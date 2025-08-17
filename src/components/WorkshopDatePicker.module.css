@@ -1,0 +1,286 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.dateGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dateButton {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+}
+
+.dateButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 13px;
+}
+
+.dateButton:hover::before {
+  opacity: 1;
+}
+
+.dateButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.dateButton.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.dateButton.soldOut {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, rgba(108, 117, 125, 0.1), rgba(108, 117, 125, 0.05));
+  border-color: rgba(108, 117, 125, 0.3);
+}
+
+.dateButton.soldOut:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.dateContent {
+  position: relative;
+  z-index: 1;
+}
+
+.dateText {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.timeText {
+  display: block;
+  font-size: 1.1rem;
+  color: #667eea;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.locationText {
+  display: block;
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.capacityText {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.dateButton:not(.soldOut) .capacityText {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.dateButton.soldOut .capacityText {
+  background: linear-gradient(135deg, #dc3545, #e74c3c);
+  color: white;
+}
+
+.selectedIndicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.bookingSection {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.selectedDateInfo {
+  margin-bottom: 1.5rem;
+}
+
+.selectedDateInfo h4 {
+  color: #2c3e50;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.selectedDateInfo p {
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.selectedDateInfo strong {
+  color: #2c3e50;
+}
+
+.bookWorkshopButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.bookWorkshopButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.bookWorkshopButton:active {
+  transform: translateY(0);
+}
+
+.loading {
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.1rem;
+  padding: 2rem;
+}
+
+.noDates {
+  text-align: center;
+  color: #6c757d;
+  padding: 2rem;
+}
+
+.noDates p {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+    margin: 0 1rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .dateGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dateButton {
+    padding: 1.25rem;
+  }
+  
+  .dateText {
+    font-size: 1.1rem;
+  }
+  
+  .bookingSection {
+    padding: 1.5rem;
+  }
+  
+  .bookWorkshopButton {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+    margin: 0 0.5rem;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .dateButton {
+    padding: 1rem;
+  }
+  
+  .dateText {
+    font-size: 1rem;
+  }
+  
+  .timeText {
+    font-size: 0.95rem;
+  }
+  
+  .bookingSection {
+    padding: 1rem;
+  }
+}

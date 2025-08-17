@@ -1,0 +1,70 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  width: 100%;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.input {
+  padding: var(--spacing-md);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--color-white);
+  color: var(--color-text);
+  transition: all var(--transition-normal);
+  box-shadow: 0 2px 8px rgba(128, 166, 242, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary-blue);
+  box-shadow: 0 4px 12px rgba(128, 166, 242, 0.2);
+  transform: translateY(-1px);
+}
+
+.input::placeholder {
+  color: #999;
+  opacity: 0.7;
+}
+
+.input.error {
+  border-color: #ef4444;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+}
+
+.input.error:focus {
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #ef4444;
+}
+
+/* Watercolor effect on focus */
+.input:focus::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, var(--color-accent), var(--color-primary-blue));
+  opacity: 0.1;
+  border-radius: var(--radius-md);
+  z-index: -1;
+}

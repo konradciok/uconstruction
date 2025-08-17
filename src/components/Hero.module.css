@@ -1,0 +1,337 @@
+.hero {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--color-background) 0%,
+    rgba(242, 237, 167, 0.3) 50%,
+    rgba(128, 166, 242, 0.2) 100%
+  );
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(242, 237, 167, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(128, 166, 242, 0.3) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  padding: var(--spacing-2xl) 0;
+}
+
+.heroText {
+  max-width: 600px;
+  margin-bottom: var(--spacing-xl);
+}
+
+.headline {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.2;
+  background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.subtext {
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  opacity: 0.8;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-xl);
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+/* Button styles are now handled by the Button component */
+
+.heroVisual {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: transform var(--transition-normal);
+}
+
+.heroImage:hover {
+  transform: scale(1.02);
+}
+
+.heroVisual::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  background: 
+    radial-gradient(circle, rgba(242, 237, 167, 0.6) 0%, transparent 70%),
+    radial-gradient(circle, rgba(128, 166, 242, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(20px);
+  animation: float 6s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* Responsive Design - Mobile First Approach */
+
+/* Tablet breakpoint */
+@media (min-width: 768px) {
+  .hero {
+    min-height: 75vh;
+  }
+  
+  .headline {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .subtext {
+    font-size: var(--font-size-lg);
+  }
+  
+  .ctaButtons {
+    flex-direction: row;
+    width: auto;
+  }
+  
+  .button {
+    width: auto;
+    min-width: 140px;
+  }
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 90vh;
+  }
+  
+  .heroContent {
+    flex-direction: row;
+    text-align: left;
+    gap: var(--spacing-2xl);
+    align-items: center;
+  }
+  
+  .heroText {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  
+  .headline {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .subtext {
+    font-size: var(--font-size-xl);
+  }
+  
+  .ctaButtons {
+    justify-content: flex-start;
+  }
+  
+  .heroVisual {
+    flex: 1;
+    max-width: 500px;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* Large desktop breakpoint */
+@media (min-width: 1280px) {
+  .hero {
+    min-height: 95vh;
+  }
+  
+  .headline {
+    font-size: 3.5rem;
+  }
+  
+  .heroVisual {
+    max-width: 600px;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 767px) {
+  .hero {
+    min-height: 70vh;
+  }
+  
+  .headline {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .subtext {
+    font-size: var(--font-size-base);
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .button {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .heroVisual {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* Contact Form Overlay */
+.contactFormOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.contactFormContainer {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideInUp 0.3s ease-out;
+}
+
+.closeButton {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--color-white);
+  border-radius: 50%;
+  font-size: var(--font-size-xl);
+  font-weight: bold;
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-normal);
+  z-index: 10;
+}
+
+.closeButton:hover {
+  background: #f3f4f6;
+  transform: scale(1.1);
+}
+
+.closeButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(128, 166, 242, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile adjustments for contact form */
+@media (max-width: 768px) {
+  .contactFormOverlay {
+    padding: var(--spacing-sm);
+  }
+  
+  .contactFormContainer {
+    max-height: 95vh;
+  }
+  
+  .closeButton {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-lg);
+  }
+}

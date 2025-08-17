@@ -1,0 +1,27 @@
+.container {
+  max-width: var(--container-max-width, 1200px);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  width: 100%;
+}
+
+/* Tablet breakpoint */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--spacing-xl);
+  }
+}
+
+/* Large desktop breakpoint */
+@media (min-width: 1280px) {
+  .container {
+    padding: 0 var(--spacing-2xl);
+  }
+}
