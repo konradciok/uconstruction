@@ -46,6 +46,12 @@
   animation-delay: 0.2s;
 }
 
+.ctaSection {
+  margin-top: var(--spacing-xl);
+  animation-delay: 0.3s;
+  animation-fill-mode: both;
+}
+
 /* Tablet breakpoint */
 @media (min-width: 768px) {
   .artMatters {

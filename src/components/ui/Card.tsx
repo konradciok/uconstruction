@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styles from './Card.module.css';
 
 interface CardProps {
@@ -8,12 +8,12 @@ interface CardProps {
   onClick?: () => void;
 }
 
-export default function Card({
+const Card = forwardRef<HTMLDivElement, CardProps>(({
   children,
   variant = 'default',
   className = '',
   onClick,
-}: CardProps) {
+}, ref) => {
   const cardClasses = [
     styles.card,
     styles[variant],
@@ -22,8 +22,12 @@ export default function Card({
   ].filter(Boolean).join(' ');
 
   return (
-    <div className={cardClasses} onClick={onClick}>
+    <div ref={ref} className={cardClasses} onClick={onClick}>
       {children}
     </div>
   );
-}
+});
+
+Card.displayName = 'Card';
+
+export default Card;

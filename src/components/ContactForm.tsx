@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 import Button from './ui/Button';
 import styles from './ContactForm.module.css';
@@ -12,8 +12,17 @@ interface ContactFormProps {
 export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
   const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID || 'mldlknny');
   const [gdprConsent, setGdprConsent] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  if (state.succeeded) {
+  // Watch for successful submission and set success state
+  useEffect(() => {
+    if (state.succeeded) {
+      setShowSuccess(true);
+    }
+  }, [state.succeeded]);
+
+  // Show success message when form is submitted successfully
+  if (state.succeeded && showSuccess) {
     return (
       <div className={`${styles.container} ${styles.successContainer} ${className}`}>
         <div className={styles.successContent}>
@@ -22,7 +31,13 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
           <p className={styles.successMessage}>
             Thank you for your message. I&apos;ll get back to you as soon as possible.
           </p>
-          <Button onClick={() => window.location.reload()} variant="secondary">
+          <Button 
+            onClick={() => {
+              setShowSuccess(false);
+              setGdprConsent(false);
+            }} 
+            variant="secondary"
+          >
             Send Another Message
           </Button>
         </div>

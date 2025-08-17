@@ -1,0 +1,102 @@
+.searchContainer {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--color-white);
+  border: 2px solid var(--color-border, #e5e7eb);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.inputWrapper:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(128, 166, 242, 0.15);
+}
+
+.inputWrapper.focused {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(128, 166, 242, 0.1);
+}
+
+.searchIcon {
+  color: var(--color-text-secondary, #6b7280);
+  margin-right: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  font-family: inherit;
+  padding: 0;
+  min-width: 0;
+}
+
+.input::placeholder {
+  color: var(--color-text-secondary, #9ca3af);
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: var(--color-text-secondary, #6b7280);
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: var(--spacing-sm);
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+}
+
+.clearButton:hover {
+  background: var(--color-text, #374151);
+}
+
+.clearButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .searchContainer {
+    max-width: 100%;
+  }
+  
+  .inputWrapper {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .input {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Focus styles for accessibility */
+.input:focus-visible {
+  outline: none;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .inputWrapper,
+  .clearButton {
+    transition: none;
+  }
+}

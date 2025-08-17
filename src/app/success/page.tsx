@@ -4,43 +4,39 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Container from '../../components/Container';
+import { OrderDetails } from '../../types/workshop';
 import styles from './page.module.css';
-
-interface OrderDetails {
-  customer_email?: string;
-  amount_total?: number;
-  currency?: string;
-  workshop?: {
-    name: string;
-    date: string;
-    time: string;
-    location: string;
-  };
-}
 
 function SuccessPageContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (sessionId) {
       // For now, we'll show a generic success message
       // In the future, this can fetch real order details from the API
-      setOrderDetails({
-        customer_email: 'customer@example.com',
-        amount_total: 5000, // €50.00 in cents
-        currency: 'eur',
-        workshop: {
-          name: 'Abstract Watercolor Workshop',
-          date: 'March 15, 2025',
-          time: '11:00',
-          location: 'Güímar, Tenerife'
-        }
-      });
-      setLoading(false);
+      try {
+        // Simulate potential API call that could fail
+        // In the future, replace this with actual API call
+        setOrderDetails({
+          customer_email: 'customer@example.com',
+          amount_total: 5000, // €50.00 in cents
+          currency: 'eur',
+          workshop: {
+            name: 'Abstract Watercolor Workshop',
+            date: 'March 15, 2025',
+            time: '11:00',
+            location: 'Güímar, Tenerife'
+          }
+        });
+        setLoading(false);
+      } catch {
+        setError('Failed to load booking details');
+        setLoading(false);
+      }
     } else {
       setLoading(false);
     }

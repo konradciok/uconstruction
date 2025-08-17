@@ -1,0 +1,360 @@
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  max-width: 1200px;
+  max-height: 800px;
+  background: var(--color-background);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.closeButton {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.prevButton {
+  left: var(--spacing-md);
+}
+
+.nextButton {
+  right: var(--spacing-md);
+}
+
+.imageContainer {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+}
+
+.image {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.info {
+  background: var(--color-surface);
+  padding: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.infoContent {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.3;
+}
+
+.description {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+}
+
+.metadata {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.metaItem {
+  background: var(--color-background);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.counter {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.9rem;
+  backdrop-filter: blur(4px);
+}
+
+/* Animations - Now handled by Framer Motion */
+/* Keyframe animations removed in favor of Framer Motion */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    width: 95vw;
+    height: 95vh;
+  }
+  
+  .closeButton {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    width: 35px;
+    height: 35px;
+  }
+  
+  .navButton {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .prevButton {
+    left: var(--spacing-sm);
+  }
+  
+  .nextButton {
+    right: var(--spacing-sm);
+  }
+  
+  .info {
+    padding: var(--spacing-md);
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .description {
+    font-size: 0.9rem;
+  }
+  
+  .metadata {
+    gap: var(--spacing-sm);
+    font-size: 0.8rem;
+  }
+  
+  .metaItem {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .counter {
+    bottom: var(--spacing-sm);
+    right: var(--spacing-sm);
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+  
+  .navButton {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .info {
+    padding: var(--spacing-sm);
+  }
+  
+  .title {
+    font-size: 1.1rem;
+  }
+  
+  .description {
+    font-size: 0.85rem;
+  }
+  
+  .metadata {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+}
+
+/* Focus states for accessibility */
+.closeButton:focus,
+.navButton:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Focus visible for keyboard navigation */
+.closeButton:focus-visible,
+.navButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Hide focus outline for mouse users */
+.closeButton:focus:not(:focus-visible),
+.navButton:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Ensure buttons are properly focusable */
+.closeButton,
+.navButton {
+  position: relative;
+  z-index: 10;
+  /* Ensure proper tab order */
+  tab-index: 0;
+}
+
+/* Swipe Indicator */
+.swipeIndicator {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.8rem;
+  backdrop-filter: blur(4px);
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.swipeHint {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  white-space: nowrap;
+}
+
+.swipeHint span {
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+/* Hide swipe indicator on desktop */
+@media (min-width: 768px) {
+  .swipeIndicator {
+    display: none;
+  }
+}
+
+/* Pointer events and touch handling */
+.content {
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  /* Ensure pointer events work properly */
+  pointer-events: auto;
+}
+
+/* Prevent text selection during gestures */
+.content[data-dragging="true"] {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Gesture animation states */
+.content[data-dragging="true"] {
+  transition: none;
+  cursor: grabbing;
+}
+
+.content[data-axis-lock="horizontal"] {
+  touch-action: none;
+}
+
+.content[data-axis-lock="vertical"] {
+  touch-action: pan-y pinch-zoom;
+}
+
+/* Swipe Feedback */
+.swipeFeedback {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.swipeArrow {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  backdrop-filter: blur(8px);
+}
+
+/* Reduced motion support - Framer Motion handles this automatically */
+/* Framer Motion respects the prefers-reduced-motion media query */
+/* No additional CSS needed for reduced motion as Framer Motion handles it */

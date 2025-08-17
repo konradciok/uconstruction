@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Container from './Container';
 import Button from './ui/Button';
 import WatercolorEffects from './WatercolorEffects';
@@ -31,9 +32,11 @@ export default function Hero() {
               >
                 Take a look!
               </Button>
-              <Button variant="outline" size="lg">
-                Visit Gallery
-              </Button>
+              <Link href="/portfolio">
+                <Button variant="outline" size="lg">
+                  Visit Gallery
+                </Button>
+              </Link>
             </div>
           </div>
           <div className={styles.heroVisual}>

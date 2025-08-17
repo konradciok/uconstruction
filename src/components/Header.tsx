@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Container from './Container';
 import styles from './Header.module.css';
 
-// Header component with logo image
+// Header component with logo image and responsive hamburger menu
 
 export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className={`${styles.header} animate-fadeInUp`}>
       <Container>
@@ -26,17 +36,34 @@ export default function Header() {
               </div>
             </Link>
           </div>
-          <nav className={`${styles.navigation} animate-slideInRight`}>
-            <Link href="/" className={styles.navLink}>
+          
+          {/* Hamburger Menu Button */}
+          <button 
+            className={`${styles.hamburger} ${isMenuOpen ? styles.hamburgerOpen : ''}`}
+            onClick={toggleMenu}
+            aria-label="Toggle navigation menu"
+            aria-expanded={isMenuOpen}
+          >
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+          </button>
+
+          {/* Navigation Menu */}
+          <nav className={`${styles.navigation} ${isMenuOpen ? styles.navigationOpen : ''} animate-slideInRight`}>
+            <Link href="/" className={styles.navLink} onClick={closeMenu}>
               Home
             </Link>
-            <Link href="/about" className={styles.navLink}>
+            <Link href="/about" className={styles.navLink} onClick={closeMenu}>
               About
             </Link>
-            <Link href="/commissions" className={styles.navLink}>
+            <Link href="/portfolio" className={styles.navLink} onClick={closeMenu}>
+              Portfolio
+            </Link>
+            <Link href="/commissions" className={styles.navLink} onClick={closeMenu}>
               Commissions
             </Link>
-            <Link href="/workshops" className={styles.navLink}>
+            <Link href="/workshops" className={styles.navLink} onClick={closeMenu}>
               Workshops
             </Link>
           </nav>

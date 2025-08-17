@@ -2,6 +2,7 @@
 
 import Header from './Header';
 import Footer from './Footer';
+import styles from './BodyWrapper.module.css';
 
 interface BodyWrapperProps {
   children: React.ReactNode;
@@ -9,13 +10,9 @@ interface BodyWrapperProps {
 
 export default function BodyWrapper({ children }: BodyWrapperProps) {
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      minHeight: '100vh' 
-    }}>
+    <div className={styles.wrapper}>
       <Header />
-      <main style={{ flex: 1 }}>
+      <main className={styles.main}>
         {children}
       </main>
       <Footer />

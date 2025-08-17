@@ -1,5 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import Container from './Container';
+import Button from './ui/Button';
 import styles from './ArtMatters.module.css';
 
 export default function ArtMatters() {
@@ -17,6 +19,13 @@ export default function ArtMatters() {
             <p className={`${styles.description} animate-fadeInUp`}>
               If you&apos;re looking for something truly special, I&apos;d love to work with you on a custom commission. Feel free to connect with me on social media or reach out with any questions or inquiries. Thank you for supporting my art!
             </p>
+            <div className={styles.ctaSection}>
+              <Link href="/portfolio">
+                <Button variant="primary" size="md">
+                  Explore My Portfolio
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </Container>

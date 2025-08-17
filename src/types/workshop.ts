@@ -21,7 +21,7 @@ export interface OrderDetails {
   customer_email?: string;
   amount_total?: number;
   currency?: string;
-  workshop: {
+  workshop?: {
     name: string;
     date: string | null;
     time: string;

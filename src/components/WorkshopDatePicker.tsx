@@ -1,15 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { WorkshopDate } from '../types/workshop';
+import { WorkshopDate, WorkshopDatePickerProps } from '../types/workshop';
 import { getAvailableDates } from '../lib/workshop-dates';
 import { formatCanary } from '../lib/datetime';
 import styles from './WorkshopDatePicker.module.css';
-
-interface WorkshopDatePickerProps {
-  onDateSelect: (date: WorkshopDate) => void;
-  className?: string;
-}
 
 export const WorkshopDatePicker: React.FC<WorkshopDatePickerProps> = ({
   onDateSelect,
