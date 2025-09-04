@@ -35,8 +35,8 @@ export const WorkshopDatePicker: React.FC<WorkshopDatePickerProps> = ({
   }
 
   return (
-    <div className={`${styles.container} ${className}`}>
-      <h3 className={styles.title}>Select Workshop Date</h3>
+    <div className={`${styles.container} ${className}`} id="workshop-date-picker">
+      <h3 className={styles.title} id="workshop-date-picker-title">Select Workshop Date</h3>
       <p className={styles.subtitle}>
         Choose your preferred date and time for the watercolor workshop
       </p>

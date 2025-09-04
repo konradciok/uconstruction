@@ -1,0 +1,282 @@
+.container {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.header h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.statNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.exportButton,
+.clearButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.exportButton {
+  background: #10b981;
+  color: white;
+}
+
+.exportButton:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.clearButton {
+  background: #ef4444;
+  color: white;
+}
+
+.clearButton:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.confirmDialog {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.confirmDialog p {
+  margin: 0 0 1rem 0;
+  color: #7f1d1d;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.cancelButton,
+.confirmButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelButton {
+  background: #6b7280;
+  color: white;
+}
+
+.cancelButton:hover {
+  background: #4b5563;
+}
+
+.confirmButton {
+  background: #dc2626;
+  color: white;
+}
+
+.confirmButton:hover {
+  background: #b91c1c;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .stats {
+    gap: 1.5rem;
+    padding: 0.75rem;
+  }
+
+  .statNumber {
+    font-size: 1.25rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .exportButton,
+  .clearButton {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .confirmActions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cancelButton,
+  .confirmButton {
+    width: 100%;
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h3 {
+    font-size: 1.125rem;
+  }
+
+  .stats {
+    gap: 1rem;
+  }
+
+  .statNumber {
+    font-size: 1.125rem;
+  }
+
+  .statLabel {
+    font-size: 0.625rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .header h3 {
+    color: #f9fafb;
+  }
+
+  .header p {
+    color: #9ca3af;
+  }
+
+  .stats {
+    background: #374151;
+  }
+
+  .statNumber {
+    color: #60a5fa;
+  }
+
+  .statLabel {
+    color: #9ca3af;
+  }
+
+  .confirmDialog {
+    background: #7f1d1d;
+    border-color: #f87171;
+  }
+
+  .confirmDialog p {
+    color: #fecaca;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .container {
+    border-width: 2px;
+  }
+
+  .exportButton,
+  .clearButton,
+  .cancelButton,
+  .confirmButton {
+    border: 2px solid transparent;
+  }
+
+  .exportButton:hover,
+  .clearButton:hover,
+  .cancelButton:hover,
+  .confirmButton:hover {
+    border-color: currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .exportButton,
+  .clearButton,
+  .cancelButton,
+  .confirmButton {
+    transition: none;
+  }
+
+  .exportButton:hover,
+  .clearButton:hover {
+    transform: none;
+  }
+}

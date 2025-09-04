@@ -98,3 +98,44 @@ export function getOptimizedImageUrl(
   
   return `${originalUrl}?${params.toString()}`;
 }
+
+/**
+ * Derive a human-friendly title from an image URL or filename
+ */
+export function deriveTitleFromUrl(url: string): string {
+  try {
+    const fileNameWithExt = url.split('/').pop() || '';
+    const withoutExt = fileNameWithExt.replace(/\.[^/.]+$/, '');
+    const normalized = withoutExt.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+    return normalized.replace(/\b\w/g, (c) => c.toUpperCase());
+  } catch {
+    return 'Artwork';
+  }
+}
+
+/**
+ * Parse painting meta from a filename like "obsidian_05_A4.jpg"
+ * Returns title: "Obsidian 05" and tag: "Obsidian"
+ */
+export function parsePaintingMetaFromFilename(fileName: string): { title: string; tag: string } {
+  // Drop extension
+  const base = fileName.replace(/\.[^/.]+$/, '');
+  // Split by underscores or dashes
+  const parts = base.split(/[-_]+/).filter(Boolean);
+  // Remove common size tokens at the end (A4, A3, A2, 30x40, 30×40)
+  const sizePattern = /^(a\d+|\d+\s*[x×]\s*\d+|\d+\s*cm)$/i;
+  const filtered = parts.filter((p, idx) => !(idx === parts.length - 1 && sizePattern.test(p)));
+  // Build title: capitalize words, keep numbers as-is
+  const words = filtered.map((w) => w.replace(/\s+/g, ' ').trim());
+  const capitalized = words
+    .map((w) => w.replace(/\b\w/g, (c) => c.toUpperCase()))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  // Title may include series and number; tag is first word capitalized
+  const tag = words.length > 0 ? words[0].replace(/\b\w/g, (c) => c.toUpperCase()) : 'Artwork';
+  return {
+    title: capitalized || 'Artwork',
+    tag,
+  };
+}

@@ -8,10 +8,20 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "shopify:verify": "node --env-file=.env --env-file=.env.local --env-file=env.local scripts/shopify-verify.js",
+    "sync:backfill": "node --env-file=.env --env-file=.env.local --env-file=env.local scripts/shopify-backfill.js",
+    "sync:delta": "node --env-file=.env --env-file=.env.local --env-file=env.local scripts/shopify-delta-sync.js",
+    "webhooks:setup": "node --env-file=.env --env-file=.env.local --env-file=env.local scripts/setup-webhooks.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:db:push": "prisma db push",
+    "prisma:studio": "prisma studio",
+    "db:reset": "prisma migrate reset --force"
   },
   "dependencies": {
     "@formspree/react": "^3.0.0",
+    "@prisma/client": "^6.15.0",
     "@stripe/stripe-js": "^2.0.0",
     "@tanstack/react-virtual": "^3.13.12",
     "date-fns": "^2.30.0",
@@ -30,6 +40,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "prettier": "^3.6.2",
+    "prisma": "^6.15.0",
     "typescript": "^5.9.2"
   }
 }

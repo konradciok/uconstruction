@@ -11,6 +11,22 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  // Tighten rules: no explicit any, exhaustive deps, a11y
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+    },
+  },
+  {
+    rules: {
+      'react-hooks/exhaustive-deps': 'error',
+      // Reinforce a11y checks commonly missed
+      'jsx-a11y/alt-text': 'error',
+      'jsx-a11y/aria-role': 'warn',
+      'jsx-a11y/no-autofocus': ['warn', { ignoreNonDOM: true }],
+    },
+  },
 ];
 
 export default eslintConfig;

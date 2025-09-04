@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { GalleryItem as GalleryItemType } from '@/types/gallery';
 import Card from '@/components/ui/Card';
 import styles from './GalleryItem.module.css';
+import { deriveTitleFromUrl } from '@/lib/image-utils';
 
 interface GalleryItemProps {
   item: GalleryItemType;
@@ -23,6 +24,8 @@ export default React.memo(function GalleryItem({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const derivedTitle = useCallback(() => item.title || deriveTitleFromUrl(item.imageUrl), [item.title, item.imageUrl]);
 
   const handleClick = useCallback(() => {
     if (onClick) {
@@ -93,11 +96,12 @@ export default React.memo(function GalleryItem({
         data-index={index}
       >
         <div className={styles.imageContainer}>
+          <div className={styles.topTitle}>{derivedTitle()}</div>
           {!imageError ? (
             <>
               <Image
                 src={item.imageUrl}
-                alt={item.title || 'Artwork'}
+                alt={derivedTitle()}
                 fill
                 sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                 className={`${styles.image} ${imageLoaded ? styles.loaded : ''}`}
@@ -119,41 +123,11 @@ export default React.memo(function GalleryItem({
               <p>Image not available</p>
             </div>
           )}
-          
-          <motion.div 
-            className={styles.overlay}
-            variants={overlayVariants}
-            initial="hidden"
-            whileHover="visible"
-            transition={{ duration: 0.2, ease: "easeOut" }}
-          >
-            <div className={styles.overlayContent}>
-              <h3 className={styles.title}>{item.title}</h3>
-              {item.description && (
-                <p className={styles.description}>{item.description}</p>
-              )}
-              <div className={styles.metadata}>
-                {item.medium && (
-                  <span className={styles.metaItem}>{item.medium}</span>
-                )}
-                {item.year && (
-                  <span className={styles.metaItem}>{item.year}</span>
-                )}
-              </div>
-            </div>
-          </motion.div>
+
         </div>
         
         <div className={styles.itemInfo}>
-          <h3 className={styles.itemTitle}>{item.title}</h3>
-          <div className={styles.itemMeta}>
-            {item.category && (
-              <span className={styles.category}>{item.category}</span>
-            )}
-            {item.dimensions && (
-              <span className={styles.dimensions}>{item.dimensions}</span>
-            )}
-          </div>
+          <div className={styles.author}>Anna Ciok</div>
         </div>
       </Card>
     </motion.div>

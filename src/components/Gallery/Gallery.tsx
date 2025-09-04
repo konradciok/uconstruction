@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, { useMemo, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GalleryItem } from '@/types/gallery';
-import { galleryFilters } from '@/lib/gallery-data';
 import GalleryItemComponent from './GalleryItem';
 import VirtualizedGrid from './VirtualizedGrid';
 import Lightbox from './Lightbox';
-import Button from '@/components/ui/Button';
 import SearchInput from '@/components/ui/SearchInput';
-import MultiSelectFilter, { FilterOption } from '@/components/ui/MultiSelectFilter';
-import { useDebounce } from '@/hooks/useDebounce';
+import MultiSelectFilter from '@/components/ui/MultiSelectFilter';
+import { usePerformanceMonitor } from './usePerformanceMonitor';
+import { useGalleryFilters } from '@/hooks/useGalleryFilters';
+import { useLightboxNavigation } from '@/hooks/useLightboxNavigation';
 import styles from './Gallery.module.css';
 
 interface GalleryProps {
@@ -28,80 +28,26 @@ export default function Gallery({
   enableVirtualization = false,
   virtualizationThreshold = 50
 }: GalleryProps) {
-  // Filter state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [filterLogic, setFilterLogic] = useState<'AND' | 'OR'>('OR');
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // Lightbox state
-  const [lightboxState, setLightboxState] = useState({
-    isOpen: false,
-    currentItem: null as GalleryItem | null,
-    currentIndex: 0
-  });
+  const isDev = process.env.NODE_ENV === 'development';
+  // Filters via hook
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedCategories,
+    setSelectedCategories,
+    filterLogic,
+    setFilterLogic,
+    categoryOptions,
+    filteredItems,
+    hasActiveFilters,
+    clearFilters,
+  } = useGalleryFilters(items);
   
   // Reference to track the triggering element for focus restoration
   const triggerRef = useRef<HTMLElement | null>(null);
 
-  // Debounce search query for better performance
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
-
-  // Get unique categories with counts
-  const categoryOptions = useMemo((): FilterOption[] => {
-    const categoryCounts = items.reduce((acc, item) => {
-      acc[item.category] = (acc[item.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    return galleryFilters
-      .filter(filter => filter.category !== 'all')
-      .map(filter => ({
-        value: filter.category,
-        label: filter.label,
-        count: categoryCounts[filter.category] || 0
-      }));
-  }, [items]);
-
-  // Enhanced filtering logic
-  const filteredItems = useMemo(() => {
-    let result = items;
-
-    // Category filtering with AND/OR logic
-    if (selectedCategories.length > 0) {
-      if (filterLogic === 'AND') {
-        // Show items that match ALL selected categories
-        result = result.filter(item => 
-          selectedCategories.every(category => item.category === category)
-        );
-      } else {
-        // Show items that match ANY selected category (OR logic)
-        result = result.filter(item => 
-          selectedCategories.includes(item.category)
-        );
-      }
-    }
-
-    // Search filtering
-    if (debouncedSearchQuery.trim()) {
-      const query = debouncedSearchQuery.toLowerCase().trim();
-      result = result.filter(item => {
-        const searchableFields = [
-          item.title,
-          item.description,
-          item.medium,
-          item.category,
-          item.year?.toString()
-        ].filter(Boolean);
-
-        return searchableFields.some(field => 
-          field.toLowerCase().includes(query)
-        );
-      });
-    }
-
-    return result;
-  }, [items, selectedCategories, filterLogic, debouncedSearchQuery]);
+  // Loading state (placeholder for future async fetches)
+  const isLoading = false;
 
   // Determine if virtualization should be used
   const shouldUseVirtualization = enableVirtualization && filteredItems.length > virtualizationThreshold;
@@ -117,71 +63,75 @@ export default function Gallery({
     return 4;
   }, []);
 
-  const handleSearchChange = useCallback((query: string) => {
-    setSearchQuery(query);
-  }, []);
+  const handleSearchChange = useCallback((query: string) => setSearchQuery(query), [setSearchQuery]);
+  const handleCategoryChange = useCallback((categories: string[]) => setSelectedCategories(categories), [setSelectedCategories]);
+  const handleLogicChange = useCallback((logic: 'AND' | 'OR') => setFilterLogic(logic), [setFilterLogic]);
+  const handleClearFilters = useCallback(() => clearFilters(), [clearFilters]);
 
-  const handleCategoryChange = useCallback((categories: string[]) => {
-    setSelectedCategories(categories);
-  }, []);
+  // Performance monitoring (dev only): FPS budget and render timing
+  const { startRenderMeasure, endRenderMeasure } = usePerformanceMonitor(filteredItems.length, {
+    enabled: isDev,
+    onMetricsUpdate: (metrics) => {
+      if (metrics.fps < 50) {
+        // eslint-disable-next-line no-console
+        console.warn('[Gallery] FPS below budget', metrics);
+      }
+    },
+  });
 
-  const handleLogicChange = useCallback((logic: 'AND' | 'OR') => {
-    setFilterLogic(logic);
-  }, []);
+  // Measure render phases for the gallery grid in dev
+  useEffect(() => {
+    if (!isDev) return;
+    startRenderMeasure();
+    // End on next animation frame to approximate render completion
+    const rafId = requestAnimationFrame(() => {
+      endRenderMeasure();
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [isDev, startRenderMeasure, endRenderMeasure, filteredItems.length, enableVirtualization]);
 
-  const handleClearFilters = useCallback(() => {
-    setSearchQuery('');
-    setSelectedCategories([]);
-  }, []);
+  // CLS budget monitoring (dev only)
+  useEffect(() => {
+    if (!isDev || typeof PerformanceObserver === 'undefined') return;
+
+    let cumulativeLayoutShift = 0;
+    interface LayoutShiftEntry extends PerformanceEntry {
+      value: number;
+      hadRecentInput: boolean;
+    }
+
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries() as LayoutShiftEntry[]) {
+        if (!entry.hadRecentInput) {
+          cumulativeLayoutShift += entry.value;
+          if (cumulativeLayoutShift > 0.05) {
+            // eslint-disable-next-line no-console
+            console.warn('[Gallery] CLS above budget', cumulativeLayoutShift.toFixed(3));
+          }
+        }
+      }
+    });
+    try {
+      observer.observe({ type: 'layout-shift', buffered: true } as PerformanceObserverInit);
+    } catch {
+      // ignore if not supported
+    }
+    return () => observer.disconnect();
+  }, [isDev]);
+
+  const { isOpen, currentItem, currentIndex, openWithItem, close, next, previous, jumpTo } = useLightboxNavigation({ items: filteredItems });
 
   const handleItemClick = useCallback((item: GalleryItem, element?: HTMLElement) => {
-    const currentIndex = filteredItems.findIndex(filteredItem => filteredItem.id === item.id);
-    
-    // Store reference to the triggering element
     if (element) {
       triggerRef.current = element;
     }
-    
-    setLightboxState({
-      isOpen: true,
-      currentItem: item,
-      currentIndex: currentIndex >= 0 ? currentIndex : 0
-    });
-  }, [filteredItems]);
+    openWithItem(item);
+  }, [openWithItem]);
 
-  const handleLightboxClose = useCallback(() => {
-    setLightboxState(prev => ({ ...prev, isOpen: false }));
-  }, []);
-
-  const handleLightboxNext = useCallback(() => {
-    const nextIndex = (lightboxState.currentIndex + 1) % filteredItems.length;
-    setLightboxState({
-      isOpen: true,
-      currentItem: filteredItems[nextIndex],
-      currentIndex: nextIndex
-    });
-  }, [lightboxState.currentIndex, filteredItems]);
-
-  const handleLightboxPrevious = useCallback(() => {
-    const prevIndex = lightboxState.currentIndex === 0 
-      ? filteredItems.length - 1 
-      : lightboxState.currentIndex - 1;
-    setLightboxState({
-      isOpen: true,
-      currentItem: filteredItems[prevIndex],
-      currentIndex: prevIndex
-    });
-  }, [lightboxState.currentIndex, filteredItems]);
-
-  const handleLightboxJumpToIndex = useCallback((index: number) => {
-    if (index >= 0 && index < filteredItems.length) {
-      setLightboxState({
-        isOpen: true,
-        currentItem: filteredItems[index],
-        currentIndex: index
-      });
-    }
-  }, [filteredItems]);
+  const handleLightboxClose = useCallback(() => close(), [close]);
+  const handleLightboxNext = useCallback(() => next(), [next]);
+  const handleLightboxPrevious = useCallback(() => previous(), [previous]);
+  const handleLightboxJumpToIndex = useCallback((index: number) => jumpTo(index), [jumpTo]);
 
   // Animation variants for grid
   const gridVariants = {
@@ -202,8 +152,7 @@ export default function Gallery({
     }
   };
 
-  // Check if any filters are active
-  const hasActiveFilters = searchQuery.trim() || selectedCategories.length > 0;
+  // Check if any filters are active (from hook)
 
   if (!items || items.length === 0) {
     return (
@@ -251,7 +200,7 @@ export default function Gallery({
         initial="hidden"
         animate="visible"
         exit="exit"
-        key={`${selectedCategories.join(',')}-${debouncedSearchQuery}-${filterLogic}`} // Re-animate when filters change
+        key={`${selectedCategories.join(',')}-${searchQuery}-${filterLogic}`} // Re-animate when filters change
       >
         {filteredItems.map((item, index) => (
           <GalleryItemComponent
@@ -357,7 +306,7 @@ export default function Gallery({
               Showing {filteredItems.length} of {items.length} items
               {searchQuery.trim() && (
                 <span className={styles.filterInfo}>
-                  {' '}matching "{searchQuery}"
+                  {' '}matching &ldquo;{searchQuery}&rdquo;
                 </span>
               )}
               {selectedCategories.length > 0 && (
@@ -379,9 +328,9 @@ export default function Gallery({
 
       {/* Lightbox */}
       <Lightbox
-        isOpen={lightboxState.isOpen}
-        currentItem={lightboxState.currentItem}
-        currentIndex={lightboxState.currentIndex}
+        isOpen={isOpen}
+        currentItem={currentItem}
+        currentIndex={currentIndex}
         totalItems={filteredItems.length}
         filteredItems={filteredItems}
         onClose={handleLightboxClose}

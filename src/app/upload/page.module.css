@@ -1,0 +1,12 @@
+.main {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 2rem 0;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .main {
+    background: #1a1a1a;
+  }
+}

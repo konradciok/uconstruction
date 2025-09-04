@@ -16,7 +16,7 @@ interface LightboxProps {
   onNext: () => void;
   onPrevious: () => void;
   onJumpToIndex?: (index: number) => void; // Add callback for jumping to specific index
-  triggerRef?: React.RefObject<HTMLElement>; // Reference to the triggering element
+  triggerRef?: React.RefObject<HTMLElement | null>; // Reference to the triggering element
 }
 
 export default function Lightbox({

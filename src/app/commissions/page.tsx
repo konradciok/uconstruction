@@ -1,8 +1,13 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Container from '../../components/Container';
+import { ContactForm } from '../../components/ContactForm';
+import heroStyles from '../../components/Hero.module.css';
 import styles from './page.module.css';
 
 export default function CommissionsPage() {
+  const [showContactForm, setShowContactForm] = useState(false);
   return (
     <div className={styles.commissionsPage}>
       <Container>
@@ -19,7 +24,11 @@ export default function CommissionsPage() {
               <p className={styles.description}>
                 While you can explore my currently available works in the &quot;Shop&quot; section, I also offer bespoke paintings created especially for you in a specific format and style. If you&apos;re interested in a custom piece, I would be delighted to bring your vision to life. Please feel free to contact me so we can discuss the details of our collaboration.
               </p>
-              <button className={styles.contactButton}>
+              <button 
+                className={styles.contactButton}
+                onClick={() => setShowContactForm(true)}
+                type="button"
+              >
                 Contact Me
               </button>
             </section>
@@ -38,6 +47,21 @@ export default function CommissionsPage() {
               </p>
             </section>
           </div>
+          {showContactForm && (
+            <div className={heroStyles.contactFormOverlay}>
+              <div className={heroStyles.contactFormContainer}>
+                <button 
+                  className={heroStyles.closeButton}
+                  onClick={() => setShowContactForm(false)}
+                  aria-label="Close contact form"
+                  type="button"
+                >
+                  ×
+                </button>
+                <ContactForm />
+              </div>
+            </div>
+          )}
         </div>
       </Container>
     </div>

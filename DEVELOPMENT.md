@@ -192,6 +192,27 @@ npm install          # Install dependencies
 npm update           # Update dependencies
 ```
 
+## Local DB (Prisma + SQLite)
+
+1. Create `.env.local` in the project root with:
+   ```bash
+   DATABASE_URL="file:./prisma/dev.db"
+   ```
+2. Install dependencies (includes Prisma and client):
+   ```bash
+   npm install
+   ```
+3. Generate Prisma client:
+   ```bash
+   npm run prisma:generate
+   ```
+4. Initialize the SQLite DB and baseline migration (no models yet):
+   ```bash
+   npm run prisma:migrate
+   ```
+
+This will create `prisma/dev.db` and the Prisma client in `src/generated/prisma` (gitignored).
+
 ## File Structure Reference
 
 ```

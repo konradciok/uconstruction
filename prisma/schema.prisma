@@ -1,0 +1,177 @@
+// Prisma schema for Shopify → Local DB replication
+// Phase 2 — Schema Design and Migrations
+
+// Client generator
+// Output is ignored by VCS via .gitignore
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+// Datasource — SQLite by default (can be swapped to Postgres later)
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL") // e.g. DATABASE_URL="file:./prisma/dev.db"
+}
+
+// -----------------------------
+// Core domain models
+// -----------------------------
+
+model Product {
+  id               Int       @id @default(autoincrement())
+  shopifyId        String    @unique // Store GID or numeric string from REST
+  handle           String    @unique // Unique per shop
+  title            String
+  bodyHtml         String?
+  vendor           String?
+  productType      String?
+  status           String?   // keep flexible instead of enum (e.g., active, draft, archived)
+  publishedAt      DateTime?
+  deletedAt        DateTime?
+  shopifyUpdatedAt DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relations
+  options            ProductOption[]
+  variants           Variant[]
+  media              ProductMedia[]
+  productTags        ProductTag[]
+  productCollections ProductCollection[]
+
+  @@index([shopifyUpdatedAt])
+}
+
+model ProductOption {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  name      String
+  position  Int
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, position])
+}
+
+model Variant {
+  id                        Int       @id @default(autoincrement())
+  shopifyId                 String    @unique
+  productId                 Int
+  title                     String?
+  sku                       String?
+  // For SQLite, use Decimal without native type. When moving to Postgres, add @db.Decimal(18, 6)
+  priceAmount               Decimal?
+  priceCurrency             String?
+  compareAtPriceAmount      Decimal?
+  compareAtPriceCurrency    String?
+  position                  Int?
+  barcode                   String?
+  inventoryPolicy           String?
+  inventoryItemId           String?
+  requiresShipping          Boolean?
+  taxable                   Boolean?
+  weight                    Float?
+  weightUnit                String?
+  shopifyUpdatedAt          DateTime?
+
+  product                   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([sku])
+}
+
+model ProductMedia {
+  id            Int      @id @default(autoincrement())
+  shopifyId     String?  @unique
+  productId     Int
+  mediaType     String
+  url           String   // source URL
+  previewImage  Json?
+  altText       String?
+  position      Int?
+  width         Int?
+  height        Int?
+  checksum      String?
+
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, position])
+}
+
+model Collection {
+  id               Int       @id @default(autoincrement())
+  shopifyId        String    @unique
+  handle           String    @unique
+  title            String
+  bodyHtml         String?
+  sortOrder        String?
+  deletedAt        DateTime?
+  shopifyUpdatedAt DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  productCollections ProductCollection[]
+}
+
+model ProductCollection {
+  productId    Int
+  collectionId Int
+
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([productId, collectionId])
+  @@index([collectionId])
+}
+
+// Normalized tags
+model Tag {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  productTags ProductTag[]
+}
+
+model ProductTag {
+  productId Int
+  tagId     Int
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+  @@index([tagId])
+}
+
+// Optional: inventory levels by item + location
+model InventoryLevel {
+  inventoryItemId String
+  locationId      String
+  available       Int
+
+  @@id([inventoryItemId, locationId])
+  @@index([locationId])
+}
+
+// Sync cursor/state per resource type (e.g., products, collections)
+model SyncState {
+  id            Int       @id @default(autoincrement())
+  resourceType  String    @unique
+  lastCursor    String?
+  lastSyncTime  DateTime?
+}
+
+// Optional: generalized metafield storage
+model Metafield {
+  id         Int      @id @default(autoincrement())
+  ownerType  String   // e.g., PRODUCT, VARIANT, COLLECTION
+  ownerId    String   // Shopify GID or numeric string
+  namespace  String
+  key        String
+  type       String?  // Shopify type, e.g., single_line_text_field, json
+  value      String?  // normalized text value
+  raw        Json?    // raw payload/value for flexibility
+
+  @@index([ownerType, ownerId])
+  @@index([namespace, key])
+}

@@ -15,7 +15,17 @@ export default function WorkshopsPage() {
             <h1 className={`${styles.title} animate-fadeInUp`}>
               Abstract Watercolor Workshop Inspired by Tenerife&apos;s Beauty
             </h1>
-            <button className={styles.registerButton}>
+            <button
+              className={styles.registerButton}
+              onClick={() => {
+                const titleEl = document.getElementById('workshop-date-picker-title');
+                const containerEl = document.getElementById('workshop-date-picker');
+                const target = titleEl || containerEl;
+                if (target) {
+                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
               Register now!
             </button>
           </header>
