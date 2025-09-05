@@ -6,6 +6,16 @@ const nextConfig: NextConfig = {
     // Allow production builds to succeed even if there are ESLint errors
     ignoreDuringBuilds: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.shopify.com',
+        port: '',
+        pathname: '/s/files/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

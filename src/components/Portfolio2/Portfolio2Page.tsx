@@ -7,8 +7,21 @@ import GalleryGrid from './GalleryGrid';
 import Portfolio2Manager from './Portfolio2Manager';
 import styles from './Portfolio2Page.module.css';
 
-export default function Portfolio2Page({ artworks: staticArtworks }: Portfolio2PageProps) {
-  const { artworks, isLoading, error, refresh, stats } = usePortfolio2Data();
+export default function Portfolio2Page({ 
+  artworks: staticArtworks, 
+  enableShopifyProducts = true,
+  showSourceBadges = false 
+}: Portfolio2PageProps) {
+  const { 
+    artworks, 
+    isLoading, 
+    error, 
+    refresh, 
+    stats, 
+    refreshShopify,
+    sourceConfig,
+    updateSourceConfig
+  } = usePortfolio2Data();
 
   // Use dynamic artworks if available, otherwise fall back to static props
   const displayArtworks = artworks.length > 0 ? artworks : staticArtworks;
@@ -72,26 +85,51 @@ export default function Portfolio2Page({ artworks: staticArtworks }: Portfolio2P
             {stats.uploaded > 0 && (
               <div className={styles.statItem}>
                 <span className={styles.statNumber}>{stats.uploaded}</span>
-                <span className={styles.statLabel}>Recently Added</span>
+                <span className={styles.statLabel}>Uploaded</span>
               </div>
             )}
-            <div className={styles.statItem}>
-              <span className={styles.statNumber}>{stats.static}</span>
-              <span className={styles.statLabel}>Original Collection</span>
-            </div>
+            {stats.static > 0 && (
+              <div className={styles.statItem}>
+                <span className={styles.statNumber}>{stats.static}</span>
+                <span className={styles.statLabel}>Collection</span>
+              </div>
+            )}
+            {stats.shopify > 0 && (
+              <div className={styles.statItem}>
+                <span className={styles.statNumber}>{stats.shopify}</span>
+                <span className={styles.statLabel}>Products</span>
+              </div>
+            )}
           </div>
           
-          {/* Refresh Button */}
-          <button 
-            onClick={refresh} 
-            className={styles.refreshButton}
-            title="Refresh portfolio data"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 12a9 9 0 11-6.219-8.56" />
-            </svg>
-            Refresh
-          </button>
+          {/* Action Buttons */}
+          <div className={styles.actionButtons}>
+            <button 
+              onClick={refresh} 
+              className={styles.refreshButton}
+              title="Refresh all portfolio data"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 12a9 9 0 11-6.219-8.56" />
+              </svg>
+              Refresh All
+            </button>
+            
+            {stats.shopify > 0 && (
+              <button 
+                onClick={refreshShopify} 
+                className={styles.refreshButton}
+                title="Sync with Shopify products"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M2 3h6l2 13h7" />
+                  <circle cx="20" cy="20" r="1" />
+                  <circle cx="9" cy="20" r="1" />
+                </svg>
+                Sync Shopify
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -103,6 +141,8 @@ export default function Portfolio2Page({ artworks: staticArtworks }: Portfolio2P
         <GalleryGrid 
           artworks={displayArtworks}
           gap={16}
+          showSourceBadges={showSourceBadges}
+          showPrices={stats.shopify > 0} // Show prices if we have products
         />
       </main>
     </div>

@@ -1,0 +1,378 @@
+/* Product Page Styles */
+.main {
+  min-height: 100vh;
+  background: var(--color-background, #F2F2F2);
+  padding: 2rem 0;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--color-background-secondary, #f3f4f6);
+  border-top: 4px solid var(--color-primary, #80A6F2);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading p {
+  color: var(--color-text-secondary, #666);
+  font-size: 1rem;
+}
+
+.error {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.error h1 {
+  font-size: 2rem;
+  color: var(--color-text, #111111);
+  margin-bottom: 1rem;
+}
+
+.error p {
+  color: var(--color-text-secondary, #666);
+  margin-bottom: 2rem;
+  font-size: 1.125rem;
+}
+
+.backButton {
+  background: var(--color-primary, #80A6F2);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background: var(--color-primary-dark, #6B94E8);
+  transform: translateY(-1px);
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+}
+
+.breadcrumbLink {
+  background: none;
+  border: none;
+  color: var(--color-primary, #80A6F2);
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: inherit;
+  transition: color 0.2s ease;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-primary-dark, #6B94E8);
+}
+
+.breadcrumbSeparator {
+  margin: 0 0.5rem;
+  color: var(--color-text-secondary, #666);
+}
+
+.breadcrumbCurrent {
+  color: var(--color-text, #111111);
+  font-weight: 500;
+}
+
+/* Product Section */
+.productSection {
+  margin-bottom: 4rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Related Products */
+.relatedSection {
+  margin-bottom: 4rem;
+}
+
+.relatedTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text, #111111);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Additional Information */
+.additionalInfo {
+  margin-bottom: 4rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.infoCard {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.infoCard:hover {
+  transform: translateY(-2px);
+}
+
+.infoCard h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text, #111111);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.infoCard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.infoCard li {
+  color: var(--color-text-secondary, #666);
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.infoCard li:before {
+  content: '•';
+  color: var(--color-primary, #80A6F2);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.infoCard li:last-child {
+  margin-bottom: 0;
+}
+
+/* Customer Reviews */
+.reviewsSection {
+  background: white;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.reviewsTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text, #111111);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.reviewsOverview {
+  margin-bottom: 2rem;
+}
+
+.reviewsSummary {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.averageRating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ratingNumber {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-primary, #80A6F2);
+}
+
+.stars {
+  font-size: 1.5rem;
+  color: #fbbf24;
+}
+
+.reviewCount {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #666);
+}
+
+.reviewsList {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.review {
+  padding: 1.5rem;
+  background: var(--color-background-secondary, #f8f8f8);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-primary, #80A6F2);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.reviewerName {
+  font-weight: 600;
+  color: var(--color-text, #111111);
+}
+
+.reviewStars {
+  color: #fbbf24;
+  font-size: 0.875rem;
+}
+
+.reviewText {
+  color: var(--color-text-secondary, #666);
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .main {
+    padding: 1rem 0;
+  }
+
+  .breadcrumb {
+    margin-bottom: 1.5rem;
+  }
+
+  .productSection {
+    margin-bottom: 3rem;
+  }
+
+  .relatedTitle {
+    font-size: 1.5rem;
+  }
+
+  .relatedGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .infoCard {
+    padding: 1.5rem;
+  }
+
+  .reviewsSection {
+    padding: 2rem 1rem;
+  }
+
+  .reviewsTitle {
+    font-size: 1.5rem;
+  }
+
+  .averageRating {
+    gap: 0.25rem;
+  }
+
+  .ratingNumber {
+    font-size: 2.5rem;
+  }
+
+  .stars {
+    font-size: 1.25rem;
+  }
+
+  .review {
+    padding: 1rem;
+  }
+
+  .reviewHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb {
+    font-size: 0.75rem;
+  }
+
+  .breadcrumbCurrent {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .error {
+    padding: 2rem 1rem;
+  }
+
+  .error h1 {
+    font-size: 1.5rem;
+  }
+
+  .infoCard h3 {
+    font-size: 1.125rem;
+  }
+
+  .ratingNumber {
+    font-size: 2rem;
+  }
+
+  .reviewsList {
+    gap: 1rem;
+  }
+
+  .review {
+    padding: 0.75rem;
+  }
+
+  .reviewText {
+    font-size: 0.875rem;
+  }
+}

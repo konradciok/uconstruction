@@ -1,0 +1,198 @@
+/* ProductCard Component Styles */
+
+.card {
+  position: relative;
+  background: var(--color-background);
+  border: 1px solid var(--color-border, #e5e5e5);
+  border-radius: var(--border-radius-md, 8px);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-primary, #80A6F2);
+}
+
+.card:focus {
+  outline: 2px solid var(--color-primary, #80A6F2);
+  outline-offset: 2px;
+}
+
+.card:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Size Variants */
+.small {
+  max-width: 200px;
+}
+
+.medium {
+  max-width: 280px;
+}
+
+.large {
+  max-width: 320px;
+}
+
+/* Image Container */
+.imageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5; /* Consistent with Portfolio2 */
+  overflow: hidden;
+  background: var(--color-background-secondary, #f8f8f8);
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+  color: var(--color-text-secondary, #666);
+}
+
+.placeholderText {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 500;
+}
+
+/* Status Badge */
+.statusBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--color-accent, #F2EDA7);
+  color: var(--color-text, #111111);
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm, 4px);
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 600;
+  text-transform: capitalize;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Content Area */
+.content {
+  padding: var(--spacing-md, 16px);
+}
+
+.title {
+  margin: 0 0 var(--spacing-xs, 8px) 0;
+  font-size: var(--font-size-md, 16px);
+  font-weight: 600;
+  color: var(--color-text, #111111);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.vendor {
+  margin: 0 0 var(--spacing-xs, 8px) 0;
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-text-secondary, #666);
+  font-style: italic;
+}
+
+.price {
+  margin: 0;
+  font-size: var(--font-size-md, 16px);
+  font-weight: 700;
+  color: var(--color-primary, #80A6F2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card {
+    max-width: 100%;
+  }
+  
+  .small {
+    max-width: 160px;
+  }
+  
+  .medium {
+    max-width: 240px;
+  }
+  
+  .large {
+    max-width: 100%;
+  }
+  
+  .content {
+    padding: var(--spacing-sm, 12px);
+  }
+  
+  .title {
+    font-size: var(--font-size-sm, 14px);
+  }
+  
+  .price {
+    font-size: var(--font-size-sm, 14px);
+  }
+}
+
+@media (max-width: 480px) {
+  .small {
+    max-width: 140px;
+  }
+  
+  .medium {
+    max-width: 200px;
+  }
+  
+  .content {
+    padding: var(--spacing-sm, 10px);
+  }
+  
+  .statusBadge {
+    top: 4px;
+    right: 4px;
+    padding: 2px 6px;
+    font-size: var(--font-size-xs, 10px);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card {
+    border-color: var(--color-text, #111111);
+  }
+  
+  .card:hover {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .image {
+    transition: none;
+  }
+  
+  .card:hover {
+    transform: none;
+  }
+  
+  .card:hover .image {
+    transform: none;
+  }
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Artwork } from '@/types/portfolio2';
+import { Artwork, PortfolioStats, SourceConfig } from '@/types/portfolio2';
 import { Portfolio2Manager } from '@/lib/portfolio2-manager';
 
 interface UsePortfolio2DataReturn {
@@ -7,29 +7,32 @@ interface UsePortfolio2DataReturn {
   isLoading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
-  stats: {
-    total: number;
-    uploaded: number;
-    static: number;
-  };
+  stats: PortfolioStats;
+  refreshShopify: () => Promise<void>;
+  sourceConfig: SourceConfig;
+  updateSourceConfig: (config: SourceConfig) => void;
 }
 
-export function usePortfolio2Data(): UsePortfolio2DataReturn {
+export function usePortfolio2Data(config?: SourceConfig): UsePortfolio2DataReturn {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState({ total: 0, uploaded: 0, static: 0 });
+  const [stats, setStats] = useState<PortfolioStats>({ total: 0, uploaded: 0, static: 0, shopify: 0 });
+  const [sourceConfig, setSourceConfig] = useState<SourceConfig>(
+    config || Portfolio2Manager.getSourceConfig()
+  );
 
   const loadArtworks = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
       
-      const allArtworks = await Portfolio2Manager.getAllArtworks();
+      // Get artworks with current source configuration
+      const allArtworks = await Portfolio2Manager.getAllArtworks(sourceConfig);
       setArtworks(allArtworks);
       
-      // Update stats
-      const portfolioStats = Portfolio2Manager.getPortfolioStats();
+      // Update stats (async now)
+      const portfolioStats = await Portfolio2Manager.getPortfolioStats();
       setStats(portfolioStats);
       
     } catch (err) {
@@ -38,7 +41,7 @@ export function usePortfolio2Data(): UsePortfolio2DataReturn {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [sourceConfig]);
 
   // Load artworks on mount
   useEffect(() => {
@@ -65,11 +68,36 @@ export function usePortfolio2Data(): UsePortfolio2DataReturn {
     await loadArtworks();
   }, [loadArtworks]);
 
+  // Refresh Shopify products specifically
+  const refreshShopify = useCallback(async () => {
+    try {
+      await Portfolio2Manager.refreshShopifyArtworks();
+      await loadArtworks();
+    } catch (err) {
+      console.error('Error refreshing Shopify artworks:', err);
+      setError(err instanceof Error ? err.message : 'Failed to refresh Shopify data');
+    }
+  }, [loadArtworks]);
+
+  // Update source configuration
+  const updateSourceConfig = useCallback((config: SourceConfig) => {
+    setSourceConfig(config);
+    // The loadArtworks will be triggered by the useEffect below
+  }, []);
+
+  // Reload artworks when source config changes
+  useEffect(() => {
+    loadArtworks();
+  }, [loadArtworks]);
+
   return {
     artworks,
     isLoading,
     error,
     refresh,
-    stats
+    stats,
+    refreshShopify,
+    sourceConfig,
+    updateSourceConfig
   };
 }
