@@ -361,41 +361,6 @@ export async function getShopProducts(
   }
 }
 
-/**
- * Get product by handle for product detail page
- */
-export async function getProductByHandle(prisma: PrismaClient, handle: string): Promise<TemplateProduct | null> {
-  try {
-    const product = await prisma.product.findUnique({
-      where: { handle },
-      include: {
-        variants: true,
-        media: {
-          orderBy: { position: 'asc' }
-        },
-        productTags: {
-          include: {
-            tag: true
-          }
-        },
-        productCollections: {
-          include: {
-            collection: true
-          }
-        }
-      }
-    })
-    
-    if (!product) {
-      return null
-    }
-    
-    return adaptProductForTemplate(product as ProductWithRelations)
-  } catch (error) {
-    console.error(`Error fetching product with handle ${handle}:`, error)
-    return null
-  }
-}
 
 /**
  * Get collections for filter dropdowns

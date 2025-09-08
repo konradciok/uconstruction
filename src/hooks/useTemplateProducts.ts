@@ -159,50 +159,6 @@ export function useShopProducts(
   }
 }
 
-/**
- * Hook for fetching a single product by handle
- */
-export function useProductByHandle(handle: string) {
-  const [product, setProduct] = useState<TemplateProduct | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function fetchProduct() {
-      if (!handle) {
-        setProduct(null)
-        setLoading(false)
-        return
-      }
-
-      try {
-        setLoading(true)
-        setError(null)
-        
-        const response = await fetch(`/api/template/products/${handle}`)
-        if (!response.ok) {
-          if (response.status === 404) {
-            setProduct(null)
-            return
-          }
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        
-        const productData = await response.json()
-        setProduct(productData)
-      } catch (err) {
-        console.error(`Error fetching product with handle ${handle}:`, err)
-        setError(err instanceof Error ? err.message : 'Failed to fetch product')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchProduct()
-  }, [handle])
-
-  return { product, loading, error }
-}
 
 /**
  * Hook for fetching collections (categories)
