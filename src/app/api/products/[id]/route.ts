@@ -6,13 +6,14 @@ import { ProductService } from '@/lib/product-service';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const productService = new ProductService();
 
   try {
     // Validate ID parameter
-    const productId = parseInt(params.id);
+    const resolvedParams = await params;
+    const productId = parseInt(resolvedParams.id);
 
     if (isNaN(productId) || productId <= 0) {
       return NextResponse.json(
@@ -50,7 +51,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error(`[API] Error fetching product ${params.id}:`, error);
+    console.error(`[API] Error fetching product:`, error);
 
     return NextResponse.json(
       {

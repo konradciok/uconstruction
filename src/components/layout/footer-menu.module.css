@@ -1,0 +1,65 @@
+/**
+ * Footer Menu Component Styles
+ * 
+ * Footer navigation menu with responsive design
+ * and watercolor artist aesthetic integration.
+ */
+
+.footerMenu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .footerMenu {
+    flex-direction: row;
+    gap: var(--spacing-3xl);
+  }
+}
+
+.menuSection {
+  flex: 1;
+}
+
+.menuTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-sm) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.menuList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.menuLink {
+  color: var(--color-gray-600);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-fast);
+  display: block;
+  padding: var(--spacing-xs) 0;
+}
+
+.menuLink:hover {
+  color: var(--color-text);
+}
+
+/* Focus styles for accessibility */
+.menuLink:focus {
+  outline: 2px solid var(--color-primary-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.menuLink:focus:not(:focus-visible) {
+  outline: none;
+}

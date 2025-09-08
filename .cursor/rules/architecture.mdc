@@ -1,0 +1,21 @@
+---
+description: Next.js App Router architecture, rendering model, data + SEO conventions.
+globs:
+  - "app/**/*"
+  - "src/app/**/*"
+alwaysApply: true
+---
+
+# Next.js Architecture & Conventions
+
+- **Routing:** Use the **App Router** (`/app`) for all routes. Prefer file-based routes, route groups, and route colocation.  
+- **Rendering:** **Server Components by default**. Use Client Components only when you need browser APIs, state, or effects; mark with `"use client"`.  
+- **Links & Images & Fonts:** Use `next/link`, `next/image`, and `next/font` (prefer variable fonts). Configure `images.remotePatterns` for remote assets.  
+- **SEO:** Use the **Metadata API** (`export const metadata` / `generateMetadata`) instead of `<Head>`. Add route-scoped OG images where relevant.  
+- **Data & Caching:** Be explicit. With `fetch`, set `cache`/`next:{ revalidate, tags }` as needed. Use `revalidateTag` / `revalidatePath` for on-demand updates.  
+- **Organization:**  
+  - Use **route groups** for non-URL structure (e.g. `(marketing)`).  
+  - Use `_lib`, `_components`, `_styles` for non-routable, colocated modules.  
+- **Naming:**  
+  - **Files/folders:** **kebab-case** (e.g., `user-card.tsx`, `route.ts`).  
+  - **Components (exports):** **PascalCase**. Keep filename policy consistent.

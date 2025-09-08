@@ -41,8 +41,8 @@ export class ProductToArtworkTransformer {
         url: `/products/${product.handle}`, // Future product page URL
         metadata: {
           price,
-          vendor: product.vendor,
-          status: product.status,
+          vendor: product.vendor || undefined,
+          status: product.status || undefined,
           shopifyId: product.shopifyId,
           lastUpdated: product.shopifyUpdatedAt
             ? product.shopifyUpdatedAt instanceof Date
@@ -118,7 +118,7 @@ export class ProductToArtworkTransformer {
 
     const prices = product.variants
       .filter((v) => v.priceAmount)
-      .map((v) => parseFloat(v.priceAmount as string));
+      .map((v) => parseFloat(v.priceAmount?.toString() || '0'));
 
     if (prices.length === 0) return '';
 
@@ -207,8 +207,8 @@ export class ProductToArtworkTransformer {
         url: `/products/${product.handle}`,
         metadata: {
           price: this.getPriceDisplay(product),
-          vendor: product.vendor,
-          status: product.status,
+          vendor: product.vendor || undefined,
+          status: product.status || undefined,
           shopifyId: product.shopifyId,
           lastUpdated: new Date().toISOString(),
         },

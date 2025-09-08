@@ -1,0 +1,173 @@
+/* VariantSelector Component Styles */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.variantSection {
+  /* Variant selection section */
+}
+
+.variantTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+}
+
+.variantList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.variantButton {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  background-color: var(--color-white);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.variantButton:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.variantButtonSelected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.variantButtonDisabled {
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.4);
+  cursor: not-allowed;
+}
+
+.variantButtonDisabled:hover {
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.outOfStockText {
+  margin-left: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+}
+
+.variantInfo {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+}
+
+.variantInfoContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.variantInfoLeft {
+  /* Left side of variant info */
+}
+
+.variantInfoTitle {
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.variantInfoStatus {
+  font-size: var(--font-size-sm);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.variantInfoRight {
+  text-align: right;
+}
+
+.variantPrice {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.variantComparePrice {
+  font-size: var(--font-size-sm);
+  color: rgba(0, 0, 0, 0.5);
+  text-decoration: line-through;
+}
+
+.quantitySection {
+  /* Quantity selector section */
+}
+
+.quantityLabel {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.quantitySelect {
+  display: block;
+  width: 80px;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: var(--color-white);
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: border-color var(--transition-fast);
+}
+
+.quantitySelect:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(128, 166, 242, 0.1);
+}
+
+.addToCartButton {
+  width: 100%;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  font-size: var(--font-size-base);
+}
+
+.addToCartButton:hover {
+  background-color: var(--color-primary-blue);
+}
+
+.addToCartButton:disabled {
+  background-color: rgba(0, 0, 0, 0.4);
+  cursor: not-allowed;
+}
+
+.addToCartButton:disabled:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .variantButton {
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+  
+  .quantitySelect {
+    width: 100px;
+  }
+}

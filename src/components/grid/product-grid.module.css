@@ -1,0 +1,223 @@
+/* ProductGrid Component Styles */
+.grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+/* Responsive grid columns */
+.gridCols1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.gridCols2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.gridCols3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gridCols4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.gridCols5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.gridCols6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+/* Responsive breakpoints */
+@media (min-width: 640px) {
+  .smGridCols1 { grid-template-columns: repeat(1, 1fr); }
+  .smGridCols2 { grid-template-columns: repeat(2, 1fr); }
+  .smGridCols3 { grid-template-columns: repeat(3, 1fr); }
+  .smGridCols4 { grid-template-columns: repeat(4, 1fr); }
+  .smGridCols5 { grid-template-columns: repeat(5, 1fr); }
+  .smGridCols6 { grid-template-columns: repeat(6, 1fr); }
+}
+
+@media (min-width: 768px) {
+  .mdGridCols1 { grid-template-columns: repeat(1, 1fr); }
+  .mdGridCols2 { grid-template-columns: repeat(2, 1fr); }
+  .mdGridCols3 { grid-template-columns: repeat(3, 1fr); }
+  .mdGridCols4 { grid-template-columns: repeat(4, 1fr); }
+  .mdGridCols5 { grid-template-columns: repeat(5, 1fr); }
+  .mdGridCols6 { grid-template-columns: repeat(6, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .lgGridCols1 { grid-template-columns: repeat(1, 1fr); }
+  .lgGridCols2 { grid-template-columns: repeat(2, 1fr); }
+  .lgGridCols3 { grid-template-columns: repeat(3, 1fr); }
+  .lgGridCols4 { grid-template-columns: repeat(4, 1fr); }
+  .lgGridCols5 { grid-template-columns: repeat(5, 1fr); }
+  .lgGridCols6 { grid-template-columns: repeat(6, 1fr); }
+}
+
+@media (min-width: 1280px) {
+  .xlGridCols1 { grid-template-columns: repeat(1, 1fr); }
+  .xlGridCols2 { grid-template-columns: repeat(2, 1fr); }
+  .xlGridCols3 { grid-template-columns: repeat(3, 1fr); }
+  .xlGridCols4 { grid-template-columns: repeat(4, 1fr); }
+  .xlGridCols5 { grid-template-columns: repeat(5, 1fr); }
+  .xlGridCols6 { grid-template-columns: repeat(6, 1fr); }
+}
+
+.productItem {
+  /* Group hover effects can be handled by child components */
+}
+
+.productLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.aspectSquare {
+  aspect-ratio: 1;
+}
+
+/* Loading skeleton styles */
+.skeleton {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeletonImage {
+  aspect-ratio: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+.skeletonText {
+  height: var(--spacing-md);
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-sm);
+}
+
+.skeletonTextShort {
+  width: 75%;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Error state styles */
+.errorContainer {
+  text-align: center;
+  padding: var(--spacing-3xl) 0;
+}
+
+.errorIcon {
+  color: #dc2626; /* red-600 */
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-2xl);
+}
+
+.errorTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.errorMessage {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: var(--spacing-md);
+}
+
+.retryButton {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.retryButton:hover {
+  background-color: var(--color-primary-blue);
+}
+
+/* Empty state styles */
+.emptyContainer {
+  text-align: center;
+  padding: var(--spacing-3xl) 0;
+}
+
+.emptyIcon {
+  color: rgba(0, 0, 0, 0.4);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-4xl);
+}
+
+.emptyTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.emptyMessage {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Load more button styles */
+.loadMoreContainer {
+  text-align: center;
+  margin-top: var(--spacing-xl);
+}
+
+.loadMoreButton {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.loadMoreButton:hover {
+  background-color: var(--color-primary-blue);
+}
+
+/* Loading more state */
+.loadingMoreContainer {
+  text-align: center;
+  margin-top: var(--spacing-xl);
+}
+
+.spinner {
+  display: inline-block;
+  width: var(--spacing-xl);
+  height: var(--spacing-xl);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--color-primary);
+  animation: spin 1s ease-in-out infinite;
+}
+
+.loadingMoreText {
+  margin-top: var(--spacing-md);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

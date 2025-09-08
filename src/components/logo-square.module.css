@@ -1,0 +1,76 @@
+/**
+ * Logo Square Component Styles
+ * 
+ * Square container for the site logo with watercolor artist aesthetic
+ * and customizable sizes.
+ */
+
+.container {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-gray-200);
+  background-color: var(--color-white);
+  transition: all var(--transition-fast);
+}
+
+.container:hover {
+  border-color: var(--color-primary-blue);
+  box-shadow: 0 2px 8px rgba(128, 166, 242, 0.1);
+}
+
+/* Size variants */
+.containerSm {
+  height: 30px;
+  width: 30px;
+  border-radius: var(--radius-md);
+}
+
+.containerMd {
+  height: 40px;
+  width: 40px;
+  border-radius: var(--radius-lg);
+}
+
+.containerLg {
+  height: 50px;
+  width: 50px;
+  border-radius: var(--radius-xl);
+}
+
+.icon {
+  fill: var(--color-text);
+  transition: fill var(--transition-fast);
+}
+
+/* Icon size variants */
+.iconSm {
+  height: 10px;
+  width: 10px;
+}
+
+.iconMd {
+  height: 16px;
+  width: 16px;
+}
+
+.iconLg {
+  height: 20px;
+  width: 20px;
+}
+
+/* Hover effect */
+.container:hover .icon {
+  fill: var(--color-primary-blue);
+}
+
+/* Focus styles for accessibility */
+.container:focus {
+  outline: 2px solid var(--color-primary-blue);
+  outline-offset: 2px;
+}
+
+.container:focus:not(:focus-visible) {
+  outline: none;
+}

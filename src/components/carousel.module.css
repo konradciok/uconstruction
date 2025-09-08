@@ -1,0 +1,115 @@
+/**
+ * Carousel Component Styles
+ * 
+ * Responsive carousel with smooth horizontal scrolling animation
+ * and watercolor artist aesthetic integration.
+ */
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.container {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: var(--spacing-lg);
+  padding-top: var(--spacing-xs);
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel {
+  display: flex;
+  gap: var(--spacing-md);
+  animation: carousel-scroll 60s linear infinite;
+  width: max-content;
+}
+
+.carouselItem {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  height: 30vh;
+  max-height: 275px;
+  width: 66.666667%; /* w-2/3 */
+  max-width: 475px;
+  flex: none;
+}
+
+@media (min-width: 768px) {
+  .carouselItem {
+    width: 33.333333%; /* md:w-1/3 */
+  }
+}
+
+.productLink {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: block;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: transform var(--transition-normal);
+}
+
+.productLink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Pause animation on hover */
+.container:hover .carousel {
+  animation-play-state: paused;
+}
+
+/* Carousel scroll animation */
+@keyframes carousel-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333333%); /* Move by one third to create seamless loop */
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .carouselItem {
+    height: 25vh;
+    max-height: 200px;
+  }
+  
+  .title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .carousel {
+    animation: none;
+  }
+  
+  .productLink:hover {
+    transform: none;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.productLink:focus {
+  outline: 2px solid var(--color-primary-blue);
+  outline-offset: 2px;
+}
+
+.productLink:focus:not(:focus-visible) {
+  outline: none;
+}

@@ -1,0 +1,16 @@
+---
+description: Styling, TypeScript, linting/formatting standards for the frontend.
+globs:
+  - "**/*.{ts,tsx,js,jsx}"
+  - "app/**/*.{ts,tsx}"
+  - "src/**/*.{ts,tsx}"
+alwaysApply: true
+---
+
+# Style & Formatting
+
+- **TypeScript:** `strict: true` for the project. Avoid `any`; prefer precise generics and discriminated unions.
+- **Tailwind CSS:** Use Tailwind for styling, mobile-first. Prefer utility classes; extract components when class lists get long.
+- **Formatting (Prettier):** 2-space indentation, **single quotes**, **no semicolons** (`semi: false`). Keep consistent via pre-commit and CI.
+- **ESLint:** Extend `next/core-web-vitals`. Treat lint and type errors as CI blockers.
+- **Accessibility:** Give interactive elements proper roles/labels. Use `next/link` for navigation, never naked `<a>` for internal routes.

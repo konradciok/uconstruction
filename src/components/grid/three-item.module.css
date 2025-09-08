@@ -1,0 +1,87 @@
+/* ThreeItemGrid Component Styles */
+.grid {
+  margin: 0 auto;
+  max-width: 1280px; /* max-w-7xl equivalent */
+  display: grid;
+  gap: var(--spacing-md);
+  padding: 0 var(--spacing-md) var(--spacing-md);
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+}
+
+/* Tablet and up - 6 column grid with 2 rows */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    max-height: calc(100vh - 200px);
+  }
+}
+
+.gridItem {
+  position: relative;
+  aspect-ratio: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.gridItemFull {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.gridItemHalf {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* Tablet and up - full item spans 4 columns, 2 rows */
+@media (min-width: 768px) {
+  .gridItemFull {
+    grid-column: span 4;
+    grid-row: span 2;
+  }
+  
+  .gridItemHalf {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+}
+
+.link {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  height: 100%;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Placeholder styles for when no products are available */
+.placeholder {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholderText {
+  color: rgba(0, 0, 0, 0.4);
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .placeholderText {
+    font-size: var(--font-size-xl);
+  }
+}

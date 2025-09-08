@@ -47,3 +47,7 @@ prisma/dev.db
 prisma/dev.db-journal
 prisma/*.sqlite
 prisma/*.sqlite-journal
+
+# Template directories (not part of main build)
+/nextjs-commerce-temp/
+/uconstruction/

@@ -87,11 +87,7 @@ export function useProducts({
 
         const result: ProductListResult = await response.json();
 
-        if (!result.success) {
-          throw new Error(result.error?.message || 'Failed to fetch products');
-        }
-
-        const newProducts = result.data.products;
+        const newProducts = result.products;
 
         if (append) {
           setProducts((prev) => [...prev, ...newProducts]);
@@ -99,8 +95,8 @@ export function useProducts({
           setProducts(newProducts);
         }
 
-        setHasMore(result.data.hasMore || false);
-        setNextCursor(result.data.nextCursor || null);
+        setHasMore(result.hasMore || false);
+        setNextCursor(result.nextCursor || null);
       } catch (err) {
         console.error('Error fetching products:', err);
         setError(

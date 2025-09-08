@@ -1,4 +1,30 @@
-# Specyfikacja: Strona kategorii „Printy FineArt” (katalog produktów)
+# UConstruction Project Catalogue
+
+## 📋 Project Overview
+
+This repository contains **three separate Next.js applications**:
+
+### 1. Main Watercolor Artist Site (Primary Project)
+- **Location**: Root directory (`/`)
+- **Purpose**: Professional watercolor artist website for Anna Ciok
+- **Status**: Production-ready (98% complete)
+- **Features**: Portfolio, e-commerce, workshop booking, contact forms
+
+### 2. Next.js Commerce Template
+- **Location**: `nextjs-commerce-temp/`
+- **Purpose**: E-commerce boilerplate/template
+- **Status**: Template/starting point
+- **Features**: Product catalog, cart, Shopify integration
+
+### 3. UConstruction Subdirectory
+- **Location**: `uconstruction/`
+- **Purpose**: Alternative e-commerce implementation
+- **Status**: Separate implementation
+- **Features**: Product pages, search, cart system
+
+---
+
+# Specyfikacja: Strona kategorii „Printy FineArt" (katalog produktów)
 
 **Adresat:** agent kodowania *Cloudecode*  
 **Stack:** React (JS), CSS (CSS Modules lub `*.css`), bez frameworków UI (czysty CSS)  
