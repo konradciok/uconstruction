@@ -1,12 +1,20 @@
 /* ThreeItemGrid Component Styles */
 .grid {
   margin: 0 auto;
-  max-width: 1280px; /* max-w-7xl equivalent */
+  max-width: 1280px;
   display: grid;
-  gap: var(--spacing-md);
-  padding: 0 var(--spacing-md) var(--spacing-md);
+  gap: var(--spacing-sm);
+  padding: 0;
   grid-template-columns: 1fr;
   grid-template-rows: auto;
+}
+
+/* Small tablet and up - 2 column grid */
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
 }
 
 /* Tablet and up - 6 column grid with 2 rows */
@@ -15,6 +23,7 @@
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(2, 1fr);
     max-height: calc(100vh - 200px);
+    gap: var(--spacing-md);
   }
 }
 
@@ -33,6 +42,19 @@
 .gridItemHalf {
   grid-column: span 1;
   grid-row: span 1;
+}
+
+/* Small tablet - full item spans 2 columns, half items span 1 column */
+@media (min-width: 640px) {
+  .gridItemFull {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  
+  .gridItemHalf {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
 }
 
 /* Tablet and up - full item spans 4 columns, 2 rows */

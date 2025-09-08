@@ -15,10 +15,11 @@
 }
 
 .price {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--color-text);
   line-height: 1;
+  word-wrap: break-word;
 }
 
 .comparePrice {
@@ -52,10 +53,10 @@
     var(--color-secondary) 100%
   );
   color: white;
-  padding: var(--spacing-lg) var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
   border-radius: var(--border-radius);
   font-weight: 700;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -64,6 +65,10 @@
   letter-spacing: 0.05em;
   position: relative;
   overflow: hidden;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .primaryCta::before {
@@ -112,7 +117,36 @@
   display: none;
 }
 
-/* Responsive adjustments */
+/* Mobile adjustments */
+@media (max-width: 639px) {
+  .price {
+    font-size: var(--font-size-xl);
+  }
+  
+  .comparePrice {
+    font-size: var(--font-size-lg);
+  }
+  
+  .primaryCta {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    min-height: 44px;
+  }
+}
+
+/* Small tablet adjustments */
+@media (min-width: 640px) {
+  .price {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .primaryCta {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Tablet adjustments */
 @media (min-width: 768px) {
   .container {
     flex-direction: row;
@@ -131,21 +165,38 @@
   }
   
   .price {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .comparePrice {
+    font-size: var(--font-size-xl);
+  }
+  
+  .primaryCta {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 1024px) {
+  .price {
     font-size: var(--font-size-4xl);
   }
   
   .comparePrice {
     font-size: var(--font-size-2xl);
   }
-}
-
-@media (min-width: 1024px) {
-  .price {
-    font-size: var(--font-size-5xl);
-  }
   
   .primaryCta {
     padding: var(--spacing-lg) var(--spacing-2xl);
     font-size: var(--font-size-xl);
+  }
+}
+
+/* Large desktop adjustments */
+@media (min-width: 1280px) {
+  .price {
+    font-size: var(--font-size-5xl);
   }
 }

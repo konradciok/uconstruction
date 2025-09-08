@@ -11,11 +11,13 @@
 }
 
 .title {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: var(--spacing-md);
   line-height: 1.2;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .vendor {
@@ -38,6 +40,8 @@
 .descriptionContent {
   color: rgba(0, 0, 0, 0.6);
   line-height: 1.7;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .descriptionContent h1,
@@ -163,14 +167,56 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive adjustments */
+/* Mobile adjustments */
+@media (max-width: 639px) {
+  .title {
+    font-size: var(--font-size-xl);
+    line-height: 1.3;
+  }
+  
+  .vendor {
+    font-size: var(--font-size-base);
+  }
+  
+  .descriptionTitle,
+  .featuresTitle,
+  .tagsTitle,
+  .collectionsTitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .features {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Small tablet adjustments */
+@media (min-width: 640px) {
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* Tablet adjustments */
 @media (min-width: 768px) {
+  .title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .vendor {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 1024px) {
   .title {
     font-size: var(--font-size-4xl);
   }
 }
 
-@media (min-width: 1024px) {
+/* Large desktop adjustments */
+@media (min-width: 1280px) {
   .title {
     font-size: var(--font-size-5xl);
   }

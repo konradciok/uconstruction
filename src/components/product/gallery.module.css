@@ -25,6 +25,7 @@
   overflow: hidden;
   border-radius: var(--border-radius-lg);
   background-color: rgba(0, 0, 0, 0.05);
+  min-height: 300px;
 }
 
 .mainImage {
@@ -79,6 +80,21 @@
   gap: var(--spacing-sm);
   overflow-x: auto;
   padding-bottom: var(--spacing-sm);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.thumbnailsContainer::-webkit-scrollbar {
+  height: 4px;
+}
+
+.thumbnailsContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thumbnailsContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
 }
 
 .thumbnailButton {
@@ -113,18 +129,58 @@
 }
 
 
-/* Responsive adjustments */
-@media (min-width: 768px) {
+/* Mobile adjustments */
+@media (max-width: 639px) {
+  .thumbnailButton {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .mainImageContainer {
+    min-height: 250px;
+  }
+}
+
+/* Small tablet adjustments */
+@media (min-width: 640px) {
   .container {
     gap: var(--spacing-lg);
   }
   
+  .thumbnailButton {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .mainImageContainer {
+    min-height: 350px;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) {
   .thumbnailsContainer {
     gap: var(--spacing-md);
   }
   
   .thumbnailButton {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .mainImageContainer {
+    min-height: 400px;
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 1024px) {
+  .thumbnailButton {
     width: 140px;
     height: 140px;
+  }
+  
+  .mainImageContainer {
+    min-height: 500px;
   }
 }

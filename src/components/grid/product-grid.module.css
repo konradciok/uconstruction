@@ -1,7 +1,7 @@
 /* ProductGrid Component Styles */
 .grid {
   display: grid;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
 }
 
 /* Responsive grid columns */
@@ -29,8 +29,19 @@
   grid-template-columns: repeat(6, 1fr);
 }
 
+/* Mobile adjustments */
+@media (max-width: 639px) {
+  .grid {
+    gap: var(--spacing-sm);
+  }
+}
+
 /* Responsive breakpoints */
 @media (min-width: 640px) {
+  .grid {
+    gap: var(--spacing-md);
+  }
+  
   .smGridCols1 { grid-template-columns: repeat(1, 1fr); }
   .smGridCols2 { grid-template-columns: repeat(2, 1fr); }
   .smGridCols3 { grid-template-columns: repeat(3, 1fr); }
@@ -40,6 +51,10 @@
 }
 
 @media (min-width: 768px) {
+  .grid {
+    gap: var(--spacing-lg);
+  }
+  
   .mdGridCols1 { grid-template-columns: repeat(1, 1fr); }
   .mdGridCols2 { grid-template-columns: repeat(2, 1fr); }
   .mdGridCols3 { grid-template-columns: repeat(3, 1fr); }
@@ -49,6 +64,10 @@
 }
 
 @media (min-width: 1024px) {
+  .grid {
+    gap: var(--spacing-xl);
+  }
+  
   .lgGridCols1 { grid-template-columns: repeat(1, 1fr); }
   .lgGridCols2 { grid-template-columns: repeat(2, 1fr); }
   .lgGridCols3 { grid-template-columns: repeat(3, 1fr); }
