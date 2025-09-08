@@ -6,13 +6,9 @@ interface ProductDescriptionProps {
 }
 
 export function ProductDescription({ product }: ProductDescriptionProps) {
-  const price = product.priceRange.minVariantPrice.amount
-  const compareAtPrice = product.variants?.[0]?.compareAtPrice?.amount || null
-  const hasDiscount = compareAtPrice && parseFloat(compareAtPrice) > parseFloat(price)
-
   return (
     <div className={styles.container}>
-      {/* Product Title and Price */}
+      {/* Product Title */}
       <div className={styles.header}>
         <h1 className={styles.title}>
           {product.title}
@@ -23,23 +19,6 @@ export function ProductDescription({ product }: ProductDescriptionProps) {
             by {product.vendor}
           </p>
         )}
-
-        {/* Price Display */}
-        <div className={styles.priceContainer}>
-          <span className={styles.price}>
-            ${price}
-          </span>
-          {hasDiscount && (
-            <>
-              <span className={styles.comparePrice}>
-                ${compareAtPrice}
-              </span>
-              <span className={styles.saleBadge}>
-                Sale
-              </span>
-            </>
-          )}
-        </div>
       </div>
 
       {/* Product Description */}

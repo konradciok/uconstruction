@@ -11,7 +11,7 @@ import { useProductByHandle } from '@/hooks/useTemplateProducts'
 import { ProductGallery } from '@/components/product/gallery'
 import { ProductDescription } from '@/components/product/description'
 import { VariantSelector } from '@/components/product/variant-selector'
-import { AddToCart } from '@/components/cart/add-to-cart'
+import { PriceAndCta } from '@/components/product/price-and-cta'
 import { CartModal } from '@/components/cart/cart-modal'
 import Container from '@/components/Container'
 import { useState, useEffect } from 'react'
@@ -101,6 +101,13 @@ export default function ProductPage({ params }: ProductPageProps) {
               <div className={styles.infoSection}>
                 <ProductDescription product={product} />
                 
+                {/* Price and CTA */}
+                <PriceAndCta
+                  product={product}
+                  selectedVariantId={selectedVariantId || product.variants[0]?.id}
+                  quantity={1}
+                />
+                
                 {/* Variant Selector */}
                 {product.variants.length > 1 && (
                   <div className={styles.variantSection}>
@@ -110,16 +117,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                     />
                   </div>
                 )}
-                
-                {/* Add to Cart */}
-                <div className={styles.addToCartSection}>
-                  <AddToCart
-                    product={product}
-                    variantId={selectedVariantId || product.variants[0]?.id}
-                    quantity={1}
-                    className="w-full"
-                  />
-                </div>
 
                 {/* Additional Info */}
                 <div className={styles.additionalInfo}>

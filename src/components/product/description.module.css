@@ -21,34 +21,7 @@
 .vendor {
   font-size: var(--font-size-lg);
   color: rgba(0, 0, 0, 0.6);
-  margin-bottom: var(--spacing-md);
-}
-
-.priceContainer {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.price {
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
-  color: var(--color-text);
-}
-
-.comparePrice {
-  font-size: var(--font-size-xl);
-  color: rgba(0, 0, 0, 0.5);
-  text-decoration: line-through;
-}
-
-.saleBadge {
-  background-color: #fef2f2; /* red-50 */
-  color: #991b1b; /* red-800 */
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-lg);
 }
 
 .description {
@@ -194,14 +167,6 @@
 @media (min-width: 768px) {
   .title {
     font-size: var(--font-size-4xl);
-  }
-  
-  .price {
-    font-size: var(--font-size-4xl);
-  }
-  
-  .comparePrice {
-    font-size: var(--font-size-2xl);
   }
 }
 

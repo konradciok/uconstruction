@@ -97,8 +97,8 @@ export function ProductGallery({ product }: ProductGalleryProps) {
               <Image
                 src={image.url}
                 alt={image.altText || `${product.title} ${index + 1}`}
-                width={80}
-                height={80}
+                width={120}
+                height={120}
                 className={styles.thumbnailImage}
               />
             </button>
@@ -106,15 +106,6 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         </div>
       )}
 
-      {/* Image Actions */}
-      <div className={styles.actionsContainer}>
-        <button className={clsx(styles.actionButton, styles.primaryButton)}>
-          View Full Size
-        </button>
-        <button className={clsx(styles.actionButton, styles.secondaryButton)}>
-          Download
-        </button>
-      </div>
     </div>
   )
 }
