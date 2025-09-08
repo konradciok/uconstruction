@@ -9,7 +9,7 @@ export class UploadService {
    * Upload and process multiple images
    */
   static async uploadImages(
-    files: File[], 
+    files: File[],
     formData: UploadFormData,
     onProgress?: (fileId: string, progress: number) => void
   ): Promise<ProcessedImage[]> {
@@ -21,10 +21,10 @@ export class UploadService {
       const batch = files.slice(i, i + this.MAX_CONCURRENT_UPLOADS);
       const batchPromises = batch.map(async (file, index) => {
         const fileId = ImageProcessor.generateImageId();
-        
+
         // Update progress
         onProgress?.(fileId, 10);
-        
+
         try {
           // Validate file
           const validation = ImageProcessor.validateImageFile(file);
@@ -36,7 +36,7 @@ export class UploadService {
 
           // Process image
           const processedResult = await ImageProcessor.processImage(file);
-          
+
           onProgress?.(fileId, 60);
 
           // Upload processed images
@@ -48,7 +48,7 @@ export class UploadService {
           );
 
           onProgress?.(fileId, 100);
-          
+
           return uploadedImage;
         } catch (error) {
           onProgress?.(fileId, 0);
@@ -74,7 +74,7 @@ export class UploadService {
     formData: UploadFormData
   ): Promise<ProcessedImage> {
     const formDataToSend = new FormData();
-    
+
     // Add metadata
     formDataToSend.append('imageId', imageId);
     formDataToSend.append('originalName', originalName);
@@ -89,28 +89,64 @@ export class UploadService {
     }
 
     // Add thumbnail files
-    formDataToSend.append('thumbnailJpg', processedResult.thumbnail.jpg, `${imageId}-thumb.jpg`);
+    formDataToSend.append(
+      'thumbnailJpg',
+      processedResult.thumbnail.jpg,
+      `${imageId}-thumb.jpg`
+    );
     if (processedResult.thumbnail.webp) {
-      formDataToSend.append('thumbnailWebp', processedResult.thumbnail.webp, `${imageId}-thumb.webp`);
+      formDataToSend.append(
+        'thumbnailWebp',
+        processedResult.thumbnail.webp,
+        `${imageId}-thumb.webp`
+      );
     }
     if (processedResult.thumbnail.avif) {
-      formDataToSend.append('thumbnailAvif', processedResult.thumbnail.avif, `${imageId}-thumb.avif`);
+      formDataToSend.append(
+        'thumbnailAvif',
+        processedResult.thumbnail.avif,
+        `${imageId}-thumb.avif`
+      );
     }
 
     // Add full size files
-    formDataToSend.append('fullJpg', processedResult.full.jpg, `${imageId}-full.jpg`);
+    formDataToSend.append(
+      'fullJpg',
+      processedResult.full.jpg,
+      `${imageId}-full.jpg`
+    );
     if (processedResult.full.webp) {
-      formDataToSend.append('fullWebp', processedResult.full.webp, `${imageId}-full.webp`);
+      formDataToSend.append(
+        'fullWebp',
+        processedResult.full.webp,
+        `${imageId}-full.webp`
+      );
     }
     if (processedResult.full.avif) {
-      formDataToSend.append('fullAvif', processedResult.full.avif, `${imageId}-full.avif`);
+      formDataToSend.append(
+        'fullAvif',
+        processedResult.full.avif,
+        `${imageId}-full.avif`
+      );
     }
 
     // Add dimensions
-    formDataToSend.append('thumbnailWidth', processedResult.thumbnail.dimensions.width.toString());
-    formDataToSend.append('thumbnailHeight', processedResult.thumbnail.dimensions.height.toString());
-    formDataToSend.append('fullWidth', processedResult.full.dimensions.width.toString());
-    formDataToSend.append('fullHeight', processedResult.full.dimensions.height.toString());
+    formDataToSend.append(
+      'thumbnailWidth',
+      processedResult.thumbnail.dimensions.width.toString()
+    );
+    formDataToSend.append(
+      'thumbnailHeight',
+      processedResult.thumbnail.dimensions.height.toString()
+    );
+    formDataToSend.append(
+      'fullWidth',
+      processedResult.full.dimensions.width.toString()
+    );
+    formDataToSend.append(
+      'fullHeight',
+      processedResult.full.dimensions.height.toString()
+    );
 
     const response = await fetch(this.UPLOAD_ENDPOINT, {
       method: 'POST',
@@ -147,8 +183,12 @@ export class UploadService {
     jpg: "/img/portfolio2/full/${processedImage.id}.jpg",
     width: ${processedImage.full.width},
     height: ${processedImage.full.height}
-  }${processedImage.alt ? `,
-  alt: "${processedImage.alt}"` : ''}
+  }${
+    processedImage.alt
+      ? `,
+  alt: "${processedImage.alt}"`
+      : ''
+  }
 }`;
 
     return entry;
@@ -158,7 +198,9 @@ export class UploadService {
    * Download portfolio data as file
    */
   static downloadPortfolioData(processedImages: ProcessedImage[]): void {
-    const entries = processedImages.map(img => this.generatePortfolioEntry(img));
+    const entries = processedImages.map((img) =>
+      this.generatePortfolioEntry(img)
+    );
     const content = `export const UPLOADED_ARTWORKS = [
 ${entries.join(',\n')}
 ];`;

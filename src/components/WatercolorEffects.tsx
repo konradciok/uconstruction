@@ -5,7 +5,9 @@ interface WatercolorEffectsProps {
   className?: string;
 }
 
-export default function WatercolorEffects({ className = '' }: WatercolorEffectsProps) {
+export default function WatercolorEffects({
+  className = '',
+}: WatercolorEffectsProps) {
   return (
     <div className={`${styles.watercolorEffects} ${className}`}>
       {/* Organic watercolor shapes */}
@@ -13,7 +15,7 @@ export default function WatercolorEffects({ className = '' }: WatercolorEffectsP
       <div className={styles.shape2}></div>
       <div className={styles.shape3}></div>
       <div className={styles.shape4}></div>
-      
+
       {/* Floating particles */}
       <div className={styles.particle1}></div>
       <div className={styles.particle2}></div>

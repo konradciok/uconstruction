@@ -22,7 +22,10 @@ export default function GalleryCMS() {
     ]).then(([list, uploaded]) => {
       if (!mounted) return;
       const uploadedIds = new Set(uploaded.map((a) => a.id));
-      const withFlags = (list as EditableArtwork[]).map((a) => ({ ...a, _isUploaded: uploadedIds.has(a.id) }));
+      const withFlags = (list as EditableArtwork[]).map((a) => ({
+        ...a,
+        _isUploaded: uploadedIds.has(a.id),
+      }));
       setArtworks(withFlags);
     });
     const onUpdate = () => {
@@ -31,14 +34,20 @@ export default function GalleryCMS() {
         Promise.resolve(Portfolio2Manager.listUploadedArtworks()),
       ]).then(([list, uploaded]) => {
         const uploadedIds = new Set(uploaded.map((a) => a.id));
-        const withFlags = (list as EditableArtwork[]).map((a) => ({ ...a, _isUploaded: uploadedIds.has(a.id) }));
+        const withFlags = (list as EditableArtwork[]).map((a) => ({
+          ...a,
+          _isUploaded: uploadedIds.has(a.id),
+        }));
         setArtworks(withFlags);
       });
     };
     window.addEventListener('portfolio2-update', onUpdate as EventListener);
     return () => {
       mounted = false;
-      window.removeEventListener('portfolio2-update', onUpdate as EventListener);
+      window.removeEventListener(
+        'portfolio2-update',
+        onUpdate as EventListener
+      );
     };
   }, []);
 
@@ -53,7 +62,9 @@ export default function GalleryCMS() {
   }, [artworks, filter]);
 
   const updateArtwork = (id: string, updates: Partial<Artwork>) => {
-    setArtworks((prev) => prev.map((a) => (a.id === id ? { ...a, ...updates } : a)));
+    setArtworks((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, ...updates } : a))
+    );
   };
 
   const saveArtwork = async (art: Artwork) => {
@@ -70,7 +81,9 @@ export default function GalleryCMS() {
 
   const removeArtwork = async (id: string) => {
     if (typeof window !== 'undefined') {
-      const confirmed = confirm('Do you really want to delete this item from the gallery?');
+      const confirmed = confirm(
+        'Do you really want to delete this item from the gallery?'
+      );
       if (!confirmed) return;
     }
     setSaving(true);
@@ -88,7 +101,9 @@ export default function GalleryCMS() {
         <h1>Gallery CMS</h1>
         <p>Manage uploaded artworks. Edit title, size, medium, tags, alt.</p>
         <div className={styles.actions}>
-          <a href="/upload" className={styles.linkButton}>Upload more</a>
+          <a href="/upload" className={styles.linkButton}>
+            Upload more
+          </a>
         </div>
       </div>
 
@@ -115,7 +130,9 @@ export default function GalleryCMS() {
                 <input
                   type="text"
                   value={art.title}
-                  onChange={(e) => updateArtwork(art.id, { title: e.target.value })}
+                  onChange={(e) =>
+                    updateArtwork(art.id, { title: e.target.value })
+                  }
                 />
               </label>
               <label>
@@ -123,7 +140,9 @@ export default function GalleryCMS() {
                 <input
                   type="text"
                   value={art.dimensions}
-                  onChange={(e) => updateArtwork(art.id, { dimensions: e.target.value })}
+                  onChange={(e) =>
+                    updateArtwork(art.id, { dimensions: e.target.value })
+                  }
                 />
               </label>
               <label>
@@ -131,7 +150,9 @@ export default function GalleryCMS() {
                 <input
                   type="text"
                   value={art.medium ?? ''}
-                  onChange={(e) => updateArtwork(art.id, { medium: e.target.value })}
+                  onChange={(e) =>
+                    updateArtwork(art.id, { medium: e.target.value })
+                  }
                 />
               </label>
               <label>
@@ -139,7 +160,14 @@ export default function GalleryCMS() {
                 <input
                   type="text"
                   value={(art.tags ?? []).join(', ')}
-                  onChange={(e) => updateArtwork(art.id, { tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+                  onChange={(e) =>
+                    updateArtwork(art.id, {
+                      tags: e.target.value
+                        .split(',')
+                        .map((t) => t.trim())
+                        .filter(Boolean),
+                    })
+                  }
                 />
               </label>
               <label>
@@ -147,15 +175,27 @@ export default function GalleryCMS() {
                 <input
                   type="text"
                   value={art.alt ?? ''}
-                  onChange={(e) => updateArtwork(art.id, { alt: e.target.value })}
+                  onChange={(e) =>
+                    updateArtwork(art.id, { alt: e.target.value })
+                  }
                 />
               </label>
             </div>
             <div className={styles.cardActions}>
-              <button disabled={saving} onClick={() => saveArtwork(art)} className={styles.save}>Save</button>
+              <button
+                disabled={saving}
+                onClick={() => saveArtwork(art)}
+                className={styles.save}
+              >
+                Save
+              </button>
               <button
                 disabled={saving || !art._isUploaded}
-                title={art._isUploaded ? 'Delete uploaded artwork' : 'Only uploaded artworks can be deleted here'}
+                title={
+                  art._isUploaded
+                    ? 'Delete uploaded artwork'
+                    : 'Only uploaded artworks can be deleted here'
+                }
                 onClick={() => removeArtwork(art.id)}
                 className={styles.delete}
               >
@@ -168,5 +208,3 @@ export default function GalleryCMS() {
     </div>
   );
 }
-
-

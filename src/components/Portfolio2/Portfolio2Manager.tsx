@@ -8,7 +8,9 @@ interface Portfolio2ManagerProps {
   onRefresh?: () => void;
 }
 
-export default function Portfolio2Manager({ onRefresh }: Portfolio2ManagerProps) {
+export default function Portfolio2Manager({
+  onRefresh,
+}: Portfolio2ManagerProps) {
   const [stats, setStats] = useState({ total: 0, uploaded: 0, static: 0 });
   const [showConfirmClear, setShowConfirmClear] = useState(false);
 
@@ -23,7 +25,7 @@ export default function Portfolio2Manager({ onRefresh }: Portfolio2ManagerProps)
 
     if (typeof window !== 'undefined') {
       window.addEventListener('portfolio2-update', handlePortfolioUpdate);
-      
+
       return () => {
         window.removeEventListener('portfolio2-update', handlePortfolioUpdate);
       };
@@ -77,7 +79,14 @@ export default function Portfolio2Manager({ onRefresh }: Portfolio2ManagerProps)
           className={styles.exportButton}
           title="Export uploaded artworks data"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7,10 12,15 17,10" />
             <line x1="12" y1="15" x2="12" y2="3" />
@@ -90,7 +99,14 @@ export default function Portfolio2Manager({ onRefresh }: Portfolio2ManagerProps)
           className={styles.clearButton}
           title="Remove all uploaded artworks"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <polyline points="3,6 5,6 21,6" />
             <path d="M19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2" />
           </svg>
@@ -100,12 +116,18 @@ export default function Portfolio2Manager({ onRefresh }: Portfolio2ManagerProps)
 
       {showConfirmClear && (
         <div className={styles.confirmDialog}>
-          <p>Are you sure you want to remove all uploaded artworks? This action cannot be undone.</p>
+          <p>
+            Are you sure you want to remove all uploaded artworks? This action
+            cannot be undone.
+          </p>
           <div className={styles.confirmActions}>
             <button onClick={handleCancelClear} className={styles.cancelButton}>
               Cancel
             </button>
-            <button onClick={handleClearUploaded} className={styles.confirmButton}>
+            <button
+              onClick={handleClearUploaded}
+              className={styles.confirmButton}
+            >
               Yes, Clear All
             </button>
           </div>

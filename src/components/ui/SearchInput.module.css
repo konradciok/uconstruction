@@ -78,11 +78,11 @@
   .searchContainer {
     max-width: 100%;
   }
-  
+
   .inputWrapper {
     padding: var(--spacing-xs) var(--spacing-sm);
   }
-  
+
   .input {
     font-size: var(--font-size-sm);
   }

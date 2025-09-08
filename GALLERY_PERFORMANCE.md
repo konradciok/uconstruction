@@ -18,12 +18,14 @@ The gallery has been optimized to handle thousands of items without performance 
 Located in `src/components/Gallery/VirtualizedGrid.tsx`
 
 **Features:**
+
 - Uses `@tanstack/react-virtual` for efficient rendering
 - Only renders items currently visible in the viewport
 - Supports responsive column layouts
 - Configurable overscan for smooth scrolling
 
 **Usage:**
+
 ```tsx
 <VirtualizedGrid
   items={filteredItems}
@@ -40,6 +42,7 @@ Located in `src/components/Gallery/VirtualizedGrid.tsx`
 Located in `src/components/Gallery/GalleryItem.tsx`
 
 **Optimizations:**
+
 - `React.memo` to prevent unnecessary re-renders
 - `useCallback` for stable event handlers
 - Intersection Observer integration for preloading
@@ -47,12 +50,13 @@ Located in `src/components/Gallery/GalleryItem.tsx`
 - Lazy loading for off-screen images
 
 **Key Features:**
+
 ```tsx
-export default React.memo(function GalleryItem({ 
-  item, 
-  onClick, 
+export default React.memo(function GalleryItem({
+  item,
+  onClick,
   index = 0,
-  onIntersection 
+  onIntersection,
 }: GalleryItemProps) {
   // Memoized handlers
   const handleClick = useCallback(() => {
@@ -64,7 +68,7 @@ export default React.memo(function GalleryItem({
     priority={index < 6}
     loading="lazy"
     // ... other props
-  />
+  />;
 });
 ```
 
@@ -73,11 +77,13 @@ export default React.memo(function GalleryItem({
 Located in `src/components/Gallery/useIntersectionPreloader.ts`
 
 **Purpose:**
+
 - Preload images that are about to enter the viewport
 - Reduces perceived loading time
 - Configurable preload distance and thresholds
 
 **Features:**
+
 - Tracks which images have been preloaded
 - Uses Intersection Observer API
 - Configurable root margin and threshold
@@ -88,12 +94,14 @@ Located in `src/components/Gallery/useIntersectionPreloader.ts`
 Located in `src/components/Gallery/usePerformanceMonitor.ts`
 
 **Metrics Tracked:**
+
 - Render time for operations
 - FPS (Frames Per Second)
 - Memory usage (if available)
 - Item count being rendered
 
 **Usage:**
+
 ```tsx
 const { startRenderMeasure, endRenderMeasure } = usePerformanceMonitor(
   items.length,
@@ -101,7 +109,7 @@ const { startRenderMeasure, endRenderMeasure } = usePerformanceMonitor(
     enabled: process.env.NODE_ENV === 'development',
     onMetricsUpdate: (metrics) => {
       console.log('Performance metrics:', metrics);
-    }
+    },
   }
 );
 ```
@@ -111,14 +119,16 @@ const { startRenderMeasure, endRenderMeasure } = usePerformanceMonitor(
 ### Automatic Virtualization
 
 The gallery automatically switches to virtualized rendering when:
+
 - `enableVirtualization` prop is true
 - Item count exceeds `virtualizationThreshold` (default: 50)
 
 ### Responsive Column Layout
 
 Columns automatically adjust based on screen size:
+
 - Mobile (< 480px): 1 column
-- Tablet (< 768px): 2 columns  
+- Tablet (< 768px): 2 columns
 - Desktop (< 1200px): 3 columns
 - Large screens (≥ 1200px): 4 columns
 
@@ -134,6 +144,7 @@ Columns automatically adjust based on screen size:
 Located in `src/components/Gallery/Gallery.module.css`
 
 **Performance CSS Properties:**
+
 ```css
 .grid,
 .virtualizedGrid {
@@ -156,8 +167,10 @@ Located in `src/components/Gallery/Gallery.module.css`
 import Gallery from '@/components/Gallery/Gallery';
 
 function PortfolioPage() {
-  const galleryItems = [/* your items */];
-  
+  const galleryItems = [
+    /* your items */
+  ];
+
   return (
     <Gallery
       items={galleryItems}
@@ -203,7 +216,7 @@ function GalleryWithMonitoring() {
         if (metrics.fps < 30) {
           console.warn('Low FPS detected:', metrics.fps);
         }
-      }
+      },
     }
   );
 

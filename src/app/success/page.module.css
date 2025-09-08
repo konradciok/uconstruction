@@ -1,7 +1,11 @@
 .successPage {
   padding: var(--spacing-xl) 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
 }
 
 .content {
@@ -10,7 +14,11 @@
 }
 
 .successCard {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(240, 248, 255, 0.8)
+  );
   border-radius: 20px;
   padding: var(--spacing-2xl);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -208,20 +216,20 @@
   .successPage {
     padding: var(--spacing-2xl) 0;
   }
-  
+
   .title {
     font-size: var(--font-size-3xl);
   }
-  
+
   .subtitle {
     font-size: var(--font-size-xl);
   }
-  
+
   .detailsTitle,
   .whatsNextTitle {
     font-size: var(--font-size-xl);
   }
-  
+
   .backButton,
   .homeButton {
     font-size: var(--font-size-lg);
@@ -234,20 +242,20 @@
   .content {
     max-width: 700px;
   }
-  
+
   .successCard {
     padding: var(--spacing-3xl);
   }
-  
+
   .title {
     font-size: var(--font-size-4xl);
   }
-  
+
   .successIcon {
     width: 100px;
     height: 100px;
   }
-  
+
   .successIcon span {
     font-size: 3rem;
   }

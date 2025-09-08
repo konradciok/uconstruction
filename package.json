@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:full": "node scripts/start-dev.js",
+    "dev:db": "npm run prisma:generate && npm run prisma:db:push && npm run dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

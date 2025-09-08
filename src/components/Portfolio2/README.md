@@ -5,6 +5,7 @@ Moduł galerii dla podstrony Portfolio 2, zaprojektowany do eksponowania obrazó
 ## Funkcjonalności
 
 ### Siatka galerii (thumbnails)
+
 - **Stała proporcja 4:5** dla wszystkich miniatur i obrazów w powiększeniu
 - **Biała ramka 3px** wokół każdej miniatury
 - **Siatka symetryczna** z równymi kolumnami i odstępami
@@ -18,6 +19,7 @@ Moduł galerii dla podstrony Portfolio 2, zaprojektowany do eksponowania obrazó
 - **Optymalizacja obrazów** z obsługą AVIF/WebP + fallback JPG
 
 ### Lightbox (powiększenie)
+
 - **Otwierany po kliknięciu/tapnięciu** w miniaturę
 - **Obraz w proporcji 4:5** wpasowany maksymalnie w viewport
 - **Tytuł i wymiary** wyświetlone na dole powiększenia
@@ -43,32 +45,34 @@ Portfolio2/
 ## Typy danych
 
 ### Artwork
+
 ```typescript
 interface Artwork {
-  id: string;                // unikalne
-  title: string;             // tytuł do wyświetlenia w lightbox
-  dimensions: string;        // „60 × 75 cm, olej na płótnie"
+  id: string; // unikalne
+  title: string; // tytuł do wyświetlenia w lightbox
+  dimensions: string; // „60 × 75 cm, olej na płótnie"
   thumbnail: {
     avif?: string;
     webp?: string;
     jpg: string;
-    width: number;           // natural width (proporcja 4:5)
-    height: number;          // natural height (proporcja 4:5)
+    width: number; // natural width (proporcja 4:5)
+    height: number; // natural height (proporcja 4:5)
   };
   full: {
     avif?: string;
     webp?: string;
     jpg: string;
-    width: number;           // ratio 4:5
-    height: number;          // ratio 4:5
+    width: number; // ratio 4:5
+    height: number; // ratio 4:5
   };
-  alt?: string;              // krótkie alt; domyślnie title
+  alt?: string; // krótkie alt; domyślnie title
 }
 ```
 
 ## Użycie
 
 ### Podstawowe użycie
+
 ```tsx
 import Portfolio2Page from '@/components/Portfolio2/Portfolio2Page';
 import { ARTWORKS } from '@/lib/portfolio2-data';
@@ -79,19 +83,20 @@ function MyPage() {
 ```
 
 ### Z konfiguracją kolumn
+
 ```tsx
 import GalleryGrid from '@/components/Portfolio2/GalleryGrid';
 
 function CustomGallery() {
   return (
-    <GalleryGrid 
+    <GalleryGrid
       artworks={ARTWORKS}
       columns={{
-        xl: 6,  // 6 kolumn na bardzo dużych ekranach
-        lg: 4,  // 4 kolumny na dużych ekranach
-        md: 3,  // 3 kolumny na średnich ekranach
-        sm: 2,  // 2 kolumny na małych ekranach
-        xs: 1   // 1 kolumna na bardzo małych ekranach
+        xl: 6, // 6 kolumn na bardzo dużych ekranach
+        lg: 4, // 4 kolumny na dużych ekranach
+        md: 3, // 3 kolumny na średnich ekranach
+        sm: 2, // 2 kolumny na małych ekranach
+        xs: 1, // 1 kolumna na bardzo małych ekranach
       }}
       gap={20} // 20px odstęp między elementami
     />
@@ -102,6 +107,7 @@ function CustomGallery() {
 ## Konfiguracja danych obrazów
 
 ### Struktura katalogów
+
 ```
 public/
 └── img/
@@ -119,37 +125,42 @@ public/
 ```
 
 ### Przykład danych
+
 ```typescript
 export const ARTWORKS: Artwork[] = [
   {
-    id: "a-001",
-    title: "Cisza poranka",
-    dimensions: "60 × 75 cm, olej na płótnie",
+    id: 'a-001',
+    title: 'Cisza poranka',
+    dimensions: '60 × 75 cm, olej na płótnie',
     thumbnail: {
-      avif: "/img/portfolio2/thumbs/a-001.avif",
-      webp: "/img/portfolio2/thumbs/a-001.webp",
-      jpg:  "/img/portfolio2/thumbs/a-001.jpg",
-      width: 800, height: 1000
+      avif: '/img/portfolio2/thumbs/a-001.avif',
+      webp: '/img/portfolio2/thumbs/a-001.webp',
+      jpg: '/img/portfolio2/thumbs/a-001.jpg',
+      width: 800,
+      height: 1000,
     },
     full: {
-      avif: "/img/portfolio2/full/a-001.avif",
-      webp: "/img/portfolio2/full/a-001.webp",
-      jpg:  "/img/portfolio2/full/a-001.jpg",
-      width: 1600, height: 2000
+      avif: '/img/portfolio2/full/a-001.avif',
+      webp: '/img/portfolio2/full/a-001.webp',
+      jpg: '/img/portfolio2/full/a-001.jpg',
+      width: 1600,
+      height: 2000,
     },
-    alt: "Obraz olejny: Cisza poranka"
-  }
+    alt: 'Obraz olejny: Cisza poranka',
+  },
 ];
 ```
 
 ## Dostępność (a11y)
 
 ### Miniatury
+
 - Przyciski z `aria-label="Powiększ: {title}"`
 - Obsługa klawiatury (Enter/Space otwiera)
 - Focus management
 
 ### Lightbox
+
 - Modal dialog z `role="dialog"`, `aria-modal="true"`
 - `aria-labelledby` wskazujące tytuł w overlayu
 - Trap focus w modalu
@@ -159,6 +170,7 @@ export const ARTWORKS: Artwork[] = [
 ## Wydajność
 
 ### Optymalizacje
+
 - **Lazy loading** miniatur z `loading="lazy"`
 - **Priority loading** pierwszych 4 obrazów
 - **Preload** sąsiadujących obrazów w lightboxie
@@ -166,6 +178,7 @@ export const ARTWORKS: Artwork[] = [
 - **Aspect-ratio** CSS zamiast JavaScript dla uniknięcia reflow
 
 ### Responsive images
+
 ```tsx
 <Image
   src={artwork.thumbnail.jpg}
@@ -181,22 +194,26 @@ export const ARTWORKS: Artwork[] = [
 ## Style i motywy
 
 ### Kolory
+
 - **Tło strony**: neutralne (#f8f9fa)
 - **Ramka miniatury**: biała 3px z delikatnym cieniem
 - **Lightbox overlay**: półprzezroczysty czarny
 - **Przyciski**: półprzezroczyste z backdrop-filter
 
 ### Responsywność
+
 - **Desktop**: 16px odstępy
 - **Tablet**: 12px odstępy
 - **Mobile**: 8px odstępy
 
 ### Dark mode
+
 Moduł automatycznie obsługuje tryb ciemny poprzez `prefers-color-scheme: dark`.
 
 ## Testy
 
 ### Testy manualne
+
 1. **Siatka**: Sprawdź 5 kolumn przy 1440px, wszystkie miniatury 4:5 z ramką 3px
 2. **Lightbox**: Klik na miniaturę otwiera modal, obraz 4:5 bez zniekształceń
 3. **Nawigacja**: Esc zamyka, ←/→ przechodzą między obrazami, swipe działa na mobile
@@ -204,6 +221,7 @@ Moduł automatycznie obsługuje tryb ciemny poprzez `prefers-color-scheme: dark`
 5. **Wydajność**: Miniatury ładują się leniwie, brak reflow podczas przewijania
 
 ### Testy automatyczne
+
 ```bash
 # Uruchom testy
 npm test -- --testPathPattern=Portfolio2
@@ -215,14 +233,16 @@ npm test -- --testPathPattern=Portfolio2 --verbose
 ## Rozszerzenia
 
 ### Dodanie filtrów
+
 ```tsx
 // Można dodać filtry kategorii, wyszukiwanie, etc.
 const [filteredArtworks, setFilteredArtworks] = useState(artworks);
 
-<GalleryGrid artworks={filteredArtworks} />
+<GalleryGrid artworks={filteredArtworks} />;
 ```
 
 ### Dodanie animacji
+
 ```tsx
 // Można dodać framer-motion dla animacji
 import { motion } from 'framer-motion';
@@ -233,7 +253,7 @@ import { motion } from 'framer-motion';
   transition={{ duration: 0.3 }}
 >
   <GalleryGrid artworks={artworks} />
-</motion.div>
+</motion.div>;
 ```
 
 ## Wymagania techniczne

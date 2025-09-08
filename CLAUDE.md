@@ -6,8 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Core Development
 
-- `npm run dev` - Start development server at <http://localhost:3000>
+- `npm run dev:full` - **🚀 RECOMMENDED**: Full startup with database initialization
+  - Automatically generates Prisma client, sets up database, starts dev server
   - Visit `/products-demo` to see ✅ **implemented product components**
+  - Visit `/portfolio` to see the unified gallery system
+- `npm run dev:db` - Simple database setup + dev server chain
+- `npm run dev` - Standard Next.js development server at <http://localhost:3000>
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint with strict rules (no explicit any, exhaustive deps, a11y)
@@ -24,9 +28,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run shopify:verify` - Verify Shopify integration
 - `npm run sync:backfill` - Backfill data from Shopify
 
+### Startup Scripts
+
+The project includes intelligent startup scripts for smooth development:
+
+- **`scripts/start-dev.js`** - Advanced Node.js startup script with:
+  - Database status checking
+  - Automatic Prisma client generation
+  - Schema setup and verification
+  - Graceful shutdown handling
+  - Colorized output and progress tracking
+- **`scripts/start-dev-simple.sh`** - Bash alternative for simpler environments
+- **Usage**: `npm run dev:full` (uses advanced script) or `./scripts/start-dev-simple.sh`
+
 ## Architecture Overview
 
 This is a Next.js 15.4.6 watercolor artist website with TypeScript, featuring a triple-purpose architecture:
+
 1. **Artist Portfolio Site** - Main public website with contact forms and workshop bookings
 2. **Shopify Integration** - Local database replication for product management (Portfolio2, Upload features)
 3. **Product Base System** - Complete product management with REST API and UI components ✅ **IMPLEMENTED**
@@ -59,7 +77,7 @@ This is a Next.js 15.4.6 watercolor artist website with TypeScript, featuring a 
 - `/portfolio` - Main gallery with filtering
 - `/portfolio2` - Advanced gallery with Shopify product sync
 - `/upload` - Admin upload interface for artworks
-- `/products-demo` - ✅ **Product components showcase and testing** 
+- `/products-demo` - ✅ **Product components showcase and testing**
 - `/success` - Post-form submission success page
 
 ### API Routes
@@ -78,7 +96,7 @@ This is a Next.js 15.4.6 watercolor artist website with TypeScript, featuring a 
 - **Portfolio2**: Shopify-integrated gallery with admin upload capabilities
 - **✅ Product System**: Complete product management components
   - **ProductCard**: Reusable product display with 3 size variants
-  - **ProductGrid**: Virtualized grid with loading/empty/error states  
+  - **ProductGrid**: Virtualized grid with loading/empty/error states
   - **ProductFilters**: Advanced filtering with 8 filter types and 3 layouts
   - **ProductDetails**: Full product view with image gallery (DoD completed)
 - **UI Components**: Custom design system in `src/components/ui/`
@@ -105,7 +123,7 @@ The database includes comprehensive Shopify product replication:
 ### Color Palette
 
 - Background: `#F2F2F2` (light gray)
-- Text: `#111111` (dark gray)  
+- Text: `#111111` (dark gray)
 - Primary: `#80A6F2` (soft blue)
 - Accent: `#F2EDA7` (pale yellow)
 
@@ -153,7 +171,7 @@ Required environment variables:
 # Forms
 NEXT_PUBLIC_FORMSPREE_FORM_ID=your_formspree_form_id
 
-# Payments  
+# Payments
 STRIPE_SECRET_KEY=sk_test_..._or_sk_live_...
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_..._or_pk_live_...
 
@@ -168,7 +186,7 @@ Comprehensive documentation for the implemented product management system:
 - **SHOPIFY_PRODUCT_BASE_ARCHITECTURE.md** - Complete implementation status and architecture
 - **SHOPIFY_PRODUCT_API_DOCUMENTATION.md** - Full REST API documentation with examples
 - **Component Files**: `src/components/Product/` - ProductCard, ProductGrid, ProductFilters
-- **API Files**: `src/app/api/products/` - Complete REST API implementation  
+- **API Files**: `src/app/api/products/` - Complete REST API implementation
 - **Types**: `src/types/product.ts` - TypeScript interfaces
 - **Service**: `src/lib/product-service.ts` - Database service layer
 

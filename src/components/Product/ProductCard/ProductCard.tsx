@@ -24,21 +24,21 @@ export default function ProductCard({
 }: ProductCardProps) {
   // Get primary image
   const primaryImage = product.media?.[0];
-  
+
   // Calculate price display
   const getPriceDisplay = () => {
     if (!product.variants?.length) return null;
-    
+
     const prices = product.variants
-      .filter(v => v.priceAmount)
-      .map(v => parseFloat(v.priceAmount as string));
-    
+      .filter((v) => v.priceAmount)
+      .map((v) => parseFloat(v.priceAmount as string));
+
     if (prices.length === 0) return null;
     if (prices.length === 1) return `$${prices[0].toFixed(2)}`;
-    
+
     const min = Math.min(...prices);
     const max = Math.max(...prices);
-    
+
     if (min === max) return `$${min.toFixed(2)}`;
     return `$${min.toFixed(2)} - $${max.toFixed(2)}`;
   };
@@ -58,14 +58,12 @@ export default function ProductCard({
     }
   };
 
-  const cardClasses = [
-    styles.card,
-    styles[size],
-    className,
-  ].filter(Boolean).join(' ');
+  const cardClasses = [styles.card, styles[size], className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <article 
+    <article
       className={cardClasses}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -89,26 +87,22 @@ export default function ProductCard({
             <span className={styles.placeholderText}>No Image</span>
           </div>
         )}
-        
+
         {/* Status Badge */}
         {showStatus && product.status && product.status !== 'active' && (
-          <div className={styles.statusBadge}>
-            {product.status}
-          </div>
+          <div className={styles.statusBadge}>{product.status}</div>
         )}
       </div>
 
       {/* Content */}
       <div className={styles.content}>
         <h3 className={styles.title}>{product.title}</h3>
-        
+
         {showVendor && product.vendor && (
           <p className={styles.vendor}>{product.vendor}</p>
         )}
-        
-        {showPrice && (
-          <p className={styles.price}>{getPriceDisplay()}</p>
-        )}
+
+        {showPrice && <p className={styles.price}>{getPriceDisplay()}</p>}
       </div>
     </article>
   );

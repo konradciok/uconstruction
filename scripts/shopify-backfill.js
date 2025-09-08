@@ -28,7 +28,9 @@ let PrismaClient;
 try {
   ({ PrismaClient } = require('../src/generated/prisma'));
 } catch (e) {
-  console.error('Failed to load PrismaClient from ../src/generated/prisma. Did you run "npm run prisma:generate"?');
+  console.error(
+    'Failed to load PrismaClient from ../src/generated/prisma. Did you run "npm run prisma:generate"?'
+  );
   process.exit(1);
 }
 
@@ -108,7 +110,8 @@ function asDecimalString(money) {
   if (!money) return null;
   if (typeof money === 'string') return money;
   if (typeof money === 'number') return String(money);
-  if (typeof money === 'object' && money.amount != null) return String(money.amount);
+  if (typeof money === 'object' && money.amount != null)
+    return String(money.amount);
   return null;
 }
 
@@ -177,9 +180,17 @@ async function main() {
     }
   `;
 
-  const start = await postGraphQL({ domain, token, apiVersion, query: bulkMutation });
+  const start = await postGraphQL({
+    domain,
+    token,
+    apiVersion,
+    query: bulkMutation,
+  });
   if (start.status !== 200 || start.json.errors) {
-    console.error('Failed to start bulk operation:', start.json.errors || start.json);
+    console.error(
+      'Failed to start bulk operation:',
+      start.json.errors || start.json
+    );
     process.exit(1);
   }
   const startErrors = start.json.data?.bulkOperationRunQuery?.userErrors;
@@ -199,7 +210,12 @@ async function main() {
   let url = null;
   let lastCount = 0;
   while (true) {
-    const { status: http, json } = await postGraphQL({ domain, token, apiVersion, query: pollQuery });
+    const { status: http, json } = await postGraphQL({
+      domain,
+      token,
+      apiVersion,
+      query: pollQuery,
+    });
     if (http !== 200) {
       console.error('Polling failed with HTTP', http, json);
       process.exit(1);
@@ -255,7 +271,10 @@ async function main() {
 
 async function importProducts(prisma, ndjsonPath) {
   console.log('Importing Products (pass 1)...');
-  const rl = readline.createInterface({ input: fs.createReadStream(ndjsonPath), crlfDelay: Infinity });
+  const rl = readline.createInterface({
+    input: fs.createReadStream(ndjsonPath),
+    crlfDelay: Infinity,
+  });
   const ops = [];
   const BATCH = 500;
   async function flushOps() {
@@ -265,7 +284,12 @@ async function importProducts(prisma, ndjsonPath) {
   }
   for await (const line of rl) {
     if (!line) continue;
-    let obj; try { obj = JSON.parse(line); } catch { continue; }
+    let obj;
+    try {
+      obj = JSON.parse(line);
+    } catch {
+      continue;
+    }
     if (obj.__typename !== 'Product') continue;
     const p = obj;
     ops.push(
@@ -302,7 +326,10 @@ async function importProducts(prisma, ndjsonPath) {
 
 async function importVariants(prisma, ndjsonPath) {
   console.log('Importing Variants (pass 2)...');
-  const rl = readline.createInterface({ input: fs.createReadStream(ndjsonPath), crlfDelay: Infinity });
+  const rl = readline.createInterface({
+    input: fs.createReadStream(ndjsonPath),
+    crlfDelay: Infinity,
+  });
   const ops = [];
   const BATCH = 500;
   async function flushOps() {
@@ -312,7 +339,12 @@ async function importVariants(prisma, ndjsonPath) {
   }
   for await (const line of rl) {
     if (!line) continue;
-    let obj; try { obj = JSON.parse(line); } catch { continue; }
+    let obj;
+    try {
+      obj = JSON.parse(line);
+    } catch {
+      continue;
+    }
     if (obj.__typename !== 'ProductVariant') continue;
     const v = obj;
     const priceAmount = asDecimalString(v.price);
@@ -371,12 +403,20 @@ async function importOptionsAndMedia(prisma, ndjsonPath) {
 
   // Group options and media by product shopifyId
   const optionMap = new Map(); // shopifyId -> [{ name, position }]
-  const mediaMap = new Map();  // shopifyId -> [{ mediaType, url, altText, width, height }]
+  const mediaMap = new Map(); // shopifyId -> [{ mediaType, url, altText, width, height }]
 
-  const rl = readline.createInterface({ input: fs.createReadStream(ndjsonPath), crlfDelay: Infinity });
+  const rl = readline.createInterface({
+    input: fs.createReadStream(ndjsonPath),
+    crlfDelay: Infinity,
+  });
   for await (const line of rl) {
     if (!line) continue;
-    let obj; try { obj = JSON.parse(line); } catch { continue; }
+    let obj;
+    try {
+      obj = JSON.parse(line);
+    } catch {
+      continue;
+    }
     const t = obj.__typename;
 
     if (t === 'ProductOption') {
@@ -403,7 +443,10 @@ async function importOptionsAndMedia(prisma, ndjsonPath) {
   const productIdsCache = new Map(); // shopifyId -> numeric id
   async function getProductId(shopifyId) {
     if (productIdsCache.has(shopifyId)) return productIdsCache.get(shopifyId);
-    const p = await prisma.product.findUnique({ where: { shopifyId }, select: { id: true } });
+    const p = await prisma.product.findUnique({
+      where: { shopifyId },
+      select: { id: true },
+    });
     if (!p) return null;
     productIdsCache.set(shopifyId, p.id);
     return p.id;
@@ -448,7 +491,8 @@ async function importOptionsAndMedia(prisma, ndjsonPath) {
     );
 
     processed++;
-    if (processed % 50 === 0) console.log(`Options/Media updated for ${processed} products...`);
+    if (processed % 50 === 0)
+      console.log(`Options/Media updated for ${processed} products...`);
   }
 
   console.log('Options and Media import complete.');

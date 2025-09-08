@@ -18,7 +18,11 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--color-primary-blue), var(--color-accent));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-blue),
+    var(--color-accent)
+  );
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 }
 
@@ -32,7 +36,11 @@
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: var(--spacing-sm);
-  background: linear-gradient(135deg, var(--color-primary-blue), var(--color-accent));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-blue),
+    var(--color-accent)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -267,7 +275,11 @@
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(242, 237, 167, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(242, 237, 167, 0.1) 0%,
+    transparent 70%
+  );
   pointer-events: none;
   z-index: -1;
 }
@@ -293,9 +305,21 @@
   animation-fill-mode: both;
 }
 
-.form > *:nth-child(1) { animation-delay: 0.1s; }
-.form > *:nth-child(2) { animation-delay: 0.2s; }
-.form > *:nth-child(3) { animation-delay: 0.3s; }
-.form > *:nth-child(4) { animation-delay: 0.4s; }
-.form > *:nth-child(5) { animation-delay: 0.5s; }
-.form > *:nth-child(6) { animation-delay: 0.6s; }
+.form > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.form > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.form > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.form > *:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.form > *:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.form > *:nth-child(6) {
+  animation-delay: 0.6s;
+}

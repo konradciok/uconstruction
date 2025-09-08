@@ -16,7 +16,9 @@ interface ProductPageProps {
 
 export default function ProductPage({ params }: ProductPageProps) {
   const [product, setProduct] = useState<ProductWithRelations | null>(null);
-  const [relatedProducts, setRelatedProducts] = useState<ProductWithRelations[]>([]);
+  const [relatedProducts, setRelatedProducts] = useState<
+    ProductWithRelations[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [handle, setHandle] = useState<string | null>(null);
@@ -37,7 +39,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       try {
         // Fetch main product
         const productResponse = await fetch(`/api/products/handle/${handle}`);
-        
+
         if (!productResponse.ok) {
           if (productResponse.status === 404) {
             setError('Product not found');
@@ -54,27 +56,35 @@ export default function ProductPage({ params }: ProductPageProps) {
         setProduct(productData.data.product);
 
         // Fetch related products (same category/tags)
-        const category = productData.data.product.productCollections?.[0]?.collection?.title;
-        const tags = productData.data.product.productTags?.map((pt: any) => pt.tag.name) || [];
-        
+        const category =
+          productData.data.product.productCollections?.[0]?.collection?.title;
+        const tags =
+          productData.data.product.productTags?.map((pt: any) => pt.tag.name) ||
+          [];
+
         let relatedQuery = new URLSearchParams();
         if (category) relatedQuery.set('category', category);
-        if (tags.length > 0) relatedQuery.set('tags', tags.slice(0, 2).join(','));
+        if (tags.length > 0)
+          relatedQuery.set('tags', tags.slice(0, 2).join(','));
         relatedQuery.set('limit', '4');
         relatedQuery.set('publishedOnly', 'true');
 
-        const relatedResponse = await fetch(`/api/products?${relatedQuery.toString()}`);
+        const relatedResponse = await fetch(
+          `/api/products?${relatedQuery.toString()}`
+        );
         if (relatedResponse.ok) {
           const relatedData = await relatedResponse.json();
           if (relatedData.success) {
             // Filter out current product and limit to 3 items
             const filtered = relatedData.data.products
-              .filter((p: ProductWithRelations) => p.id !== productData.data.product.id)
+              .filter(
+                (p: ProductWithRelations) =>
+                  p.id !== productData.data.product.id
+              )
               .slice(0, 3);
             setRelatedProducts(filtered);
           }
         }
-
       } catch (err) {
         console.error('Error fetching product:', err);
         setError(err instanceof Error ? err.message : 'Failed to load product');
@@ -118,11 +128,10 @@ export default function ProductPage({ params }: ProductPageProps) {
         <Container>
           <div className={styles.error}>
             <h1>Product Not Found</h1>
-            <p>{error || 'The product you\'re looking for could not be found.'}</p>
-            <button 
-              onClick={handleBackToCatalog}
-              className={styles.backButton}
-            >
+            <p>
+              {error || "The product you're looking for could not be found."}
+            </p>
+            <button onClick={handleBackToCatalog} className={styles.backButton}>
               ← Back to Catalog
             </button>
           </div>
@@ -136,7 +145,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       <Container>
         {/* Breadcrumb Navigation */}
         <nav className={styles.breadcrumb}>
-          <button 
+          <button
             onClick={handleBackToCatalog}
             className={styles.breadcrumbLink}
           >
@@ -148,10 +157,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
         {/* Product Details */}
         <div className={styles.productSection}>
-          <ProductDetails 
-            product={product}
-            onAddToCart={handleAddToCart}
-          />
+          <ProductDetails product={product} onAddToCart={handleAddToCart} />
         </div>
 
         {/* Related Products */}
@@ -183,7 +189,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <li>International shipping available</li>
               </ul>
             </div>
-            
+
             <div className={styles.infoCard}>
               <h3>↩️ Return Policy</h3>
               <ul>
@@ -193,7 +199,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <li>Full refund or exchange</li>
               </ul>
             </div>
-            
+
             <div className={styles.infoCard}>
               <h3>🎨 About the Artwork</h3>
               <ul>
@@ -218,7 +224,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               </div>
             </div>
           </div>
-          
+
           <div className={styles.reviewsList}>
             <div className={styles.review}>
               <div className={styles.reviewHeader}>
@@ -226,30 +232,32 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <div className={styles.reviewStars}>★★★★★</div>
               </div>
               <p className={styles.reviewText}>
-                "Absolutely stunning artwork! The colors are vibrant and the quality is exceptional. 
-                It arrived perfectly packaged and looks amazing in my living room."
+                "Absolutely stunning artwork! The colors are vibrant and the
+                quality is exceptional. It arrived perfectly packaged and looks
+                amazing in my living room."
               </p>
             </div>
-            
+
             <div className={styles.review}>
               <div className={styles.reviewHeader}>
                 <div className={styles.reviewerName}>Michael R.</div>
                 <div className={styles.reviewStars}>★★★★★</div>
               </div>
               <p className={styles.reviewText}>
-                "Fast shipping and beautiful print quality. This is my third purchase from this artist 
-                and I'm never disappointed. Highly recommend!"
+                "Fast shipping and beautiful print quality. This is my third
+                purchase from this artist and I'm never disappointed. Highly
+                recommend!"
               </p>
             </div>
-            
+
             <div className={styles.review}>
               <div className={styles.reviewHeader}>
                 <div className={styles.reviewerName}>Emma L.</div>
                 <div className={styles.reviewStars}>★★★★☆</div>
               </div>
               <p className={styles.reviewText}>
-                "Beautiful artwork, exactly as described. Only small issue was with delivery timing, 
-                but customer service was very helpful."
+                "Beautiful artwork, exactly as described. Only small issue was
+                with delivery timing, but customer service was very helpful."
               </p>
             </div>
           </div>

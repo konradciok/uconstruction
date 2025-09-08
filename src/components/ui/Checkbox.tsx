@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './Checkbox.module.css';
 
-interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+interface CheckboxProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label: string;
   error?: string;
   className?: string;

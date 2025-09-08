@@ -7,6 +7,7 @@ Moduł Portfolio 2 to kompletne rozwiązanie galerii obrazów dla strony artystk
 ## Architektura
 
 ### Struktura plików
+
 ```
 src/
 ├── types/
@@ -33,9 +34,11 @@ src/
 ### Komponenty
 
 #### 1. Portfolio2Page
+
 Główny komponent strony, który renderuje nagłówek i siatkę galerii.
 
 **Props:**
+
 ```typescript
 interface Portfolio2PageProps {
   artworks: Artwork[];
@@ -43,32 +46,38 @@ interface Portfolio2PageProps {
 ```
 
 **Funkcjonalności:**
+
 - Renderowanie nagłówka strony
 - Obsługa stanu pustej galerii
 - Integracja z GalleryGrid
 
 #### 2. GalleryGrid
+
 Komponent odpowiedzialny za siatkę galerii, zarządzanie stanem lightboxa i nawigację.
 
 **Props:**
+
 ```typescript
 interface GalleryGridProps {
   artworks: Artwork[];
-  columns?: Partial<Record<"xl"|"lg"|"md"|"sm"|"xs", number>>;
+  columns?: Partial<Record<'xl' | 'lg' | 'md' | 'sm' | 'xs', number>>;
   gap?: number; // domyślnie 16
 }
 ```
 
 **Funkcjonalności:**
+
 - Responsywna siatka CSS Grid
 - Zarządzanie stanem lightboxa
 - Konfigurowalne kolumny i odstępy
 - Integracja z LightboxModal
 
 #### 3. GalleryItem
+
 Pojedyncza miniatura obrazu z obsługą kliknięć i klawiatury.
 
 **Props:**
+
 ```typescript
 interface GalleryItemProps {
   artwork: Artwork;
@@ -78,6 +87,7 @@ interface GalleryItemProps {
 ```
 
 **Funkcjonalności:**
+
 - Renderowanie obrazu w proporcji 4:5
 - Biała ramka 3px
 - Obsługa kliknięć i klawiatury
@@ -85,9 +95,11 @@ interface GalleryItemProps {
 - Dostępność (aria-label, focus management)
 
 #### 4. LightboxModal
+
 Modal z powiększeniem obrazu, nawigacją i informacjami.
 
 **Props:**
+
 ```typescript
 interface LightboxModalProps {
   artworks: Artwork[];
@@ -99,6 +111,7 @@ interface LightboxModalProps {
 ```
 
 **Funkcjonalności:**
+
 - Modal z portalem React
 - Obraz w proporcji 4:5
 - Nawigacja klawiaturą (←/→, Esc)
@@ -110,32 +123,34 @@ interface LightboxModalProps {
 ## Typy danych
 
 ### Artwork
+
 ```typescript
 interface Artwork {
-  id: string;                // Unikalny identyfikator
-  title: string;             // Tytuł do wyświetlenia w lightbox
-  dimensions: string;        // Wymiary i technika
+  id: string; // Unikalny identyfikator
+  title: string; // Tytuł do wyświetlenia w lightbox
+  dimensions: string; // Wymiary i technika
   thumbnail: {
-    avif?: string;           // Obraz AVIF (opcjonalny)
-    webp?: string;           // Obraz WebP (opcjonalny)
-    jpg: string;             // Obraz JPG (wymagany)
-    width: number;           // Szerokość (proporcja 4:5)
-    height: number;          // Wysokość (proporcja 4:5)
+    avif?: string; // Obraz AVIF (opcjonalny)
+    webp?: string; // Obraz WebP (opcjonalny)
+    jpg: string; // Obraz JPG (wymagany)
+    width: number; // Szerokość (proporcja 4:5)
+    height: number; // Wysokość (proporcja 4:5)
   };
   full: {
-    avif?: string;           // Pełny obraz AVIF (opcjonalny)
-    webp?: string;           // Pełny obraz WebP (opcjonalny)
-    jpg: string;             // Pełny obraz JPG (wymagany)
-    width: number;           // Szerokość (proporcja 4:5)
-    height: number;          // Wysokość (proporcja 4:5)
+    avif?: string; // Pełny obraz AVIF (opcjonalny)
+    webp?: string; // Pełny obraz WebP (opcjonalny)
+    jpg: string; // Pełny obraz JPG (wymagany)
+    width: number; // Szerokość (proporcja 4:5)
+    height: number; // Wysokość (proporcja 4:5)
   };
-  alt?: string;              // Tekst alternatywny (domyślnie title)
+  alt?: string; // Tekst alternatywny (domyślnie title)
 }
 ```
 
 ## Responsywność
 
 ### Breakpointy
+
 - **≥1280px (xl)**: 5 kolumn
 - **1024–1279px (lg)**: 4 kolumny
 - **768–1023px (md)**: 3 kolumny
@@ -143,6 +158,7 @@ interface Artwork {
 - **<480px (xs)**: 1 kolumna
 
 ### Odstępy
+
 - **Desktop**: 16px
 - **Tablet**: 12px (75% z 16px)
 - **Mobile**: 8px (50% z 16px)
@@ -150,12 +166,14 @@ interface Artwork {
 ## Dostępność (a11y)
 
 ### Miniatury
+
 - Przyciski z `aria-label="Powiększ: {title}"`
 - Obsługa klawiatury (Enter/Space)
 - Focus management
 - Kontrast kolorów
 
 ### Lightbox
+
 - Modal dialog z `role="dialog"`
 - `aria-modal="true"`
 - `aria-labelledby` wskazujące tytuł
@@ -164,6 +182,7 @@ interface Artwork {
 - Obsługa klawiatury (Esc, strzałki)
 
 ### Wsparcie dla preferencji użytkownika
+
 - `prefers-reduced-motion`: wyłączenie animacji
 - `prefers-contrast: high`: zwiększony kontrast
 - `prefers-color-scheme: dark`: tryb ciemny
@@ -171,6 +190,7 @@ interface Artwork {
 ## Wydajność
 
 ### Optymalizacje obrazów
+
 - **Lazy loading** dla wszystkich miniatur
 - **Priority loading** dla pierwszych 4 obrazów
 - **Preload** sąsiadujących obrazów w lightboxie
@@ -178,12 +198,14 @@ interface Artwork {
 - **Formaty AVIF/WebP** z fallback JPG
 
 ### CSS Optymalizacje
+
 - **Aspect-ratio** CSS zamiast JavaScript
 - **CSS containment** dla lepszego renderowania
 - **Will-change** tylko gdy potrzebne
 - **Smooth scrolling** z obsługą preferencji
 
 ### React Optymalizacje
+
 - **useCallback** dla funkcji event handlers
 - **useMemo** dla obliczeń
 - **React.memo** dla komponentów (gdy potrzebne)
@@ -192,6 +214,7 @@ interface Artwork {
 ## Użycie
 
 ### Podstawowe użycie
+
 ```tsx
 import { Portfolio2Page } from '@/components/Portfolio2';
 import { ARTWORKS } from '@/lib/portfolio2-data';
@@ -202,19 +225,20 @@ function MyPage() {
 ```
 
 ### Z konfiguracją
+
 ```tsx
 import { GalleryGrid } from '@/components/Portfolio2';
 
 function CustomGallery() {
   return (
-    <GalleryGrid 
+    <GalleryGrid
       artworks={ARTWORKS}
       columns={{
-        xl: 6,  // 6 kolumn na bardzo dużych ekranach
-        lg: 4,  // 4 kolumny na dużych ekranach
-        md: 3,  // 3 kolumny na średnich ekranach
-        sm: 2,  // 2 kolumny na małych ekranach
-        xs: 1   // 1 kolumna na bardzo małych ekranach
+        xl: 6, // 6 kolumn na bardzo dużych ekranach
+        lg: 4, // 4 kolumny na dużych ekranach
+        md: 3, // 3 kolumny na średnich ekranach
+        sm: 2, // 2 kolumny na małych ekranach
+        xs: 1, // 1 kolumna na bardzo małych ekranach
       }}
       gap={20} // 20px odstęp między elementami
     />
@@ -223,31 +247,33 @@ function CustomGallery() {
 ```
 
 ### Z własnymi danymi
+
 ```tsx
 const myArtworks: Artwork[] = [
   {
-    id: "my-artwork-1",
-    title: "Moja praca",
-    dimensions: "50 × 62.5 cm, akryl na płótnie",
+    id: 'my-artwork-1',
+    title: 'Moja praca',
+    dimensions: '50 × 62.5 cm, akryl na płótnie',
     thumbnail: {
-      jpg: "/my-images/thumb-1.jpg",
+      jpg: '/my-images/thumb-1.jpg',
       width: 800,
-      height: 1000
+      height: 1000,
     },
     full: {
-      jpg: "/my-images/full-1.jpg",
+      jpg: '/my-images/full-1.jpg',
       width: 1600,
-      height: 2000
-    }
-  }
+      height: 2000,
+    },
+  },
 ];
 
-<Portfolio2Page artworks={myArtworks} />
+<Portfolio2Page artworks={myArtworks} />;
 ```
 
 ## Konfiguracja obrazów
 
 ### Struktura katalogów
+
 ```
 public/
 └── img/
@@ -265,6 +291,7 @@ public/
 ```
 
 ### Wymagania obrazów
+
 - **Proporcja**: 4:5 (szerokość:wysokość)
 - **Miniatury**: 800x1000px (zalecane)
 - **Pełne obrazy**: 1600x2000px (zalecane)
@@ -274,6 +301,7 @@ public/
 ## Testy
 
 ### Uruchomienie testów
+
 ```bash
 # Wszystkie testy Portfolio 2
 python run_portfolio2_tests.py
@@ -283,12 +311,14 @@ npm test -- --testPathPattern=Portfolio2 --verbose
 ```
 
 ### Pokrycie testów
+
 - **Portfolio2Page**: Renderowanie, stany puste
 - **GalleryItem**: Kliknięcia, klawiatura, dostępność
 - **LightboxModal**: Nawigacja, klawiatura, dostępność
 - **GalleryGrid**: Integracja komponentów
 
 ### Testy manualne
+
 1. **Siatka**: 5 kolumn przy 1440px, wszystkie miniatury 4:5
 2. **Lightbox**: Klik otwiera modal, obraz 4:5 bez zniekształceń
 3. **Nawigacja**: Esc zamyka, ←/→ przechodzą między obrazami
@@ -298,14 +328,16 @@ npm test -- --testPathPattern=Portfolio2 --verbose
 ## Rozszerzenia
 
 ### Dodanie filtrów
+
 ```tsx
 const [filteredArtworks, setFilteredArtworks] = useState(artworks);
 
 // Dodaj komponenty filtrów
-<GalleryGrid artworks={filteredArtworks} />
+<GalleryGrid artworks={filteredArtworks} />;
 ```
 
 ### Dodanie animacji
+
 ```tsx
 import { motion } from 'framer-motion';
 
@@ -315,10 +347,11 @@ import { motion } from 'framer-motion';
   transition={{ duration: 0.3 }}
 >
   <GalleryGrid artworks={artworks} />
-</motion.div>
+</motion.div>;
 ```
 
 ### Dodanie kategorii
+
 ```tsx
 interface Artwork {
   // ... istniejące pola
@@ -326,7 +359,9 @@ interface Artwork {
 }
 
 // Filtrowanie po kategoriach
-const filteredArtworks = artworks.filter(art => art.category === selectedCategory);
+const filteredArtworks = artworks.filter(
+  (art) => art.category === selectedCategory
+);
 ```
 
 ## Rozwiązywanie problemów
@@ -334,26 +369,31 @@ const filteredArtworks = artworks.filter(art => art.category === selectedCategor
 ### Częste problemy
 
 #### Obrazy nie ładują się
+
 - Sprawdź ścieżki w danych
 - Upewnij się, że obrazy są w katalogu `public`
 - Sprawdź formaty obrazów
 
 #### Lightbox nie otwiera się
+
 - Sprawdź, czy `onOpen` jest przekazywane
 - Sprawdź, czy `artworks` nie jest puste
 - Sprawdź konsolę przeglądarki
 
 #### Responsywność nie działa
+
 - Sprawdź CSS Grid breakpointy
 - Upewnij się, że `aspect-ratio` jest ustawione
 - Sprawdź, czy nie ma konfliktów CSS
 
 #### Problemy z dostępnością
+
 - Sprawdź `aria-label` i `aria-labelledby`
 - Upewnij się, że focus trap działa
 - Sprawdź obsługę klawiatury
 
 ### Debugowanie
+
 ```tsx
 // Dodaj console.log do debugowania
 const handleOpenLightbox = useCallback((index: number) => {
@@ -378,6 +418,7 @@ MIT License - zobacz plik LICENSE w głównym katalogu projektu.
 ## Wsparcie
 
 W przypadku problemów lub pytań:
+
 1. Sprawdź dokumentację w `src/components/Portfolio2/README.md`
 2. Uruchom testy: `python run_portfolio2_tests.py`
 3. Sprawdź konsolę przeglądarki

@@ -48,12 +48,12 @@
   .main {
     padding: var(--spacing-lg) 0;
   }
-  
+
   .header {
     margin-bottom: var(--spacing-xl);
     padding: 0 var(--spacing-md);
   }
-  
+
   .galleryContainer {
     margin-top: var(--spacing-xl);
   }
@@ -63,11 +63,11 @@
   .title {
     font-size: 2rem;
   }
-  
+
   .description {
     font-size: 1rem;
   }
-  
+
   .placeholder {
     padding: var(--spacing-xl);
     font-size: 1rem;

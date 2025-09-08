@@ -55,7 +55,9 @@ describe('ProductService', () => {
     ];
 
     it('should return products with default pagination', async () => {
-      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(
+        mockProducts
+      );
 
       const result = await productService.getProducts();
 
@@ -77,9 +79,14 @@ describe('ProductService', () => {
     });
 
     it('should handle pagination with cursor', async () => {
-      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(
+        mockProducts
+      );
 
-      await productService.getProducts({}, undefined, { cursor: '10', take: 5 });
+      await productService.getProducts({}, undefined, {
+        cursor: '10',
+        take: 5,
+      });
 
       expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -91,7 +98,9 @@ describe('ProductService', () => {
     });
 
     it('should apply filters correctly', async () => {
-      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(
+        mockProducts
+      );
 
       const filters = {
         status: 'active',
@@ -122,7 +131,9 @@ describe('ProductService', () => {
     });
 
     it('should handle price range filters', async () => {
-      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(
+        mockProducts
+      );
 
       const filters = {
         priceRange: { min: 100, max: 500 },
@@ -167,7 +178,9 @@ describe('ProductService', () => {
     };
 
     it('should return product by ID', async () => {
-      (mockPrisma.product.findUnique as jest.Mock).mockResolvedValue(mockProduct);
+      (mockPrisma.product.findUnique as jest.Mock).mockResolvedValue(
+        mockProduct
+      );
 
       const result = await productService.getProductById(1);
 
@@ -212,7 +225,9 @@ describe('ProductService', () => {
     };
 
     it('should return product by handle', async () => {
-      (mockPrisma.product.findUnique as jest.Mock).mockResolvedValue(mockProduct);
+      (mockPrisma.product.findUnique as jest.Mock).mockResolvedValue(
+        mockProduct
+      );
 
       const result = await productService.getProductByHandle('test-product');
 
@@ -239,7 +254,9 @@ describe('ProductService', () => {
     ];
 
     it('should search products by query', async () => {
-      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(
+        mockProducts
+      );
       (mockPrisma.product.count as jest.Mock).mockResolvedValue(1);
 
       const result = await productService.searchProducts('landscape');
@@ -247,7 +264,7 @@ describe('ProductService', () => {
       expect(result.products).toEqual(mockProducts);
       expect(result.totalResults).toBe(1);
       expect(result.searchTime).toBeGreaterThan(0);
-      
+
       expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
@@ -271,7 +288,9 @@ describe('ProductService', () => {
     });
 
     it('should handle search with filters', async () => {
-      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(
+        mockProducts
+      );
       (mockPrisma.product.count as jest.Mock).mockResolvedValue(1);
 
       await productService.searchProducts('landscape', { status: 'active' });
@@ -300,7 +319,9 @@ describe('ProductService', () => {
     ];
 
     it('should return categories with product counts', async () => {
-      (mockPrisma.collection.findMany as jest.Mock).mockResolvedValue(mockCollections);
+      (mockPrisma.collection.findMany as jest.Mock).mockResolvedValue(
+        mockCollections
+      );
 
       const result = await productService.getCategories();
 
@@ -344,10 +365,10 @@ describe('ProductService', () => {
     it('should return product statistics', async () => {
       (mockPrisma.product.count as jest.Mock)
         .mockResolvedValueOnce(10) // total
-        .mockResolvedValueOnce(8)  // published
-        .mockResolvedValueOnce(1)  // draft
+        .mockResolvedValueOnce(8) // published
+        .mockResolvedValueOnce(1) // draft
         .mockResolvedValueOnce(1); // archived
-      
+
       (mockPrisma.variant.count as jest.Mock).mockResolvedValue(15);
       (mockPrisma.productMedia.count as jest.Mock).mockResolvedValue(25);
 
@@ -368,7 +389,7 @@ describe('ProductService', () => {
     it('should handle and log errors consistently', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Test error');
-      
+
       (mockPrisma.product.findMany as jest.Mock).mockRejectedValue(error);
 
       await expect(productService.getProducts()).rejects.toThrow(error);

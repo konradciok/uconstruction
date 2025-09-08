@@ -75,7 +75,8 @@ function asDecimalString(money) {
   if (!money) return null;
   if (typeof money === 'string') return money;
   if (typeof money === 'number') return String(money);
-  if (typeof money === 'object' && money.amount != null) return String(money.amount);
+  if (typeof money === 'object' && money.amount != null)
+    return String(money.amount);
   return null;
 }
 
@@ -84,13 +85,17 @@ function asDecimalString(money) {
  */
 async function handleThrottling(extensions) {
   if (!extensions?.cost?.throttleStatus) return;
-  
+
   const { throttleStatus } = extensions.cost;
   const { maximumAvailable, currentlyAvailable, restoreRate } = throttleStatus;
-  
+
   if (currentlyAvailable < maximumAvailable * 0.1) {
-    const waitTime = Math.ceil((maximumAvailable * 0.5 - currentlyAvailable) / restoreRate) * 1000;
-    console.log(`[Delta] Throttling detected, waiting ${waitTime}ms for cost restoration`);
+    const waitTime =
+      Math.ceil((maximumAvailable * 0.5 - currentlyAvailable) / restoreRate) *
+      1000;
+    console.log(
+      `[Delta] Throttling detected, waiting ${waitTime}ms for cost restoration`
+    );
     await sleep(waitTime);
   }
 }
@@ -100,9 +105,9 @@ async function handleThrottling(extensions) {
  */
 async function getSyncState(prisma, resourceType) {
   const state = await prisma.syncState.findUnique({
-    where: { resourceType }
+    where: { resourceType },
   });
-  
+
   return {
     cursor: state?.lastCursor || null,
     lastSyncTime: state?.lastSyncTime || null,
@@ -112,7 +117,12 @@ async function getSyncState(prisma, resourceType) {
 /**
  * Update sync cursor and timestamp
  */
-async function updateSyncState(prisma, resourceType, cursor, syncTime = new Date()) {
+async function updateSyncState(
+  prisma,
+  resourceType,
+  cursor,
+  syncTime = new Date()
+) {
   await prisma.syncState.upsert({
     where: { resourceType },
     update: {
@@ -132,12 +142,14 @@ async function updateSyncState(prisma, resourceType, cursor, syncTime = new Date
  */
 function buildProductsQuery(cursor, updatedAtSince) {
   const cursorArg = cursor ? `after: "${cursor}"` : '';
-  const updatedAtFilter = updatedAtSince 
-    ? `query: "updated_at:>='${updatedAtSince.toISOString()}'"` 
+  const updatedAtFilter = updatedAtSince
+    ? `query: "updated_at:>='${updatedAtSince.toISOString()}'"`
     : '';
-  
-  const args = [cursorArg, updatedAtFilter, 'first: 50'].filter(Boolean).join(', ');
-  
+
+  const args = [cursorArg, updatedAtFilter, 'first: 50']
+    .filter(Boolean)
+    .join(', ');
+
   return `#graphql
     query DeltaProducts {
       products(${args}) {
@@ -207,7 +219,7 @@ function buildProductsQuery(cursor, updatedAtSince) {
  */
 async function processProductUpdate(prisma, product) {
   const p = product.node;
-  
+
   // Upsert product
   const productRecord = await prisma.product.upsert({
     where: { shopifyId: p.id },
@@ -278,14 +290,14 @@ async function processProductUpdate(prisma, product) {
   await prisma.productOption.deleteMany({
     where: { productId: productRecord.id },
   });
-  
+
   if (p.options?.length > 0) {
     const optionData = p.options.map((option, index) => ({
       productId: productRecord.id,
       name: option.name,
       position: option.position ?? index,
     }));
-    
+
     await prisma.productOption.createMany({
       data: optionData,
     });
@@ -295,10 +307,12 @@ async function processProductUpdate(prisma, product) {
   await prisma.productMedia.deleteMany({
     where: { productId: productRecord.id },
   });
-  
+
   if (p.media?.edges?.length > 0) {
     const mediaData = p.media.edges
-      .filter(edge => edge.node.mediaContentType === 'IMAGE' && edge.node.image)
+      .filter(
+        (edge) => edge.node.mediaContentType === 'IMAGE' && edge.node.image
+      )
       .map((edge, index) => ({
         productId: productRecord.id,
         shopifyId: edge.node.id || null,
@@ -311,7 +325,7 @@ async function processProductUpdate(prisma, product) {
         checksum: null,
         previewImage: null,
       }));
-    
+
     if (mediaData.length > 0) {
       await prisma.productMedia.createMany({
         data: mediaData,
@@ -331,58 +345,63 @@ async function main() {
 
   const prisma = new PrismaClient();
   const startTime = Date.now();
-  
+
   try {
     console.log('[Delta] Starting scheduled delta sync...');
-    
+
     // Get current sync state
     const syncState = await getSyncState(prisma, 'products');
     console.log('[Delta] Current sync state:', {
       cursor: syncState.cursor?.substring(0, 20) + '...',
       lastSync: syncState.lastSyncTime?.toISOString(),
     });
-    
+
     // Calculate overlap window (5 minutes ago to catch missed events)
     const overlapWindow = new Date(Date.now() - 5 * 60 * 1000);
-    const updatedAtSince = syncState.lastSyncTime && syncState.lastSyncTime < overlapWindow
-      ? syncState.lastSyncTime 
-      : overlapWindow;
-    
-    console.log(`[Delta] Syncing products updated since: ${updatedAtSince.toISOString()}`);
-    
+    const updatedAtSince =
+      syncState.lastSyncTime && syncState.lastSyncTime < overlapWindow
+        ? syncState.lastSyncTime
+        : overlapWindow;
+
+    console.log(
+      `[Delta] Syncing products updated since: ${updatedAtSince.toISOString()}`
+    );
+
     let cursor = null; // Start fresh for time-based queries
     let totalProcessed = 0;
     let hasNextPage = true;
     let newCursor = null;
-    
+
     while (hasNextPage) {
       const query = buildProductsQuery(cursor, updatedAtSince);
-      
+
       const { status, json } = await postGraphQL({
         domain,
         token,
         apiVersion,
         query,
       });
-      
+
       if (status !== 200 || json.errors) {
         console.error('[Delta] GraphQL query failed:', json.errors || status);
-        throw new Error(`GraphQL query failed: ${JSON.stringify(json.errors || status)}`);
+        throw new Error(
+          `GraphQL query failed: ${JSON.stringify(json.errors || status)}`
+        );
       }
-      
+
       // Handle cost-based throttling
       await handleThrottling(json.extensions);
-      
+
       const products = json.data?.products?.edges || [];
       const pageInfo = json.data?.products?.pageInfo;
-      
+
       console.log(`[Delta] Processing batch of ${products.length} products`);
-      
+
       // Process products in transaction batches
       const BATCH_SIZE = 10;
       for (let i = 0; i < products.length; i += BATCH_SIZE) {
         const batch = products.slice(i, i + BATCH_SIZE);
-        
+
         await prisma.$transaction(
           async (tx) => {
             for (const product of batch) {
@@ -391,34 +410,35 @@ async function main() {
           },
           { timeout: 60000 }
         );
-        
+
         totalProcessed += batch.length;
-        
+
         if (batch.length > 0) {
           newCursor = batch[batch.length - 1].cursor;
         }
       }
-      
+
       hasNextPage = pageInfo?.hasNextPage || false;
       cursor = pageInfo?.endCursor || null;
-      
+
       if (hasNextPage && cursor) {
-        console.log(`[Delta] Continuing to next page (cursor: ${cursor.substring(0, 20)}...)`);
+        console.log(
+          `[Delta] Continuing to next page (cursor: ${cursor.substring(0, 20)}...)`
+        );
         await sleep(100); // Small delay between pages
       }
     }
-    
+
     // Update sync state
     if (newCursor) {
       await updateSyncState(prisma, 'products', newCursor);
     }
-    
+
     const duration = Date.now() - startTime;
     console.log(`[Delta] Sync completed successfully:`);
     console.log(`  - Products processed: ${totalProcessed}`);
     console.log(`  - Duration: ${duration}ms`);
     console.log(`  - Final cursor: ${newCursor?.substring(0, 20)}...`);
-    
   } catch (error) {
     const duration = Date.now() - startTime;
     console.error(`[Delta] Sync failed after ${duration}ms:`, error);

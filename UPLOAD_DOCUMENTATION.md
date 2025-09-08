@@ -7,6 +7,7 @@ Moduł Upload to kompletne rozwiązanie do przesyłania i przetwarzania obrazów
 ## Funkcjonalności
 
 ### 🚀 **Główne możliwości:**
+
 - **Drag & Drop** - przeciągnij i upuść obrazy
 - **Wielokrotne wybory** - wybierz wiele plików jednocześnie
 - **Automatyczne przetwarzanie** - generowanie miniatur i pełnych obrazów
@@ -16,6 +17,7 @@ Moduł Upload to kompletne rozwiązanie do przesyłania i przetwarzania obrazów
 - **Download danych** - pobieranie gotowych danych portfolio
 
 ### 📁 **Struktura plików:**
+
 ```
 public/
 └── img/
@@ -35,6 +37,7 @@ public/
 ## Architektura
 
 ### Struktura komponentów:
+
 ```
 src/
 ├── types/
@@ -61,6 +64,7 @@ src/
 ## Użycie
 
 ### Podstawowe użycie:
+
 1. Przejdź do `/upload`
 2. Przeciągnij obrazy lub kliknij aby wybrać
 3. Wypełnij formularz metadanych
@@ -68,6 +72,7 @@ src/
 5. Pobierz wygenerowane dane portfolio
 
 ### Programistyczne użycie:
+
 ```tsx
 import { UploadPage } from '@/components/Upload';
 
@@ -79,18 +84,22 @@ function MyApp() {
 ## Komponenty
 
 ### 1. UploadPage
+
 Główny komponent orchestrujący cały proces upload.
 
 **Funkcjonalności:**
+
 - Zarządzanie stanem upload
 - Obsługa błędów
 - Wyświetlanie wyników
 - Download danych portfolio
 
 ### 2. FileUpload
+
 Komponent drag & drop do wyboru plików.
 
 **Props:**
+
 ```typescript
 interface FileUploadProps {
   onFilesSelected: (files: UploadedFile[]) => void;
@@ -99,15 +108,18 @@ interface FileUploadProps {
 ```
 
 **Funkcjonalności:**
+
 - Drag & drop
 - Wybór plików
 - Preview obrazów
 - Walidacja typów plików
 
 ### 3. FileList
+
 Lista wybranych plików z statusami.
 
 **Props:**
+
 ```typescript
 interface FileListProps {
   files: UploadedFile[];
@@ -117,15 +129,18 @@ interface FileListProps {
 ```
 
 **Funkcjonalności:**
+
 - Wyświetlanie plików z preview
 - Status upload (pending, uploading, completed, error)
 - Progress bars
 - Usuwanie plików
 
 ### 4. UploadForm
+
 Formularz metadanych dla obrazów.
 
 **Props:**
+
 ```typescript
 interface UploadFormProps {
   onSubmit: (formData: UploadFormData) => void;
@@ -135,6 +150,7 @@ interface UploadFormProps {
 ```
 
 **Funkcjonalności:**
+
 - Wprowadzanie tytułu, wymiarów, medium
 - Walidacja formularza
 - Keyboard shortcuts (⌘+Enter)
@@ -143,6 +159,7 @@ interface UploadFormProps {
 ## Typy danych
 
 ### UploadedFile
+
 ```typescript
 interface UploadedFile {
   id: string;
@@ -157,6 +174,7 @@ interface UploadedFile {
 ```
 
 ### ProcessedImage
+
 ```typescript
 interface ProcessedImage {
   id: string;
@@ -182,6 +200,7 @@ interface ProcessedImage {
 ```
 
 ### UploadFormData
+
 ```typescript
 interface UploadFormData {
   title: string;
@@ -194,14 +213,17 @@ interface UploadFormData {
 ## Przetwarzanie obrazów
 
 ### ImageProcessor
+
 Klasa odpowiedzialna za przetwarzanie obrazów.
 
 **Główne metody:**
+
 - `processImage(file: File)` - przetwarzanie pojedynczego obrazu
 - `validateImageFile(file: File)` - walidacja pliku
 - `generateImageId()` - generowanie unikalnego ID
 
 **Specyfikacje:**
+
 - **Miniatury**: 800x1000px (4:5)
 - **Pełne obrazy**: 1600x2000px (4:5)
 - **Formaty**: JPG (wymagany), WebP, AVIF (opcjonalne)
@@ -209,6 +231,7 @@ Klasa odpowiedzialna za przetwarzanie obrazów.
 - **Maksymalny rozmiar**: 10MB
 
 ### Algorytm przetwarzania:
+
 1. **Walidacja** - sprawdzenie typu i rozmiaru pliku
 2. **Ładowanie** - wczytanie obrazu do Canvas
 3. **Resize** - dopasowanie do proporcji 4:5 z białym tłem
@@ -218,12 +241,15 @@ Klasa odpowiedzialna za przetwarzanie obrazów.
 ## API Endpoint
 
 ### POST /api/upload
+
 Endpoint do przetwarzania uploadów.
 
 **Request:**
+
 - `FormData` z plikami i metadanymi
 
 **Response:**
+
 ```typescript
 {
   id: string;
@@ -237,6 +263,7 @@ Endpoint do przetwarzania uploadów.
 ```
 
 **Funkcjonalności:**
+
 - Tworzenie katalogów automatycznie
 - Zapisywanie plików w odpowiednich lokalizacjach
 - Zwracanie struktury danych portfolio
@@ -244,15 +271,18 @@ Endpoint do przetwarzania uploadów.
 ## Walidacja
 
 ### Obsługiwane formaty:
+
 - **JPEG** (.jpg, .jpeg)
 - **PNG** (.png)
 - **WebP** (.webp)
 
 ### Limity:
+
 - **Maksymalny rozmiar**: 10MB na plik
 - **Maksymalna liczba**: nieograniczona (przetwarzanie w batchach po 3)
 
 ### Walidacja formularza:
+
 - **Tytuł**: wymagany
 - **Wymiary**: wymagane
 - **Medium**: wymagane
@@ -261,12 +291,14 @@ Endpoint do przetwarzania uploadów.
 ## Dostępność (a11y)
 
 ### Funkcjonalności:
+
 - **Keyboard navigation** - pełna obsługa klawiatury
 - **Screen reader support** - odpowiednie ARIA labels
 - **Focus management** - prawidłowe zarządzanie focusem
 - **Error handling** - czytelne komunikaty błędów
 
 ### Wsparcie dla preferencji:
+
 - `prefers-reduced-motion` - wyłączenie animacji
 - `prefers-contrast: high` - zwiększony kontrast
 - `prefers-color-scheme: dark` - tryb ciemny
@@ -274,12 +306,14 @@ Endpoint do przetwarzania uploadów.
 ## Wydajność
 
 ### Optymalizacje:
+
 - **Batch processing** - przetwarzanie w grupach po 3
 - **Canvas API** - wydajne przetwarzanie obrazów
 - **Lazy loading** - leniwe ładowanie preview
 - **Progress tracking** - śledzenie postępu
 
 ### Limity:
+
 - **Concurrent uploads**: 3 jednocześnie
 - **File size**: 10MB max
 - **Memory usage**: optymalizowane dla dużych plików
@@ -289,23 +323,28 @@ Endpoint do przetwarzania uploadów.
 ### Częste problemy:
 
 #### "Invalid file type"
+
 - Sprawdź czy plik to JPEG, PNG lub WebP
 - Upewnij się że rozszerzenie pliku jest poprawne
 
 #### "File too large"
+
 - Zmniejsz rozmiar pliku (max 10MB)
 - Użyj kompresji przed uploadem
 
 #### "Upload failed"
+
 - Sprawdź połączenie internetowe
 - Sprawdź czy katalogi mają odpowiednie uprawnienia
 - Sprawdź konsolę przeglądarki
 
 #### "Canvas context not available"
+
 - Sprawdź czy przeglądarka obsługuje Canvas API
 - Spróbuj w innej przeglądarka
 
 ### Debugowanie:
+
 ```javascript
 // Włącz debug mode
 localStorage.setItem('upload-debug', 'true');
@@ -314,31 +353,34 @@ localStorage.setItem('upload-debug', 'true');
 console.log('Upload debug info:', {
   files: uploadedFiles,
   progress: progress,
-  errors: errors
+  errors: errors,
 });
 ```
 
 ## Rozszerzenia
 
 ### Dodanie nowych formatów:
+
 ```typescript
 // W ImageProcessor.validateImageFile()
 const validTypes = [
-  'image/jpeg', 
-  'image/jpg', 
-  'image/png', 
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
   'image/webp',
-  'image/avif' // Dodaj nowy format
+  'image/avif', // Dodaj nowy format
 ];
 ```
 
 ### Dodanie nowych rozmiarów:
+
 ```typescript
 // W ImageProcessor
 private static readonly CUSTOM_SIZE = { width: 1200, height: 1500 };
 ```
 
 ### Dodanie watermarków:
+
 ```typescript
 // W ImageProcessor.drawImageWithAspectRatio()
 ctx.fillText('Watermark', x, y);
@@ -347,6 +389,7 @@ ctx.fillText('Watermark', x, y);
 ## Testowanie
 
 ### Testy manualne:
+
 1. **Drag & drop** - przeciągnij różne typy plików
 2. **Wielokrotne wybory** - wybierz wiele plików
 3. **Walidacja** - spróbuj upload nieprawidłowych plików
@@ -354,6 +397,7 @@ ctx.fillText('Watermark', x, y);
 5. **Download** - pobierz wygenerowane dane
 
 ### Testy automatyczne:
+
 ```bash
 # Uruchom testy upload
 npm test -- --testPathPattern=Upload
@@ -378,6 +422,7 @@ MIT License - zobacz plik LICENSE w głównym katalogu projektu.
 ## Wsparcie
 
 W przypadku problemów:
+
 1. Sprawdź konsolę przeglądarki
 2. Sprawdź Network tab w DevTools
 3. Sprawdź uprawnienia katalogów

@@ -63,7 +63,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, var(--color-accent), var(--color-primary-blue));
+  background: linear-gradient(
+    45deg,
+    var(--color-accent),
+    var(--color-primary-blue)
+  );
   opacity: 0.1;
   border-radius: var(--radius-md);
   z-index: -1;

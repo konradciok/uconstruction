@@ -13,11 +13,18 @@ interface UsePortfolio2DataReturn {
   updateSourceConfig: (config: SourceConfig) => void;
 }
 
-export function usePortfolio2Data(config?: SourceConfig): UsePortfolio2DataReturn {
+export function usePortfolio2Data(
+  config?: SourceConfig
+): UsePortfolio2DataReturn {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<PortfolioStats>({ total: 0, uploaded: 0, static: 0, shopify: 0 });
+  const [stats, setStats] = useState<PortfolioStats>({
+    total: 0,
+    uploaded: 0,
+    static: 0,
+    shopify: 0,
+  });
   const [sourceConfig, setSourceConfig] = useState<SourceConfig>(
     config || Portfolio2Manager.getSourceConfig()
   );
@@ -26,18 +33,19 @@ export function usePortfolio2Data(config?: SourceConfig): UsePortfolio2DataRetur
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Get artworks with current source configuration
       const allArtworks = await Portfolio2Manager.getAllArtworks(sourceConfig);
       setArtworks(allArtworks);
-      
+
       // Update stats (async now)
       const portfolioStats = await Portfolio2Manager.getPortfolioStats();
       setStats(portfolioStats);
-      
     } catch (err) {
       console.error('Error loading portfolio data:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load portfolio data');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load portfolio data'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +65,7 @@ export function usePortfolio2Data(config?: SourceConfig): UsePortfolio2DataRetur
 
     if (typeof window !== 'undefined') {
       window.addEventListener('portfolio2-update', handlePortfolioUpdate);
-      
+
       return () => {
         window.removeEventListener('portfolio2-update', handlePortfolioUpdate);
       };
@@ -75,7 +83,9 @@ export function usePortfolio2Data(config?: SourceConfig): UsePortfolio2DataRetur
       await loadArtworks();
     } catch (err) {
       console.error('Error refreshing Shopify artworks:', err);
-      setError(err instanceof Error ? err.message : 'Failed to refresh Shopify data');
+      setError(
+        err instanceof Error ? err.message : 'Failed to refresh Shopify data'
+      );
     }
   }, [loadArtworks]);
 
@@ -98,6 +108,6 @@ export function usePortfolio2Data(config?: SourceConfig): UsePortfolio2DataRetur
     stats,
     refreshShopify,
     sourceConfig,
-    updateSourceConfig
+    updateSourceConfig,
   };
 }

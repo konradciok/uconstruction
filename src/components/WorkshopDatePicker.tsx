@@ -8,7 +8,7 @@ import styles from './WorkshopDatePicker.module.css';
 
 export const WorkshopDatePicker: React.FC<WorkshopDatePickerProps> = ({
   onDateSelect,
-  className = ''
+  className = '',
 }) => {
   const [availableDates, setAvailableDates] = useState<WorkshopDate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,17 +35,22 @@ export const WorkshopDatePicker: React.FC<WorkshopDatePickerProps> = ({
   }
 
   return (
-    <div className={`${styles.container} ${className}`} id="workshop-date-picker">
-      <h3 className={styles.title} id="workshop-date-picker-title">Select Workshop Date</h3>
+    <div
+      className={`${styles.container} ${className}`}
+      id="workshop-date-picker"
+    >
+      <h3 className={styles.title} id="workshop-date-picker-title">
+        Select Workshop Date
+      </h3>
       <p className={styles.subtitle}>
         Choose your preferred date and time for the watercolor workshop
       </p>
-      
+
       <div className={styles.dateGrid}>
         {availableDates.map((date) => {
           const isSelected = selectedDate?.dateISO === date.dateISO;
           const isSoldOut = date.isDeactivated;
-          
+
           return (
             <button
               key={date.dateISO}
@@ -67,7 +72,7 @@ export const WorkshopDatePicker: React.FC<WorkshopDatePickerProps> = ({
                   {isSoldOut ? 'Sold out' : 'Available'}
                 </span>
               </div>
-              
+
               {isSelected && (
                 <div className={styles.selectedIndicator}>
                   <span>✓ Selected</span>
@@ -83,7 +88,11 @@ export const WorkshopDatePicker: React.FC<WorkshopDatePickerProps> = ({
           <div className={styles.selectedDateInfo}>
             <h4>Selected Workshop</h4>
             <p>
-              <strong>Date:</strong> {formatCanary(new Date(selectedDate.dateISO), 'EEEE, MMMM dd, yyyy')}
+              <strong>Date:</strong>{' '}
+              {formatCanary(
+                new Date(selectedDate.dateISO),
+                'EEEE, MMMM dd, yyyy'
+              )}
             </p>
             <p>
               <strong>Time:</strong> {selectedDate.time}
@@ -95,7 +104,7 @@ export const WorkshopDatePicker: React.FC<WorkshopDatePickerProps> = ({
               <strong>Price:</strong> €50 per person
             </p>
           </div>
-          
+
           <button
             className={styles.bookWorkshopButton}
             onClick={() => {

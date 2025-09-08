@@ -17,35 +17,46 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div style={{ 
-          minHeight: '100vh', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          padding: '2rem',
-          fontFamily: 'system-ui, -apple-system, sans-serif',
-          backgroundColor: '#F2F2F2'
-        }}>
-          <div style={{ 
-            textAlign: 'center',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}>
-            <h2 style={{ 
-              fontSize: '2rem', 
-              marginBottom: '1rem',
-              color: '#111111'
-            }}>
+        <div
+          style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '2rem',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+            backgroundColor: '#F2F2F2',
+          }}
+        >
+          <div
+            style={{
+              textAlign: 'center',
+              maxWidth: '600px',
+              margin: '0 auto',
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '2rem',
+                marginBottom: '1rem',
+                color: '#111111',
+              }}
+            >
               Something went wrong!
             </h2>
-            <p style={{ 
-              marginBottom: '2rem',
-              color: '#666666',
-              lineHeight: '1.6'
-            }}>
-              We encountered an unexpected error. Please try again or contact us if the problem persists.
+            <p
+              style={{
+                marginBottom: '2rem',
+                color: '#666666',
+                lineHeight: '1.6',
+              }}
+            >
+              We encountered an unexpected error. Please try again or contact us
+              if the problem persists.
             </p>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+            <div
+              style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}
+            >
               <button
                 onClick={reset}
                 style={{
@@ -56,13 +67,13 @@ export default function GlobalError({
                   borderRadius: '0.5rem',
                   cursor: 'pointer',
                   fontSize: '1rem',
-                  fontWeight: '500'
+                  fontWeight: '500',
                 }}
               >
                 Try again
               </button>
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => (window.location.href = '/')}
                 style={{
                   padding: '0.75rem 1.5rem',
                   backgroundColor: 'transparent',
@@ -71,7 +82,7 @@ export default function GlobalError({
                   borderRadius: '0.5rem',
                   cursor: 'pointer',
                   fontSize: '1rem',
-                  fontWeight: '500'
+                  fontWeight: '500',
                 }}
               >
                 Go home

@@ -3,6 +3,7 @@
 ## Pre-Deployment Checklist
 
 ### ✅ Code Quality
+
 - [ ] All TypeScript errors resolved (`npm run type-check`)
 - [ ] ESLint passes (`npm run lint`)
 - [ ] Code formatted (`npm run format`)
@@ -10,11 +11,13 @@
 - [ ] All tests pass (if applicable)
 
 ### ✅ Environment Variables
+
 - [ ] Formspree production form ID configured
 - [ ] Stripe live keys configured
 - [ ] All environment variables documented
 
 ### ✅ Content Review
+
 - [ ] All text content reviewed and approved
 - [ ] Images optimized and properly sized
 - [ ] Links tested and working
@@ -24,6 +27,7 @@
 ## Vercel Deployment
 
 ### 1. Repository Setup
+
 ```bash
 # Ensure all changes are committed
 git add .
@@ -32,6 +36,7 @@ git push origin main
 ```
 
 ### 2. Vercel Configuration
+
 1. **Import Repository**
    - Go to [vercel.com](https://vercel.com)
    - Click "New Project"
@@ -39,6 +44,7 @@ git push origin main
    - Select Next.js framework
 
 2. **Configure Environment Variables**
+
    ```
    NEXT_PUBLIC_FORMSPREE_FORM_ID=your_production_form_id
    STRIPE_SECRET_KEY=sk_live_...
@@ -52,6 +58,7 @@ git push origin main
    - Install Command: `npm install`
 
 ### 3. Deploy
+
 - Click "Deploy"
 - Wait for build to complete
 - Verify deployment URL works
@@ -59,6 +66,7 @@ git push origin main
 ## Post-Deployment Verification
 
 ### ✅ Functionality Tests
+
 - [ ] Home page loads correctly
 - [ ] Navigation between pages works
 - [ ] Contact form submits successfully
@@ -67,12 +75,14 @@ git push origin main
 - [ ] Responsive design works on mobile/desktop
 
 ### ✅ Performance Tests
+
 - [ ] Page load times acceptable (< 3 seconds)
 - [ ] Images optimized and loading quickly
 - [ ] No console errors
 - [ ] Lighthouse score > 90
 
 ### ✅ Security Tests
+
 - [ ] HTTPS enabled
 - [ ] Environment variables not exposed
 - [ ] Form validation working
@@ -81,27 +91,32 @@ git push origin main
 ## Custom Domain Setup (Optional)
 
 ### 1. Add Domain in Vercel
+
 - Go to project settings
 - Add custom domain
 - Follow DNS configuration instructions
 
 ### 2. Configure DNS
+
 - Add CNAME record pointing to Vercel
 - Wait for DNS propagation (up to 48 hours)
 
 ### 3. SSL Certificate
+
 - Vercel automatically provisions SSL
 - Verify HTTPS works correctly
 
 ## Monitoring & Maintenance
 
 ### ✅ Post-Launch Tasks
+
 - [ ] Set up monitoring (Vercel Analytics, Google Analytics)
 - [ ] Configure error tracking
 - [ ] Set up uptime monitoring
 - [ ] Test backup/restore procedures
 
 ### ✅ Regular Maintenance
+
 - [ ] Monitor Formspree usage and limits
 - [ ] Check Stripe dashboard for payments
 - [ ] Update dependencies monthly
@@ -113,6 +128,7 @@ git push origin main
 ### Common Issues
 
 **Build Failures**
+
 ```bash
 # Check build logs in Vercel dashboard
 # Verify environment variables are set
@@ -120,16 +136,19 @@ git push origin main
 ```
 
 **Environment Variables**
+
 - Ensure all required variables are set in Vercel
 - Check variable names match exactly
 - Verify no typos in values
 
 **Domain Issues**
+
 - Check DNS propagation with `dig` or online tools
 - Verify CNAME record is correct
 - Wait up to 48 hours for full propagation
 
 **Performance Issues**
+
 - Check Vercel Analytics for insights
 - Optimize images if needed
 - Review bundle size and loading times
@@ -137,6 +156,7 @@ git push origin main
 ## Rollback Plan
 
 ### If Issues Occur
+
 1. **Immediate Rollback**
    - Use Vercel's "Redeploy" feature to previous version
    - Or revert to last known good commit
@@ -154,6 +174,7 @@ git push origin main
 ## Success Criteria
 
 ### ✅ Deployment Successful When
+
 - [ ] All pages load without errors
 - [ ] Contact form works in production
 - [ ] Workshop booking flow functional
@@ -162,6 +183,7 @@ git push origin main
 - [ ] Custom domain working (if applicable)
 
 ### ✅ Go-Live Checklist
+
 - [ ] Stakeholder approval received
 - [ ] Content final and approved
 - [ ] All functionality tested

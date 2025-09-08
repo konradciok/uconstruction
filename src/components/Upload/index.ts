@@ -4,9 +4,9 @@ export { default as FileList } from './FileList';
 export { default as UploadForm } from './UploadForm';
 
 // Re-export types
-export type { 
-  UploadedFile, 
-  ProcessedImage, 
+export type {
+  UploadedFile,
+  ProcessedImage,
   UploadFormData,
-  UploadState 
+  UploadState,
 } from '@/types/upload';

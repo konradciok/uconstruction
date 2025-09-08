@@ -6,12 +6,12 @@ import { createPortal } from 'react-dom';
 import { LightboxModalProps } from '@/types/portfolio2';
 import styles from './LightboxModal.module.css';
 
-export default function LightboxModal({ 
-  artworks, 
-  index, 
-  isOpen, 
-  onClose, 
-  onNavigate 
+export default function LightboxModal({
+  artworks,
+  index,
+  isOpen,
+  onClose,
+  onNavigate,
 }: LightboxModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -22,29 +22,35 @@ export default function LightboxModal({
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (!isOpen) return;
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!isOpen) return;
 
-    switch (event.key) {
-      case 'Escape':
+      switch (event.key) {
+        case 'Escape':
+          onClose();
+          break;
+        case 'ArrowLeft':
+          event.preventDefault();
+          onNavigate(index === 0 ? artworks.length - 1 : index - 1);
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          onNavigate(index === artworks.length - 1 ? 0 : index + 1);
+          break;
+      }
+    },
+    [isOpen, index, artworks.length, onClose, onNavigate]
+  );
+
+  const handleBackdropClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (event.target === event.currentTarget) {
         onClose();
-        break;
-      case 'ArrowLeft':
-        event.preventDefault();
-        onNavigate(index === 0 ? artworks.length - 1 : index - 1);
-        break;
-      case 'ArrowRight':
-        event.preventDefault();
-        onNavigate(index === artworks.length - 1 ? 0 : index + 1);
-        break;
-    }
-  }, [isOpen, index, artworks.length, onClose, onNavigate]);
-
-  const handleBackdropClick = useCallback((event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  }, [onClose]);
+      }
+    },
+    [onClose]
+  );
 
   const handlePrevious = useCallback(() => {
     onNavigate(index === 0 ? artworks.length - 1 : index - 1);
@@ -66,7 +72,7 @@ export default function LightboxModal({
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
@@ -86,11 +92,13 @@ export default function LightboxModal({
     const focusableElements = modalRef.current?.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
-    
+
     if (focusableElements && focusableElements.length > 0) {
       const firstElement = focusableElements[0] as HTMLElement;
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-      
+      const lastElement = focusableElements[
+        focusableElements.length - 1
+      ] as HTMLElement;
+
       firstElement.focus();
 
       const handleTabKey = (e: KeyboardEvent) => {
@@ -142,7 +150,7 @@ export default function LightboxModal({
   const nextArtwork = artworks[nextIndex];
 
   return createPortal(
-    <div 
+    <div
       className={styles.overlay}
       onClick={handleBackdropClick}
       role="dialog"
@@ -180,7 +188,7 @@ export default function LightboxModal({
       </button>
 
       {/* Main image container */}
-      <div 
+      <div
         className={styles.imageContainer}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -202,9 +210,7 @@ export default function LightboxModal({
           <h2 id="lightbox-title" className={styles.title}>
             {currentArtwork.title}
           </h2>
-          <p className={styles.dimensions}>
-            {currentArtwork.dimensions}
-          </p>
+          <p className={styles.dimensions}>{currentArtwork.dimensions}</p>
         </div>
       </div>
 

@@ -10,12 +10,16 @@ interface UploadFormProps {
   isLoading?: boolean;
 }
 
-export default function UploadForm({ onSubmit, disabled = false, isLoading = false }: UploadFormProps) {
+export default function UploadForm({
+  onSubmit,
+  disabled = false,
+  isLoading = false,
+}: UploadFormProps) {
   const [formData, setFormData] = useState<UploadFormData>({
     title: '',
     dimensions: '56 × 76 cm',
     medium: 'Watercolor',
-    alt: ''
+    alt: '',
   });
 
   const [errors, setErrors] = useState<Partial<UploadFormData>>({});
@@ -23,7 +27,7 @@ export default function UploadForm({ onSubmit, disabled = false, isLoading = fal
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail as Partial<UploadFormData>;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         title: detail.title ?? prev.title,
         dimensions: detail.dimensions ?? prev.dimensions,
         medium: detail.medium ?? prev.medium,
@@ -32,15 +36,16 @@ export default function UploadForm({ onSubmit, disabled = false, isLoading = fal
       }));
     };
     window.addEventListener('upload-defaults', handler as EventListener);
-    return () => window.removeEventListener('upload-defaults', handler as EventListener);
+    return () =>
+      window.removeEventListener('upload-defaults', handler as EventListener);
   }, []);
 
   const handleInputChange = (field: keyof UploadFormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -65,7 +70,7 @@ export default function UploadForm({ onSubmit, disabled = false, isLoading = fal
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit(formData);
     }
@@ -78,7 +83,11 @@ export default function UploadForm({ onSubmit, disabled = false, isLoading = fal
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit}
+      onKeyDown={handleKeyDown}
+    >
       <div className={styles.formHeader}>
         <h3>Image Information</h3>
         <p>Provide details for all uploaded images</p>
@@ -168,7 +177,15 @@ export default function UploadForm({ onSubmit, disabled = false, isLoading = fal
             id="tags"
             type="text"
             value={(formData.tags ?? []).join(', ')}
-            onChange={(e) => handleInputChange('tags', e.target.value.split(',').map(t => t.trim()).filter(Boolean) as any)}
+            onChange={(e) =>
+              handleInputChange(
+                'tags',
+                e.target.value
+                  .split(',')
+                  .map((t) => t.trim())
+                  .filter(Boolean) as any
+              )
+            }
             className={styles.input}
             placeholder="e.g., Obsidian, Series A"
             disabled={disabled}
@@ -191,7 +208,7 @@ export default function UploadForm({ onSubmit, disabled = false, isLoading = fal
             'Process & Upload Images'
           )}
         </button>
-        
+
         <div className={styles.shortcut}>
           Press <kbd>⌘</kbd> + <kbd>Enter</kbd> to submit
         </div>

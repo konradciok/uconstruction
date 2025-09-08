@@ -13,7 +13,7 @@ export async function GET(
   try {
     // Validate ID parameter
     const productId = parseInt(params.id);
-    
+
     if (isNaN(productId) || productId <= 0) {
       return NextResponse.json(
         {
@@ -49,10 +49,9 @@ export async function GET(
         product,
       },
     });
-
   } catch (error) {
     console.error(`[API] Error fetching product ${params.id}:`, error);
-    
+
     return NextResponse.json(
       {
         success: false,

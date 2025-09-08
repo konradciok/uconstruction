@@ -167,11 +167,11 @@
   .header {
     padding: var(--spacing-lg) 0;
   }
-  
+
   .logo {
     font-size: var(--font-size-xl);
   }
-  
+
   .navigation {
     gap: var(--spacing-lg);
   }
@@ -182,11 +182,11 @@
   .header {
     padding: var(--spacing-xl) 0;
   }
-  
+
   .logo {
     font-size: var(--font-size-2xl);
   }
-  
+
   .headerContent {
     gap: var(--spacing-xl);
   }

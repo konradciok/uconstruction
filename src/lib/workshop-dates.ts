@@ -8,7 +8,7 @@ export const WORKSHOP_CONFIG: WorkshopConfig = {
   location: 'Güímar, Tenerife',
   defaultTime: '11:00',
   productId: 'prod_SOWATu1c4uQeh0',
-  productName: 'workshop_friday'
+  productName: 'workshop_friday',
 };
 
 // Available workshop dates with placeholder payment links
@@ -20,7 +20,7 @@ export const WORKSHOP_DATES: WorkshopDate[] = [
     capacity: WORKSHOP_CONFIG.capacity,
     time: '11:00',
     location: WORKSHOP_CONFIG.location,
-    paymentLinkId: 'plink_placeholder_1'
+    paymentLinkId: 'plink_placeholder_1',
   },
   {
     dateISO: toUtcFromCanary('2025-03-21', '11:00').toISOString(),
@@ -28,7 +28,7 @@ export const WORKSHOP_DATES: WorkshopDate[] = [
     capacity: WORKSHOP_CONFIG.capacity,
     time: '11:00',
     location: WORKSHOP_CONFIG.location,
-    paymentLinkId: 'plink_placeholder_2'
+    paymentLinkId: 'plink_placeholder_2',
   },
   {
     dateISO: toUtcFromCanary('2025-03-28', '11:00').toISOString(),
@@ -36,7 +36,7 @@ export const WORKSHOP_DATES: WorkshopDate[] = [
     capacity: WORKSHOP_CONFIG.capacity,
     time: '11:00',
     location: WORKSHOP_CONFIG.location,
-    paymentLinkId: 'plink_placeholder_3'
+    paymentLinkId: 'plink_placeholder_3',
   },
   {
     dateISO: toUtcFromCanary('2025-04-04', '11:00').toISOString(),
@@ -44,16 +44,16 @@ export const WORKSHOP_DATES: WorkshopDate[] = [
     capacity: WORKSHOP_CONFIG.capacity,
     time: '11:00',
     location: WORKSHOP_CONFIG.location,
-    paymentLinkId: 'plink_placeholder_4'
-  }
+    paymentLinkId: 'plink_placeholder_4',
+  },
 ];
 
 // Helper function to get available dates (not sold out)
 export function getAvailableDates(): WorkshopDate[] {
-  return WORKSHOP_DATES.filter(date => !date.isDeactivated);
+  return WORKSHOP_DATES.filter((date) => !date.isDeactivated);
 }
 
 // Helper function to find date by ISO string
 export function findDateByISO(dateISO: string): WorkshopDate | undefined {
-  return WORKSHOP_DATES.find(date => date.dateISO === dateISO);
+  return WORKSHOP_DATES.find((date) => date.dateISO === dateISO);
 }

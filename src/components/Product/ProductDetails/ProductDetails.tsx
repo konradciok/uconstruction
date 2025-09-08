@@ -12,11 +12,11 @@ interface ProductDetailsProps {
   isModal?: boolean;
 }
 
-export default function ProductDetails({ 
-  product, 
-  onAddToCart, 
+export default function ProductDetails({
+  product,
+  onAddToCart,
   onClose,
-  isModal = false 
+  isModal = false,
 }: ProductDetailsProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedVariantId, setSelectedVariantId] = useState(
@@ -24,7 +24,9 @@ export default function ProductDetails({
   );
   const [quantity, setQuantity] = useState(1);
 
-  const selectedVariant = product.variants.find(v => v.shopifyId === selectedVariantId) || product.variants[0];
+  const selectedVariant =
+    product.variants.find((v) => v.shopifyId === selectedVariantId) ||
+    product.variants[0];
   const mainImage = product.media[selectedImageIndex];
   const hasMultipleImages = product.media.length > 1;
 
@@ -36,20 +38,23 @@ export default function ProductDetails({
 
   const formatPrice = (amount?: any, currency?: string) => {
     if (!amount) return 'N/A';
-    const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    const numericAmount =
+      typeof amount === 'string' ? parseFloat(amount) : amount;
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency || 'USD'
+      currency: currency || 'USD',
     }).format(numericAmount);
   };
 
-  const hasComparePrice = selectedVariant?.compareAtPriceAmount && 
-    parseFloat(selectedVariant.compareAtPriceAmount.toString()) > parseFloat(selectedVariant.priceAmount?.toString() || '0');
+  const hasComparePrice =
+    selectedVariant?.compareAtPriceAmount &&
+    parseFloat(selectedVariant.compareAtPriceAmount.toString()) >
+      parseFloat(selectedVariant.priceAmount?.toString() || '0');
 
   return (
     <div className={`${styles.container} ${isModal ? styles.modal : ''}`}>
       {isModal && onClose && (
-        <button 
+        <button
           onClick={onClose}
           className={styles.closeButton}
           aria-label="Close product details"
@@ -76,7 +81,7 @@ export default function ProductDetails({
                 <span>No image available</span>
               </div>
             )}
-            
+
             {/* Trust Badge */}
             <div className={styles.trustBadge}>
               <span>🔒 Secure Checkout</span>
@@ -111,14 +116,20 @@ export default function ProductDetails({
           {/* Product Title & Pricing */}
           <div className={styles.header}>
             <h1 className={styles.title}>{product.title}</h1>
-            
+
             <div className={styles.priceContainer}>
               <span className={styles.price}>
-                {formatPrice(selectedVariant?.priceAmount, selectedVariant?.priceCurrency)}
+                {formatPrice(
+                  selectedVariant?.priceAmount,
+                  selectedVariant?.priceCurrency
+                )}
               </span>
               {hasComparePrice && (
                 <span className={styles.comparePrice}>
-                  {formatPrice(selectedVariant?.compareAtPriceAmount, selectedVariant?.compareAtPriceCurrency)}
+                  {formatPrice(
+                    selectedVariant?.compareAtPriceAmount,
+                    selectedVariant?.compareAtPriceCurrency
+                  )}
                 </span>
               )}
             </div>
@@ -152,7 +163,9 @@ export default function ProductDetails({
                     key={variant.id}
                     onClick={() => setSelectedVariantId(variant.shopifyId)}
                     className={`${styles.variantButton} ${
-                      selectedVariantId === variant.shopifyId ? styles.variantButtonActive : ''
+                      selectedVariantId === variant.shopifyId
+                        ? styles.variantButtonActive
+                        : ''
                     }`}
                   >
                     {variant.title || 'Default'}
@@ -169,21 +182,23 @@ export default function ProductDetails({
           <div className={styles.quantitySection}>
             <label htmlFor="quantity">Quantity:</label>
             <div className={styles.quantityControls}>
-              <button 
+              <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className={styles.quantityButton}
               >
                 -
               </button>
-              <input 
+              <input
                 id="quantity"
-                type="number" 
-                value={quantity} 
-                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                type="number"
+                value={quantity}
+                onChange={(e) =>
+                  setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+                }
                 className={styles.quantityInput}
                 min="1"
               />
-              <button 
+              <button
                 onClick={() => setQuantity(quantity + 1)}
                 className={styles.quantityButton}
               >
@@ -194,14 +209,18 @@ export default function ProductDetails({
 
           {/* Add to Cart CTA */}
           <div className={styles.ctaSection}>
-            <button 
+            <button
               onClick={handleAddToCart}
               className={styles.addToCartButton}
               disabled={!selectedVariantId}
             >
-              Add to Cart - {formatPrice(selectedVariant?.priceAmount, selectedVariant?.priceCurrency)}
+              Add to Cart -{' '}
+              {formatPrice(
+                selectedVariant?.priceAmount,
+                selectedVariant?.priceCurrency
+              )}
             </button>
-            
+
             <button className={styles.buyNowButton}>
               Buy Now - Fast Checkout
             </button>
@@ -258,7 +277,8 @@ export default function ProductDetails({
               <span className={styles.ratingText}>4.8/5 (127 reviews)</span>
             </div>
             <p className={styles.testimonial}>
-              "Beautiful artwork and excellent quality. Fast shipping too!" - Sarah M.
+              "Beautiful artwork and excellent quality. Fast shipping too!" -
+              Sarah M.
             </p>
           </div>
         </div>

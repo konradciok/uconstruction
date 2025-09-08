@@ -44,6 +44,7 @@ The gallery has been enhanced with several image UX improvements:
 ```
 
 **Benefits**:
+
 - No layout shift during image loading
 - Consistent grid layout
 - Better Core Web Vitals scores
@@ -61,13 +62,14 @@ The gallery has been enhanced with several image UX improvements:
   alt={item.title || 'Artwork'}
   fill
   sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-  placeholder={item.blurDataURL ? "blur" : "empty"}
+  placeholder={item.blurDataURL ? 'blur' : 'empty'}
   blurDataURL={item.blurDataURL}
   {...(isPriority ? { priority: true } : { loading: 'lazy' })}
 />
 ```
 
 **Blur Data URL Structure**:
+
 ```tsx
 const BLUR_DATA_URLS = {
   default: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...',
@@ -78,6 +80,7 @@ const BLUR_DATA_URLS = {
 ```
 
 **Benefits**:
+
 - Smooth loading experience
 - No empty spaces
 - Category-specific placeholders
@@ -118,6 +121,7 @@ useEffect(() => {
 ```
 
 **Benefits**:
+
 - Instant next/previous navigation
 - Better user experience
 - Reduced perceived loading time
@@ -130,16 +134,19 @@ useEffect(() => {
 **Solution**: Dynamic sizes based on grid columns and screen size
 
 ```tsx
-sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+sizes =
+  '(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw';
 ```
 
 **Size Breakdown**:
+
 - Mobile (< 480px): 100vw (full width)
 - Tablet (< 768px): 50vw (half width)
 - Desktop (< 1200px): 33vw (third width)
 - Large screens (≥ 1200px): 25vw (quarter width)
 
 **Benefits**:
+
 - Optimized image delivery
 - Reduced bandwidth usage
 - Faster loading times
@@ -159,12 +166,13 @@ sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33
   fill
   sizes="90vw" // Lightbox uses larger sizes
   priority
-  placeholder={currentItem.blurDataURL ? "blur" : "empty"}
+  placeholder={currentItem.blurDataURL ? 'blur' : 'empty'}
   blurDataURL={currentItem.blurDataURL}
 />
 ```
 
 **Benefits**:
+
 - Smaller file sizes
 - Faster loading
 - Better compression
@@ -175,11 +183,11 @@ sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33
 ### GalleryItem Component Updates
 
 ```tsx
-export default React.memo(function GalleryItem({ 
-  item, 
-  onClick, 
+export default React.memo(function GalleryItem({
+  item,
+  onClick,
   index = 0,
-  onIntersection 
+  onIntersection,
 }: GalleryItemProps) {
   // Determine if this image should be prioritized
   const isPriority = index < 6;
@@ -192,7 +200,7 @@ export default React.memo(function GalleryItem({
           alt={item.title || 'Artwork'}
           fill
           sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-          placeholder={item.blurDataURL ? "blur" : "empty"}
+          placeholder={item.blurDataURL ? 'blur' : 'empty'}
           blurDataURL={item.blurDataURL}
           {...(isPriority ? { priority: true } : { loading: 'lazy' })}
         />

@@ -5,7 +5,7 @@ import { join } from 'path';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    
+
     // Extract metadata
     const imageId = formData.get('imageId') as string;
     const originalName = formData.get('originalName') as string;
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     const medium = formData.get('medium') as string;
     const tagsRaw = formData.get('tags') as string | null;
     const alt = formData.get('alt') as string;
-    
+
     // Extract dimensions
     const thumbnailWidth = parseInt(formData.get('thumbnailWidth') as string);
     const thumbnailHeight = parseInt(formData.get('thumbnailHeight') as string);
@@ -44,12 +44,16 @@ export async function POST(request: NextRequest) {
     }
 
     if (thumbnailWebp) {
-      const thumbnailWebpBuffer = Buffer.from(await thumbnailWebp.arrayBuffer());
+      const thumbnailWebpBuffer = Buffer.from(
+        await thumbnailWebp.arrayBuffer()
+      );
       await writeFile(join(thumbsDir, `${imageId}.webp`), thumbnailWebpBuffer);
     }
 
     if (thumbnailAvif) {
-      const thumbnailAvifBuffer = Buffer.from(await thumbnailAvif.arrayBuffer());
+      const thumbnailAvifBuffer = Buffer.from(
+        await thumbnailAvif.arrayBuffer()
+      );
       await writeFile(join(thumbsDir, `${imageId}.avif`), thumbnailAvifBuffer);
     }
 
@@ -80,18 +84,22 @@ export async function POST(request: NextRequest) {
       tags: tagsRaw ? JSON.parse(tagsRaw) : undefined,
       thumbnail: {
         jpg: `/img/portfolio2/thumbs/${imageId}.jpg`,
-        webp: thumbnailWebp ? `/img/portfolio2/thumbs/${imageId}.webp` : undefined,
-        avif: thumbnailAvif ? `/img/portfolio2/thumbs/${imageId}.avif` : undefined,
+        webp: thumbnailWebp
+          ? `/img/portfolio2/thumbs/${imageId}.webp`
+          : undefined,
+        avif: thumbnailAvif
+          ? `/img/portfolio2/thumbs/${imageId}.avif`
+          : undefined,
         width: thumbnailWidth,
-        height: thumbnailHeight
+        height: thumbnailHeight,
       },
       full: {
         jpg: `/img/portfolio2/full/${imageId}.jpg`,
         webp: fullWebp ? `/img/portfolio2/full/${imageId}.webp` : undefined,
         avif: fullAvif ? `/img/portfolio2/full/${imageId}.avif` : undefined,
         width: fullWidth,
-        height: fullHeight
-      }
+        height: fullHeight,
+      },
     };
 
     return NextResponse.json(processedImage);

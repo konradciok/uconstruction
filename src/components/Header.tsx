@@ -32,13 +32,15 @@ export default function Header() {
                   className={styles.logoImage}
                   priority
                 />
-                <h1 className={`${styles.logo} animate-slideInLeft`}>Watercolor Artist</h1>
+                <h1 className={`${styles.logo} animate-slideInLeft`}>
+                  Watercolor Artist
+                </h1>
               </div>
             </Link>
           </div>
-          
+
           {/* Hamburger Menu Button */}
-          <button 
+          <button
             className={`${styles.hamburger} ${isMenuOpen ? styles.hamburgerOpen : ''}`}
             onClick={toggleMenu}
             aria-label="Toggle navigation menu"
@@ -50,20 +52,34 @@ export default function Header() {
           </button>
 
           {/* Navigation Menu */}
-          <nav className={`${styles.navigation} ${isMenuOpen ? styles.navigationOpen : ''} animate-slideInRight`}>
+          <nav
+            className={`${styles.navigation} ${isMenuOpen ? styles.navigationOpen : ''} animate-slideInRight`}
+          >
             <Link href="/" className={styles.navLink} onClick={closeMenu}>
               Home
             </Link>
             <Link href="/about" className={styles.navLink} onClick={closeMenu}>
               About
             </Link>
-            <Link href="/portfolio" className={styles.navLink} onClick={closeMenu}>
+            <Link
+              href="/portfolio"
+              className={styles.navLink}
+              onClick={closeMenu}
+            >
               Portfolio
             </Link>
-            <Link href="/commissions" className={styles.navLink} onClick={closeMenu}>
+            <Link
+              href="/commissions"
+              className={styles.navLink}
+              onClick={closeMenu}
+            >
               Commissions
             </Link>
-            <Link href="/workshops" className={styles.navLink} onClick={closeMenu}>
+            <Link
+              href="/workshops"
+              className={styles.navLink}
+              onClick={closeMenu}
+            >
               Workshops
             </Link>
           </nav>

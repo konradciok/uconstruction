@@ -101,7 +101,7 @@
     display: block;
     gap: 0;
   }
-  
+
   .grid > * {
     page-break-inside: avoid;
     margin-bottom: 20px;

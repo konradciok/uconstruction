@@ -58,12 +58,14 @@ src/
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Background**: `#F2F2F2` (light gray)
 - **Text**: `#111111` (dark gray)
 - **Primary Blue**: `#80A6F2` (soft blue)
 - **Accent**: `#F2EDA7` (pale yellow)
 
 ### Styling Approach
+
 - **CSS Variables**: Design tokens (colors, spacing, typography)
 - **CSS Modules**: Component-scoped styling with `.module.css` files
 - **Global Utilities**: Custom utility classes for common patterns

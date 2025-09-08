@@ -11,36 +11,39 @@ export async function GET(request: NextRequest) {
   try {
     // Parse query parameters
     const { searchParams } = new URL(request.url);
-    
+
     // Build filters from query parameters
     const filters: ProductFilters = {};
-    
+
     if (searchParams.get('category')) {
       filters.category = searchParams.get('category') as string;
     }
-    
+
     if (searchParams.get('status')) {
       filters.status = searchParams.get('status') as string;
     }
-    
+
     if (searchParams.get('vendor')) {
       filters.vendor = searchParams.get('vendor') as string;
     }
-    
+
     if (searchParams.get('productType')) {
       filters.productType = searchParams.get('productType') as string;
     }
-    
+
     if (searchParams.get('publishedOnly') === 'true') {
       filters.publishedOnly = true;
     }
-    
+
     // Handle tags (comma-separated)
     const tagsParam = searchParams.get('tags');
     if (tagsParam) {
-      filters.tags = tagsParam.split(',').map(tag => tag.trim()).filter(Boolean);
+      filters.tags = tagsParam
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean);
     }
-    
+
     // Handle price range
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
@@ -51,25 +54,29 @@ export async function GET(request: NextRequest) {
         filters.priceRange = { min, max };
       }
     }
-    
+
     // Build sort options
     const sortField = searchParams.get('sortBy') || 'updatedAt';
     const sortDirection = searchParams.get('sortOrder') || 'desc';
-    
+
     const sort: ProductSortOptions = {
-      field: ['title', 'createdAt', 'updatedAt', 'publishedAt'].includes(sortField) 
-        ? sortField as ProductSortOptions['field']
+      field: ['title', 'createdAt', 'updatedAt', 'publishedAt'].includes(
+        sortField
+      )
+        ? (sortField as ProductSortOptions['field'])
         : 'updatedAt',
-      direction: ['asc', 'desc'].includes(sortDirection) 
-        ? sortDirection as 'asc' | 'desc' 
-        : 'desc'
+      direction: ['asc', 'desc'].includes(sortDirection)
+        ? (sortDirection as 'asc' | 'desc')
+        : 'desc',
     };
-    
+
     // Build pagination options
     const cursor = searchParams.get('cursor') || undefined;
     const limitParam = searchParams.get('limit');
-    const limit = limitParam ? Math.min(Math.max(parseInt(limitParam), 1), 100) : 20;
-    
+    const limit = limitParam
+      ? Math.min(Math.max(parseInt(limitParam), 1), 100)
+      : 20;
+
     const pagination = {
       cursor,
       take: limit,
@@ -92,10 +99,9 @@ export async function GET(request: NextRequest) {
         },
       },
     });
-
   } catch (error) {
     console.error('[API] Error fetching products:', error);
-    
+
     return NextResponse.json(
       {
         success: false,

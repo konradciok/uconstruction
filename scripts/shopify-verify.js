@@ -62,7 +62,12 @@ async function postGraphQL({ domain, token, apiVersion, query }) {
     }
   `;
   try {
-    const { status, headers, json } = await postGraphQL({ domain, token, apiVersion, query });
+    const { status, headers, json } = await postGraphQL({
+      domain,
+      token,
+      apiVersion,
+      query,
+    });
     if (status !== 200) {
       console.error(`Shopify responded with HTTP ${status}`);
       console.error(json);
@@ -75,7 +80,10 @@ async function postGraphQL({ domain, token, apiVersion, query }) {
     }
 
     const apiHeader = headers['x-shopify-api-version'];
-    console.log('Verified access to shop:', json.data?.shop?.name || '(unknown)');
+    console.log(
+      'Verified access to shop:',
+      json.data?.shop?.name || '(unknown)'
+    );
     console.log('MyShopify domain reported:', json.data?.shop?.myshopifyDomain);
     console.log('Pinned API version requested:', apiVersion);
     console.log('API version from response header:', apiHeader);
@@ -89,7 +97,9 @@ async function postGraphQL({ domain, token, apiVersion, query }) {
         updatedAt: firstProduct.updatedAt,
       });
     } else {
-      console.log('No products returned (this may be fine if the store is empty).');
+      console.log(
+        'No products returned (this may be fine if the store is empty).'
+      );
     }
 
     console.log('Phase 0 verification succeeded.');
@@ -98,5 +108,3 @@ async function postGraphQL({ domain, token, apiVersion, query }) {
     process.exit(1);
   }
 })();
-
-

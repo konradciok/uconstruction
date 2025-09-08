@@ -5,7 +5,11 @@ import Image from 'next/image';
 import { GalleryItemProps } from '@/types/portfolio2';
 import styles from './GalleryItem.module.css';
 
-export default function GalleryItem({ artwork, index, onOpen }: GalleryItemProps) {
+export default function GalleryItem({
+  artwork,
+  index,
+  onOpen,
+}: GalleryItemProps) {
   const handleClick = () => {
     onOpen(index);
   };

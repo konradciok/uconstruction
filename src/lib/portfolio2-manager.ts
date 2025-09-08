@@ -22,22 +22,22 @@ export class Portfolio2Manager {
         webp: processedImage.thumbnail.webp,
         avif: processedImage.thumbnail.avif,
         width: processedImage.thumbnail.width,
-        height: processedImage.thumbnail.height
+        height: processedImage.thumbnail.height,
       },
       full: {
         jpg: processedImage.full.jpg,
         webp: processedImage.full.webp,
         avif: processedImage.full.avif,
         width: processedImage.full.width,
-        height: processedImage.full.height
+        height: processedImage.full.height,
       },
       alt: processedImage.alt,
       source: {
         type: 'uploaded',
         metadata: {
-          lastUpdated: new Date().toISOString()
-        }
-      }
+          lastUpdated: new Date().toISOString(),
+        },
+      },
     };
   }
 
@@ -46,38 +46,40 @@ export class Portfolio2Manager {
    */
   static async getAllArtworks(config?: SourceConfig): Promise<Artwork[]> {
     try {
-      const sourceConfig = { 
-        includeStatic: true, 
-        includeUploaded: true, 
-        includeShopify: true, 
-        ...config 
+      const sourceConfig = {
+        includeStatic: true,
+        includeUploaded: true,
+        includeShopify: true,
+        ...config,
       };
-      
+
       const allArtworks: Artwork[] = [];
-      
+
       // Get static artworks
       if (sourceConfig.includeStatic) {
         const { ARTWORKS } = await import('@/lib/portfolio2-data');
         // Mark static artworks with source
-        const staticWithSource = ARTWORKS.map(artwork => ({
+        const staticWithSource = ARTWORKS.map((artwork) => ({
           ...artwork,
-          source: { type: 'static' as const }
+          source: { type: 'static' as const },
         }));
         allArtworks.push(...staticWithSource);
       }
-      
+
       // Get uploaded artworks from localStorage
       if (sourceConfig.includeUploaded) {
         const uploadedArtworks = this.getUploadedArtworks();
         allArtworks.push(...uploadedArtworks);
       }
-      
+
       // Get Shopify products
       if (sourceConfig.includeShopify) {
-        const shopifyArtworks = await this.getShopifyArtworks(sourceConfig.shopifyFilters);
+        const shopifyArtworks = await this.getShopifyArtworks(
+          sourceConfig.shopifyFilters
+        );
         allArtworks.push(...shopifyArtworks);
       }
-      
+
       return allArtworks;
     } catch (error) {
       console.error('Error loading artworks:', error);
@@ -91,20 +93,22 @@ export class Portfolio2Manager {
   static async addArtworks(processedImages: ProcessedImage[]): Promise<void> {
     try {
       // Convert to Artwork format
-      const newArtworks = processedImages.map(img => this.convertToArtwork(img));
-      
+      const newArtworks = processedImages.map((img) =>
+        this.convertToArtwork(img)
+      );
+
       // Get existing uploaded artworks
       const existingArtworks = this.getUploadedArtworks();
-      
+
       // Add new artworks
       const updatedArtworks = [...existingArtworks, ...newArtworks];
-      
+
       // Save to localStorage
       this.saveUploadedArtworks(updatedArtworks);
-      
+
       // Trigger gallery update
       this.notifyGalleryUpdate();
-      
+
       console.log(`Added ${newArtworks.length} new artworks to portfolio`);
     } catch (error) {
       console.error('Error adding artworks:', error);
@@ -118,11 +122,13 @@ export class Portfolio2Manager {
   static async removeArtwork(artworkId: string): Promise<void> {
     try {
       const uploadedArtworks = this.getUploadedArtworks();
-      const filteredArtworks = uploadedArtworks.filter(art => art.id !== artworkId);
-      
+      const filteredArtworks = uploadedArtworks.filter(
+        (art) => art.id !== artworkId
+      );
+
       this.saveUploadedArtworks(filteredArtworks);
       this.notifyGalleryUpdate();
-      
+
       console.log(`Removed artwork ${artworkId} from portfolio`);
     } catch (error) {
       console.error('Error removing artwork:', error);
@@ -133,16 +139,19 @@ export class Portfolio2Manager {
   /**
    * Update artwork in portfolio
    */
-  static async updateArtwork(artworkId: string, updates: Partial<Artwork>): Promise<void> {
+  static async updateArtwork(
+    artworkId: string,
+    updates: Partial<Artwork>
+  ): Promise<void> {
     try {
       const uploadedArtworks = this.getUploadedArtworks();
-      const updatedArtworks = uploadedArtworks.map(art => 
+      const updatedArtworks = uploadedArtworks.map((art) =>
         art.id === artworkId ? { ...art, ...updates } : art
       );
-      
+
       this.saveUploadedArtworks(updatedArtworks);
       this.notifyGalleryUpdate();
-      
+
       console.log(`Updated artwork ${artworkId} in portfolio`);
     } catch (error) {
       console.error('Error updating artwork:', error);
@@ -156,7 +165,7 @@ export class Portfolio2Manager {
   private static getUploadedArtworks(): Artwork[] {
     try {
       if (typeof window === 'undefined') return [];
-      
+
       const stored = localStorage.getItem(this.UPLOADED_ARTWORKS_KEY);
       return stored ? JSON.parse(stored) : [];
     } catch (error) {
@@ -178,8 +187,11 @@ export class Portfolio2Manager {
   private static saveUploadedArtworks(artworks: Artwork[]): void {
     try {
       if (typeof window === 'undefined') return;
-      
-      localStorage.setItem(this.UPLOADED_ARTWORKS_KEY, JSON.stringify(artworks));
+
+      localStorage.setItem(
+        this.UPLOADED_ARTWORKS_KEY,
+        JSON.stringify(artworks)
+      );
     } catch (error) {
       console.error('Error saving uploaded artworks:', error);
     }
@@ -191,11 +203,13 @@ export class Portfolio2Manager {
   private static notifyGalleryUpdate(): void {
     try {
       if (typeof window === 'undefined') return;
-      
+
       // Dispatch custom event
-      window.dispatchEvent(new CustomEvent('portfolio2-update', {
-        detail: { timestamp: Date.now() }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('portfolio2-update', {
+          detail: { timestamp: Date.now() },
+        })
+      );
     } catch (error) {
       console.error('Error notifying gallery update:', error);
     }
@@ -207,15 +221,19 @@ export class Portfolio2Manager {
   static exportPortfolioData(): void {
     try {
       const allArtworks = this.getUploadedArtworks();
-      
+
       if (allArtworks.length === 0) {
         alert('No uploaded artworks to export');
         return;
       }
 
       const content = this.generatePortfolioDataContent(allArtworks);
-      this.downloadFile(content, 'portfolio2-uploaded-artworks.ts', 'text/javascript');
-      
+      this.downloadFile(
+        content,
+        'portfolio2-uploaded-artworks.ts',
+        'text/javascript'
+      );
+
       console.log(`Exported ${allArtworks.length} artworks`);
     } catch (error) {
       console.error('Error exporting portfolio data:', error);
@@ -226,7 +244,7 @@ export class Portfolio2Manager {
    * Generate TypeScript content for portfolio data
    */
   private static generatePortfolioDataContent(artworks: Artwork[]): string {
-    const artworkEntries = artworks.map(art => {
+    const artworkEntries = artworks.map((art) => {
       const entry = `  {
     id: "${art.id}",
     title: "${art.title}",
@@ -244,8 +262,12 @@ export class Portfolio2Manager {
       jpg: "${art.full.jpg}",
       width: ${art.full.width},
       height: ${art.full.height}
-    }${art.alt ? `,
-    alt: "${art.alt}"` : ''}
+    }${
+      art.alt
+        ? `,
+    alt: "${art.alt}"`
+        : ''
+    }
   }`;
       return entry;
     });
@@ -264,7 +286,11 @@ ${artworkEntries.join(',\n')}
   /**
    * Download file to user's computer
    */
-  private static downloadFile(content: string, filename: string, mimeType: string): void {
+  private static downloadFile(
+    content: string,
+    filename: string,
+    mimeType: string
+  ): void {
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -282,10 +308,10 @@ ${artworkEntries.join(',\n')}
   static clearUploadedArtworks(): void {
     try {
       if (typeof window === 'undefined') return;
-      
+
       localStorage.removeItem(this.UPLOADED_ARTWORKS_KEY);
       this.notifyGalleryUpdate();
-      
+
       console.log('Cleared all uploaded artworks');
     } catch (error) {
       console.error('Error clearing uploaded artworks:', error);
@@ -298,23 +324,23 @@ ${artworkEntries.join(',\n')}
   static async getPortfolioStats(): Promise<PortfolioStats> {
     try {
       const uploaded = this.getUploadedArtworks().length;
-      
+
       // Get static count
       const { ARTWORKS } = await import('@/lib/portfolio2-data');
       const staticCount = ARTWORKS.length;
-      
+
       // Get Shopify count from cache or API
       const shopifyCount = await this.getShopifyArtworkCount();
-      
+
       const total = uploaded + staticCount + shopifyCount;
       const lastSync = this.getLastSyncTime();
-      
-      return { 
-        total, 
-        uploaded, 
-        static: staticCount, 
+
+      return {
+        total,
+        uploaded,
+        static: staticCount,
         shopify: shopifyCount,
-        lastSync 
+        lastSync,
       };
     } catch (error) {
       console.error('Error getting portfolio stats:', error);
@@ -325,52 +351,55 @@ ${artworkEntries.join(',\n')}
   /**
    * Get Shopify products transformed as artworks
    */
-  static async getShopifyArtworks(filters?: SourceConfig['shopifyFilters']): Promise<Artwork[]> {
+  static async getShopifyArtworks(
+    filters?: SourceConfig['shopifyFilters']
+  ): Promise<Artwork[]> {
     try {
       // Build query parameters
       const params = new URLSearchParams();
-      
+
       if (filters?.publishedOnly !== false) {
         params.set('publishedOnly', 'true');
       }
-      
+
       if (filters?.vendor) {
         params.set('vendor', filters.vendor);
       }
-      
+
       if (filters?.tags && filters.tags.length > 0) {
         params.set('tags', filters.tags.join(','));
       }
-      
+
       if (filters?.categories && filters.categories.length > 0) {
         params.set('category', filters.categories[0]); // Take first category
       }
-      
+
       // Set a reasonable limit for portfolio display
       params.set('limit', '50');
-      
+
       // Fetch products from API
       const response = await fetch(`/api/products?${params.toString()}`);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch products: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (!data.success) {
         throw new Error(data.error?.message || 'Failed to fetch products');
       }
-      
+
       // Transform products to artworks
-      const shopifyArtworks = ProductToArtworkTransformer.transformProducts(data.data.products);
-      
+      const shopifyArtworks = ProductToArtworkTransformer.transformProducts(
+        data.data.products
+      );
+
       // Update sync timestamp
       this.updateSyncTimestamp();
-      
+
       console.log(`Loaded ${shopifyArtworks.length} Shopify artworks`);
       return shopifyArtworks;
-      
     } catch (error) {
       console.error('Error fetching Shopify artworks:', error);
       return [];
@@ -387,22 +416,23 @@ ${artworkEntries.join(',\n')}
       if (cachedCount !== null) {
         return cachedCount;
       }
-      
+
       // Fetch fresh count
       const response = await fetch('/api/products/stats');
-      
+
       if (!response.ok) {
         return 0;
       }
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
-        const count = data.data.publishedProducts || data.data.totalProducts || 0;
+        const count =
+          data.data.publishedProducts || data.data.totalProducts || 0;
         this.setCachedShopifyCount(count);
         return count;
       }
-      
+
       return 0;
     } catch (error) {
       console.error('Error getting Shopify artwork count:', error);
@@ -416,22 +446,22 @@ ${artworkEntries.join(',\n')}
   private static getCachedShopifyCount(): number | null {
     try {
       if (typeof window === 'undefined') return null;
-      
+
       const cached = localStorage.getItem('SHOPIFY_COUNT_CACHE');
       const timestamp = localStorage.getItem('SHOPIFY_COUNT_TIMESTAMP');
-      
+
       if (!cached || !timestamp) return null;
-      
+
       const age = Date.now() - parseInt(timestamp);
       const maxAge = 5 * 60 * 1000; // 5 minutes
-      
+
       if (age > maxAge) {
         // Cache expired
         localStorage.removeItem('SHOPIFY_COUNT_CACHE');
         localStorage.removeItem('SHOPIFY_COUNT_TIMESTAMP');
         return null;
       }
-      
+
       return parseInt(cached);
     } catch (error) {
       return null;
@@ -444,7 +474,7 @@ ${artworkEntries.join(',\n')}
   private static setCachedShopifyCount(count: number): void {
     try {
       if (typeof window === 'undefined') return;
-      
+
       localStorage.setItem('SHOPIFY_COUNT_CACHE', count.toString());
       localStorage.setItem('SHOPIFY_COUNT_TIMESTAMP', Date.now().toString());
     } catch (error) {
@@ -458,7 +488,7 @@ ${artworkEntries.join(',\n')}
   private static updateSyncTimestamp(): void {
     try {
       if (typeof window === 'undefined') return;
-      
+
       localStorage.setItem(this.SHOPIFY_SYNC_KEY, new Date().toISOString());
     } catch (error) {
       console.error('Error updating sync timestamp:', error);
@@ -471,7 +501,7 @@ ${artworkEntries.join(',\n')}
   private static getLastSyncTime(): string | undefined {
     try {
       if (typeof window === 'undefined') return undefined;
-      
+
       return localStorage.getItem(this.SHOPIFY_SYNC_KEY) || undefined;
     } catch (error) {
       return undefined;
@@ -488,10 +518,10 @@ ${artworkEntries.join(',\n')}
         localStorage.removeItem('SHOPIFY_COUNT_CACHE');
         localStorage.removeItem('SHOPIFY_COUNT_TIMESTAMP');
       }
-      
+
       // Trigger portfolio update
       this.notifyGalleryUpdate();
-      
+
       console.log('Shopify artworks cache cleared and refresh triggered');
     } catch (error) {
       console.error('Error refreshing Shopify artworks:', error);
@@ -504,7 +534,7 @@ ${artworkEntries.join(',\n')}
   static setSourceConfig(config: SourceConfig): void {
     try {
       if (typeof window === 'undefined') return;
-      
+
       localStorage.setItem(this.PORTFOLIO_CONFIG_KEY, JSON.stringify(config));
       this.notifyGalleryUpdate();
     } catch (error) {
@@ -518,20 +548,32 @@ ${artworkEntries.join(',\n')}
   static getSourceConfig(): SourceConfig {
     try {
       if (typeof window === 'undefined') {
-        return { includeStatic: true, includeUploaded: true, includeShopify: true };
+        return {
+          includeStatic: true,
+          includeUploaded: true,
+          includeShopify: true,
+        };
       }
-      
+
       const stored = localStorage.getItem(this.PORTFOLIO_CONFIG_KEY);
-      
+
       if (stored) {
         return JSON.parse(stored);
       }
-      
+
       // Default configuration
-      return { includeStatic: true, includeUploaded: true, includeShopify: true };
+      return {
+        includeStatic: true,
+        includeUploaded: true,
+        includeShopify: true,
+      };
     } catch (error) {
       console.error('Error getting source config:', error);
-      return { includeStatic: true, includeUploaded: true, includeShopify: true };
+      return {
+        includeStatic: true,
+        includeUploaded: true,
+        includeShopify: true,
+      };
     }
   }
 }

@@ -11,7 +11,11 @@ interface FileListProps {
   onUpdateProgress: (fileId: string, progress: number) => void;
 }
 
-export default function FileList({ files, onRemoveFile, onUpdateProgress }: FileListProps) {
+export default function FileList({
+  files,
+  onRemoveFile,
+  onUpdateProgress,
+}: FileListProps) {
   if (files.length === 0) {
     return null;
   }
@@ -20,7 +24,14 @@ export default function FileList({ files, onRemoveFile, onUpdateProgress }: File
     switch (status) {
       case 'pending':
         return (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <circle cx="12" cy="12" r="10" />
             <polyline points="12,6 12,12 16,14" />
           </svg>
@@ -28,7 +39,14 @@ export default function FileList({ files, onRemoveFile, onUpdateProgress }: File
       case 'uploading':
         return (
           <div className={styles.spinner}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M21 12a9 9 0 11-6.219-8.56" />
             </svg>
           </div>
@@ -36,20 +54,41 @@ export default function FileList({ files, onRemoveFile, onUpdateProgress }: File
       case 'processing':
         return (
           <div className={styles.spinner}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M21 12a9 9 0 11-6.219-8.56" />
             </svg>
           </div>
         );
       case 'completed':
         return (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <polyline points="20,6 9,17 4,12" />
           </svg>
         );
       case 'error':
         return (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <circle cx="12" cy="12" r="10" />
             <line x1="15" y1="9" x2="9" y2="15" />
             <line x1="9" y1="9" x2="15" y2="15" />
@@ -98,17 +137,20 @@ export default function FileList({ files, onRemoveFile, onUpdateProgress }: File
       <h3 className={styles.title}>Selected Files ({files.length})</h3>
       <div className={styles.fileList}>
         {files.map((file) => (
-          <div key={file.id} className={`${styles.fileItem} ${getStatusClass(file.status)}`}>
+          <div
+            key={file.id}
+            className={`${styles.fileItem} ${getStatusClass(file.status)}`}
+          >
             <div className={styles.preview}>
               {file.preview && (
-                <img 
-                  src={file.preview} 
+                <img
+                  src={file.preview}
                   alt={file.name}
                   className={styles.previewImage}
                 />
               )}
             </div>
-            
+
             <div className={styles.fileInfo}>
               <div className={styles.fileName}>{file.name}</div>
               <div className={styles.fileDetails}>
@@ -116,11 +158,9 @@ export default function FileList({ files, onRemoveFile, onUpdateProgress }: File
                 <span className={styles.separator}>•</span>
                 <span>{file.type}</span>
               </div>
-              
+
               {file.error && (
-                <div className={styles.errorMessage}>
-                  {file.error}
-                </div>
+                <div className={styles.errorMessage}>{file.error}</div>
               )}
             </div>
 
@@ -135,7 +175,7 @@ export default function FileList({ files, onRemoveFile, onUpdateProgress }: File
 
             <div className={styles.progressContainer}>
               <div className={styles.progressBar}>
-                <div 
+                <div
                   className={styles.progressFill}
                   style={{ width: `${file.progress}%` }}
                 />
@@ -148,9 +188,18 @@ export default function FileList({ files, onRemoveFile, onUpdateProgress }: File
               className={styles.removeButton}
               onClick={() => onRemoveFile(file.id)}
               aria-label={`Remove ${file.name}`}
-              disabled={file.status === 'uploading' || file.status === 'processing'}
+              disabled={
+                file.status === 'uploading' || file.status === 'processing'
+              }
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>

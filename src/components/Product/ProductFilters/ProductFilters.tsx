@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ProductFilters as ProductFiltersType, ProductCategory, ProductTag } from '@/types/product';
+import {
+  ProductFilters as ProductFiltersType,
+  ProductCategory,
+  ProductTag,
+} from '@/types/product';
 import styles from './ProductFilters.module.css';
 
 interface ProductFiltersProps {
@@ -68,11 +72,17 @@ export default function ProductFilters({
 }: ProductFiltersProps) {
   // Local state for debounced inputs
   const [searchQuery, setSearchQuery] = useState(filters.search || '');
-  const [minPrice, setMinPrice] = useState(filters.priceRange?.min?.toString() || '');
-  const [maxPrice, setMaxPrice] = useState(filters.priceRange?.max?.toString() || '');
+  const [minPrice, setMinPrice] = useState(
+    filters.priceRange?.min?.toString() || ''
+  );
+  const [maxPrice, setMaxPrice] = useState(
+    filters.priceRange?.max?.toString() || ''
+  );
 
   // Local state for fetched data
-  const [categories, setCategories] = useState<ProductCategory[]>(propCategories || []);
+  const [categories, setCategories] = useState<ProductCategory[]>(
+    propCategories || []
+  );
   const [tags, setTags] = useState<ProductTag[]>(propTags || []);
   const [vendors, setVendors] = useState<VendorData[]>([]);
   const [productTypes, setProductTypes] = useState<ProductTypeData[]>([]);
@@ -105,17 +115,17 @@ export default function ProductFilters({
         // Fetch categories and tags in parallel
         const [categoriesResponse, tagsResponse] = await Promise.all([
           fetch('/api/products/categories'),
-          fetch('/api/products/tags')
+          fetch('/api/products/tags'),
         ]);
 
         if (!categoriesResponse.ok || !tagsResponse.ok) {
           throw new Error('Failed to fetch filter data');
         }
 
-        const [categoriesData, tagsData]: [CategoryAPIResponse, TagAPIResponse] = await Promise.all([
-          categoriesResponse.json(),
-          tagsResponse.json()
-        ]);
+        const [categoriesData, tagsData]: [
+          CategoryAPIResponse,
+          TagAPIResponse,
+        ] = await Promise.all([categoriesResponse.json(), tagsResponse.json()]);
 
         if (categoriesData.success) {
           setCategories(categoriesData.data.categories);
@@ -136,11 +146,12 @@ export default function ProductFilters({
           { name: 'Drawing', count: 4 },
           { name: 'Mixed Media', count: 3 },
         ]);
-
       } catch (err) {
         console.error('Error fetching filter data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch filter data');
-        
+        setError(
+          err instanceof Error ? err.message : 'Failed to fetch filter data'
+        );
+
         // Fallback to mock data on error
         setCategories(propCategories || []);
         setTags(propTags || []);
@@ -185,25 +196,25 @@ export default function ProductFilters({
   useEffect(() => {
     const min = debouncedMinPrice ? parseFloat(debouncedMinPrice) : undefined;
     const max = debouncedMaxPrice ? parseFloat(debouncedMaxPrice) : undefined;
-    
+
     const currentMin = filters.priceRange?.min;
     const currentMax = filters.priceRange?.max;
-    
+
     if (min !== currentMin || max !== currentMax) {
       let priceRange = undefined;
-      
+
       if (min !== undefined || max !== undefined) {
         priceRange = {
           min: min || 0,
           max: max || 9999999,
         };
-        
+
         // Validate price range
         if (priceRange.min > priceRange.max) {
           return; // Don't update if invalid
         }
       }
-      
+
       onFiltersChange({
         ...filters,
         priceRange,
@@ -212,52 +223,67 @@ export default function ProductFilters({
   }, [debouncedMinPrice, debouncedMaxPrice, filters, onFiltersChange]);
 
   // Handle immediate filter changes (non-debounced)
-  const handleCategoryChange = useCallback((category: string) => {
-    onFiltersChange({
-      ...filters,
-      category: category === 'all' ? undefined : category,
-    });
-  }, [filters, onFiltersChange]);
+  const handleCategoryChange = useCallback(
+    (category: string) => {
+      onFiltersChange({
+        ...filters,
+        category: category === 'all' ? undefined : category,
+      });
+    },
+    [filters, onFiltersChange]
+  );
 
-  const handleStatusChange = useCallback((status: string) => {
-    onFiltersChange({
-      ...filters,
-      status: status === 'all' ? undefined : status,
-      publishedOnly: status === 'published' ? true : undefined,
-    });
-  }, [filters, onFiltersChange]);
+  const handleStatusChange = useCallback(
+    (status: string) => {
+      onFiltersChange({
+        ...filters,
+        status: status === 'all' ? undefined : status,
+        publishedOnly: status === 'published' ? true : undefined,
+      });
+    },
+    [filters, onFiltersChange]
+  );
 
-  const handleVendorChange = useCallback((vendor: string) => {
-    onFiltersChange({
-      ...filters,
-      vendor: vendor === 'all' ? undefined : vendor,
-    });
-  }, [filters, onFiltersChange]);
+  const handleVendorChange = useCallback(
+    (vendor: string) => {
+      onFiltersChange({
+        ...filters,
+        vendor: vendor === 'all' ? undefined : vendor,
+      });
+    },
+    [filters, onFiltersChange]
+  );
 
-  const handleProductTypeChange = useCallback((productType: string) => {
-    onFiltersChange({
-      ...filters,
-      productType: productType === 'all' ? undefined : productType,
-    });
-  }, [filters, onFiltersChange]);
+  const handleProductTypeChange = useCallback(
+    (productType: string) => {
+      onFiltersChange({
+        ...filters,
+        productType: productType === 'all' ? undefined : productType,
+      });
+    },
+    [filters, onFiltersChange]
+  );
 
-  const handleTagToggle = useCallback((tagName: string) => {
-    const currentTags = filters.tags || [];
-    const newTags = currentTags.includes(tagName)
-      ? currentTags.filter(t => t !== tagName)
-      : [...currentTags, tagName];
-    
-    onFiltersChange({
-      ...filters,
-      tags: newTags.length > 0 ? newTags : undefined,
-    });
-  }, [filters, onFiltersChange]);
+  const handleTagToggle = useCallback(
+    (tagName: string) => {
+      const currentTags = filters.tags || [];
+      const newTags = currentTags.includes(tagName)
+        ? currentTags.filter((t) => t !== tagName)
+        : [...currentTags, tagName];
+
+      onFiltersChange({
+        ...filters,
+        tags: newTags.length > 0 ? newTags : undefined,
+      });
+    },
+    [filters, onFiltersChange]
+  );
 
   const handleClearFilters = useCallback(() => {
     setSearchQuery('');
     setMinPrice('');
     setMaxPrice('');
-    
+
     onFiltersChange({
       publishedOnly: true, // Default to showing only published products
     });
@@ -279,11 +305,9 @@ export default function ProductFilters({
   // Combine loading states
   const isLoading = loading || dataLoading;
 
-  const containerClasses = [
-    styles.container,
-    styles[layout],
-    className,
-  ].filter(Boolean).join(' ');
+  const containerClasses = [styles.container, styles[layout], className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={containerClasses}>
@@ -365,8 +389,7 @@ export default function ProductFilters({
             id="status-select"
             className={styles.select}
             value={
-              filters.publishedOnly ? 'published' : 
-              filters.status || 'all'
+              filters.publishedOnly ? 'published' : filters.status || 'all'
             }
             onChange={(e) => handleStatusChange(e.target.value)}
           >
@@ -496,11 +519,21 @@ export default function ProductFilters({
       )}
 
       {error && !isLoading && (
-        <div className={styles.loading} style={{ color: '#dc2626', borderTop: '1px solid #dc2626' }}>
+        <div
+          className={styles.loading}
+          style={{ color: '#dc2626', borderTop: '1px solid #dc2626' }}
+        >
           <span>⚠️ {error}</span>
-          <button 
-            onClick={() => window.location.reload()} 
-            style={{ marginLeft: '8px', textDecoration: 'underline', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              marginLeft: '8px',
+              textDecoration: 'underline',
+              background: 'none',
+              border: 'none',
+              color: 'inherit',
+              cursor: 'pointer',
+            }}
           >
             Retry
           </button>

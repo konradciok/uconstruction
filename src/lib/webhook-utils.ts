@@ -43,15 +43,15 @@ export function verifyWebhookSignature(
     const hmac = createHmac('sha256', secret);
     hmac.update(body, 'utf8');
     const calculatedSignature = hmac.digest('base64');
-    
+
     // Use timing-safe comparison
     const signatureBuffer = Buffer.from(signature, 'base64');
     const calculatedBuffer = Buffer.from(calculatedSignature, 'base64');
-    
+
     if (signatureBuffer.length !== calculatedBuffer.length) {
       return false;
     }
-    
+
     return timingSafeEqual(signatureBuffer, calculatedBuffer);
   } catch (error) {
     console.error('HMAC verification error:', error);
@@ -64,20 +64,20 @@ export function verifyWebhookSignature(
  */
 export function extractWebhookHeaders(headers: Headers): ShopifyWebhookHeaders {
   const result: ShopifyWebhookHeaders = {};
-  
+
   // Convert Headers to case-insensitive lookup
   const headerMap = new Map<string, string>();
   headers.forEach((value, key) => {
     headerMap.set(key.toLowerCase(), value);
   });
-  
+
   result['x-shopify-webhook-id'] = headerMap.get('x-shopify-webhook-id');
   result['x-shopify-event-id'] = headerMap.get('x-shopify-event-id');
   result['x-shopify-triggered-at'] = headerMap.get('x-shopify-triggered-at');
   result['x-shopify-api-version'] = headerMap.get('x-shopify-api-version');
   result['x-shopify-shop-domain'] = headerMap.get('x-shopify-shop-domain');
   result['x-shopify-hmac-sha256'] = headerMap.get('x-shopify-hmac-sha256');
-  
+
   return result;
 }
 
@@ -87,19 +87,19 @@ export function extractWebhookHeaders(headers: Headers): ShopifyWebhookHeaders {
 export function isDuplicateEvent(eventId: string, webhookId?: string): boolean {
   // Clean up expired entries
   cleanExpiredEvents();
-  
+
   // Primary deduplication using X-Shopify-Event-Id
   if (eventId && eventCache.has(eventId)) {
     console.log(`Duplicate event detected: ${eventId}`);
     return true;
   }
-  
+
   // Fallback to X-Shopify-Webhook-Id if Event-Id not available
   if (!eventId && webhookId && eventCache.has(webhookId)) {
     console.log(`Duplicate webhook detected: ${webhookId}`);
     return true;
   }
-  
+
   return false;
 }
 
@@ -109,11 +109,11 @@ export function isDuplicateEvent(eventId: string, webhookId?: string): boolean {
 export function markEventProcessed(eventId: string, webhookId?: string): void {
   const timestamp = Date.now();
   const cacheEntry = { timestamp, processed: true };
-  
+
   if (eventId) {
     eventCache.set(eventId, cacheEntry);
   }
-  
+
   if (webhookId) {
     eventCache.set(webhookId, cacheEntry);
   }
@@ -125,15 +125,15 @@ export function markEventProcessed(eventId: string, webhookId?: string): void {
 function cleanExpiredEvents(): void {
   const now = Date.now();
   const expired: string[] = [];
-  
+
   for (const [key, entry] of eventCache.entries()) {
     if (now - entry.timestamp > CACHE_TTL) {
       expired.push(key);
     }
   }
-  
-  expired.forEach(key => eventCache.delete(key));
-  
+
+  expired.forEach((key) => eventCache.delete(key));
+
   if (expired.length > 0) {
     console.log(`Cleaned up ${expired.length} expired webhook events`);
   }
@@ -148,17 +148,18 @@ export async function parseWebhookEvent(
 ): Promise<WebhookEvent | null> {
   try {
     const body = await request.json();
-    const eventId = headers['x-shopify-event-id'] || headers['x-shopify-webhook-id'];
-    
+    const eventId =
+      headers['x-shopify-event-id'] || headers['x-shopify-webhook-id'];
+
     if (!eventId) {
       console.error('Missing event ID in webhook headers');
       return null;
     }
-    
-    const triggeredAt = headers['x-shopify-triggered-at'] 
+
+    const triggeredAt = headers['x-shopify-triggered-at']
       ? new Date(headers['x-shopify-triggered-at'])
       : new Date();
-    
+
     return {
       id: headers['x-shopify-webhook-id'] || eventId,
       eventId,
@@ -194,14 +195,18 @@ export function logWebhookDiagnostics(
     success,
     error,
   };
-  
+
   console.log('[Webhook]', JSON.stringify(diagnostics));
-  
+
   // Log version drift detection
   const expectedVersion = process.env.SHOPIFY_API_VERSION;
   const receivedVersion = headers['x-shopify-api-version'];
-  
-  if (expectedVersion && receivedVersion && expectedVersion !== receivedVersion) {
+
+  if (
+    expectedVersion &&
+    receivedVersion &&
+    expectedVersion !== receivedVersion
+  ) {
     console.warn(
       `[Webhook] API version drift detected: expected ${expectedVersion}, received ${receivedVersion}`
     );

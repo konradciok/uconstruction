@@ -38,11 +38,11 @@
   .footer {
     padding: var(--spacing-xl) 0;
   }
-  
+
   .footerContent {
     gap: var(--spacing-lg);
   }
-  
+
   .copyright p {
     font-size: var(--font-size-base);
   }
@@ -53,18 +53,18 @@
   .footer {
     padding: var(--spacing-md) 0;
   }
-  
+
   .footerContent {
     flex-direction: column;
     text-align: center;
     gap: var(--spacing-lg);
   }
-  
+
   .copyright {
     min-width: auto;
     order: 2;
   }
-  
+
   .socialLinks {
     order: 1;
   }

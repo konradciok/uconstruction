@@ -20,80 +20,99 @@ export default function UploadPage() {
   const [autoAddToPortfolio, setAutoAddToPortfolio] = useState(true);
 
   const handleFilesSelected = useCallback((files: UploadedFile[]) => {
-    setUploadedFiles(prev => [...prev, ...files]);
+    setUploadedFiles((prev) => [...prev, ...files]);
     setError(null);
   }, []);
 
   const handleRemoveFile = useCallback((fileId: string) => {
-    setUploadedFiles(prev => prev.filter(file => file.id !== fileId));
+    setUploadedFiles((prev) => prev.filter((file) => file.id !== fileId));
   }, []);
 
-  const handleUpdateProgress = useCallback((fileId: string, progress: number) => {
-    setUploadedFiles(prev => 
-      prev.map(file => 
-        file.id === fileId 
-          ? { ...file, progress, status: progress === 100 ? 'completed' : 'uploading' as const }
-          : file
-      )
-    );
-  }, []);
+  const handleUpdateProgress = useCallback(
+    (fileId: string, progress: number) => {
+      setUploadedFiles((prev) =>
+        prev.map((file) =>
+          file.id === fileId
+            ? {
+                ...file,
+                progress,
+                status: progress === 100 ? 'completed' : ('uploading' as const),
+              }
+            : file
+        )
+      );
+    },
+    []
+  );
 
-  const handleFormSubmit = useCallback(async (formData: UploadFormData) => {
-    if (uploadedFiles.length === 0) {
-      setError('Please select at least one image to upload.');
-      return;
-    }
-
-    setIsUploading(true);
-    setError(null);
-
-    try {
-      // Convert UploadedFile[] to File[] for processing
-      const files: File[] = [];
-      for (const uploadedFile of uploadedFiles) {
-        // Create a File object from the preview URL
-        const response = await fetch(uploadedFile.preview!);
-        const blob = await response.blob();
-        const file = new File([blob], uploadedFile.name, { type: uploadedFile.type });
-        files.push(file);
+  const handleFormSubmit = useCallback(
+    async (formData: UploadFormData) => {
+      if (uploadedFiles.length === 0) {
+        setError('Please select at least one image to upload.');
+        return;
       }
 
-      // Process and upload images
-      const results = await UploadService.uploadImages(
-        files,
-        formData,
-        handleUpdateProgress
-      );
+      setIsUploading(true);
+      setError(null);
 
-      setProcessedImages(results);
-      setShowResults(true);
-      
-      // Automatically add to portfolio if enabled
-      if (autoAddToPortfolio) {
-        try {
-          await Portfolio2Manager.addArtworks(results);
-          console.log('Successfully added artworks to portfolio');
-        } catch (portfolioError) {
-          console.error('Error adding to portfolio:', portfolioError);
-          // Don't fail the upload if portfolio update fails
+      try {
+        // Convert UploadedFile[] to File[] for processing
+        const files: File[] = [];
+        for (const uploadedFile of uploadedFiles) {
+          // Create a File object from the preview URL
+          const response = await fetch(uploadedFile.preview!);
+          const blob = await response.blob();
+          const file = new File([blob], uploadedFile.name, {
+            type: uploadedFile.type,
+          });
+          files.push(file);
         }
+
+        // Process and upload images
+        const results = await UploadService.uploadImages(
+          files,
+          formData,
+          handleUpdateProgress
+        );
+
+        setProcessedImages(results);
+        setShowResults(true);
+
+        // Automatically add to portfolio if enabled
+        if (autoAddToPortfolio) {
+          try {
+            await Portfolio2Manager.addArtworks(results);
+            console.log('Successfully added artworks to portfolio');
+          } catch (portfolioError) {
+            console.error('Error adding to portfolio:', portfolioError);
+            // Don't fail the upload if portfolio update fails
+          }
+        }
+
+        // Clear uploaded files after successful processing
+        setUploadedFiles([]);
+      } catch (err) {
+        console.error('Upload error:', err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'An error occurred during upload.'
+        );
+
+        // Update file statuses to error
+        setUploadedFiles((prev) =>
+          prev.map((file) => ({
+            ...file,
+            status: 'error' as const,
+            error: err instanceof Error ? err.message : 'Upload failed',
+          }))
+        );
+      } finally {
+        setIsUploading(false);
       }
-      
-      // Clear uploaded files after successful processing
-      setUploadedFiles([]);
-      
-    } catch (err) {
-      console.error('Upload error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred during upload.');
-      
-      // Update file statuses to error
-      setUploadedFiles(prev => 
-        prev.map(file => ({ ...file, status: 'error' as const, error: err instanceof Error ? err.message : 'Upload failed' }))
-      );
-    } finally {
-      setIsUploading(false);
-    }
-  }, [uploadedFiles, handleUpdateProgress, autoAddToPortfolio]);
+    },
+    [uploadedFiles, handleUpdateProgress, autoAddToPortfolio]
+  );
 
   const handleDownloadPortfolioData = useCallback(() => {
     if (processedImages.length > 0) {
@@ -122,14 +141,16 @@ export default function UploadPage() {
         const { title, tag } = parsePaintingMetaFromFilename(first.name);
         // Fire a custom event that UploadForm can listen to and prefill values
         if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('upload-defaults', {
-            detail: {
-              title,
-              dimensions: '56 × 76 cm',
-              medium: 'Watercolor',
-              tags: [tag],
-            }
-          }));
+          window.dispatchEvent(
+            new CustomEvent('upload-defaults', {
+              detail: {
+                title,
+                dimensions: '56 × 76 cm',
+                medium: 'Watercolor',
+                tags: [tag],
+              },
+            })
+          );
         }
       }
     }
@@ -143,7 +164,8 @@ export default function UploadPage() {
           <p>Successfully processed {processedImages.length} image(s)</p>
           {autoAddToPortfolio && (
             <p className={styles.successMessage}>
-              ✅ Images have been automatically added to your Portfolio 2 gallery!
+              ✅ Images have been automatically added to your Portfolio 2
+              gallery!
             </p>
           )}
         </div>
@@ -191,7 +213,8 @@ export default function UploadPage() {
                 </div>
                 <div className={styles.resultPaths}>
                   <div>
-                    <strong>Thumbnail:</strong> /img/portfolio2/thumbs/{image.id}.jpg
+                    <strong>Thumbnail:</strong> /img/portfolio2/thumbs/
+                    {image.id}.jpg
                   </div>
                   <div>
                     <strong>Full:</strong> /img/portfolio2/full/{image.id}.jpg
@@ -206,17 +229,35 @@ export default function UploadPage() {
             <ol>
               {autoAddToPortfolio ? (
                 <>
-                  <li>✅ Images have been automatically added to your Portfolio 2 gallery</li>
-                  <li>Visit <a href="/portfolio2" className={styles.link}>Portfolio 2</a> to see your new images</li>
-                  <li>Images are stored in the correct directories automatically</li>
+                  <li>
+                    ✅ Images have been automatically added to your Portfolio 2
+                    gallery
+                  </li>
+                  <li>
+                    Visit{' '}
+                    <a href="/portfolio2" className={styles.link}>
+                      Portfolio 2
+                    </a>{' '}
+                    to see your new images
+                  </li>
+                  <li>
+                    Images are stored in the correct directories automatically
+                  </li>
                 </>
               ) : (
                 <>
-                  <li>Click "Export to Portfolio" to add images to your gallery</li>
-                  <li>Place the processed images in the correct directories:
+                  <li>
+                    Click "Export to Portfolio" to add images to your gallery
+                  </li>
+                  <li>
+                    Place the processed images in the correct directories:
                     <ul>
-                      <li>Thumbnails: <code>public/img/portfolio2/thumbs/</code></li>
-                      <li>Full images: <code>public/img/portfolio2/full/</code></li>
+                      <li>
+                        Thumbnails: <code>public/img/portfolio2/thumbs/</code>
+                      </li>
+                      <li>
+                        Full images: <code>public/img/portfolio2/full/</code>
+                      </li>
                     </ul>
                   </li>
                   <li>Import the downloaded data into your portfolio</li>
@@ -239,7 +280,14 @@ export default function UploadPage() {
       {error && (
         <div className={styles.error}>
           <div className={styles.errorIcon}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <circle cx="12" cy="12" r="10" />
               <line x1="15" y1="9" x2="9" y2="15" />
               <line x1="9" y1="9" x2="15" y2="15" />
@@ -252,18 +300,18 @@ export default function UploadPage() {
         </div>
       )}
 
-      <FileUpload 
+      <FileUpload
         onFilesSelected={handleFilesSelected}
         disabled={isUploading}
       />
 
-      <FileList 
+      <FileList
         files={uploadedFiles}
         onRemoveFile={handleRemoveFile}
         onUpdateProgress={handleUpdateProgress}
       />
 
-      <UploadForm 
+      <UploadForm
         onSubmit={handleFormSubmit}
         disabled={uploadedFiles.length === 0 || isUploading}
         isLoading={isUploading}
@@ -284,8 +332,8 @@ export default function UploadPage() {
           </span>
         </label>
         <p className={styles.toggleDescription}>
-          When enabled, uploaded images will be automatically added to your Portfolio 2 gallery 
-          and will appear immediately without manual import.
+          When enabled, uploaded images will be automatically added to your
+          Portfolio 2 gallery and will appear immediately without manual import.
         </p>
       </div>
 
@@ -294,8 +342,14 @@ export default function UploadPage() {
         <ol>
           <li>Select images to upload (JPEG, PNG, WebP, max 10MB each)</li>
           <li>Images will be automatically resized to 4:5 aspect ratio</li>
-          <li>Thumbnails (800x1000px) and full images (1600x2000px) will be generated</li>
-          <li>Multiple formats (JPG, WebP, AVIF) will be created for optimal performance</li>
+          <li>
+            Thumbnails (800x1000px) and full images (1600x2000px) will be
+            generated
+          </li>
+          <li>
+            Multiple formats (JPG, WebP, AVIF) will be created for optimal
+            performance
+          </li>
           <li>Images can be automatically added to your Portfolio 2 gallery</li>
         </ol>
       </div>

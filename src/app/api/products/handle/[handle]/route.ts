@@ -14,7 +14,7 @@ export async function GET(
     // Await params and validate handle parameter
     const resolvedParams = await params;
     const handle = resolvedParams.handle?.trim();
-    
+
     if (!handle) {
       return NextResponse.json(
         {
@@ -64,10 +64,9 @@ export async function GET(
         product,
       },
     });
-
   } catch (error) {
     console.error(`[API] Error fetching product by handle:`, error);
-    
+
     return NextResponse.json(
       {
         success: false,

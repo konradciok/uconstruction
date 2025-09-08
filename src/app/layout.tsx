@@ -21,9 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased-text" suppressHydrationWarning={true}>
-        <BodyWrapper>
-          {children}
-        </BodyWrapper>
+        <BodyWrapper>{children}</BodyWrapper>
       </body>
     </html>
   );

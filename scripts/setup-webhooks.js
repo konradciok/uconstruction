@@ -44,7 +44,7 @@ function parseArgs() {
     secret: null,
     dryRun: false,
   };
-  
+
   for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
       case '--url':
@@ -87,13 +87,13 @@ Examples:
         break;
     }
   }
-  
+
   if (!options.url) {
     console.error('Error: --url is required');
     console.error('Run with --help for usage information');
     process.exit(1);
   }
-  
+
   return options;
 }
 
@@ -146,7 +146,7 @@ async function createWebhook({ domain, token, apiVersion }, webhookData) {
       }
     }
   `;
-  
+
   const variables = {
     topic: webhookData.topic,
     webhookSubscription: {
@@ -154,20 +154,26 @@ async function createWebhook({ domain, token, apiVersion }, webhookData) {
       format: 'JSON',
     },
   };
-  
+
   const { status, json } = await postGraphQL({
-    domain, token, apiVersion, query: mutation, variables
+    domain,
+    token,
+    apiVersion,
+    query: mutation,
+    variables,
   });
-  
+
   if (status !== 200 || json.errors) {
     throw new Error(`GraphQL error: ${JSON.stringify(json.errors || json)}`);
   }
-  
+
   const result = json.data?.webhookSubscriptionCreate;
   if (result?.userErrors?.length > 0) {
-    throw new Error(`Webhook creation error: ${JSON.stringify(result.userErrors)}`);
+    throw new Error(
+      `Webhook creation error: ${JSON.stringify(result.userErrors)}`
+    );
   }
-  
+
   return result?.webhookSubscription;
 }
 
@@ -188,16 +194,19 @@ async function listExistingWebhooks({ domain, token, apiVersion }) {
       }
     }
   `;
-  
+
   const { status, json } = await postGraphQL({
-    domain, token, apiVersion, query
+    domain,
+    token,
+    apiVersion,
+    query,
   });
-  
+
   if (status !== 200 || json.errors) {
     throw new Error(`GraphQL error: ${JSON.stringify(json.errors || json)}`);
   }
-  
-  return json.data?.webhookSubscriptions?.edges?.map(edge => edge.node) || [];
+
+  return json.data?.webhookSubscriptions?.edges?.map((edge) => edge.node) || [];
 }
 
 async function deleteWebhook({ domain, token, apiVersion }, webhookId) {
@@ -212,22 +221,28 @@ async function deleteWebhook({ domain, token, apiVersion }, webhookId) {
       }
     }
   `;
-  
+
   const variables = { id: webhookId };
-  
+
   const { status, json } = await postGraphQL({
-    domain, token, apiVersion, query: mutation, variables
+    domain,
+    token,
+    apiVersion,
+    query: mutation,
+    variables,
   });
-  
+
   if (status !== 200 || json.errors) {
     throw new Error(`GraphQL error: ${JSON.stringify(json.errors || json)}`);
   }
-  
+
   const result = json.data?.webhookSubscriptionDelete;
   if (result?.userErrors?.length > 0) {
-    throw new Error(`Webhook deletion error: ${JSON.stringify(result.userErrors)}`);
+    throw new Error(
+      `Webhook deletion error: ${JSON.stringify(result.userErrors)}`
+    );
   }
-  
+
   return result?.deletedWebhookSubscriptionId;
 }
 
@@ -238,13 +253,13 @@ function generateWebhookSecret() {
 function updateEnvFile(secret, baseUrl) {
   const envPath = path.join(process.cwd(), 'env.local');
   let envContent = '';
-  
+
   try {
     envContent = fs.readFileSync(envPath, 'utf8');
   } catch (err) {
     console.log('Creating new env.local file...');
   }
-  
+
   // Update or add webhook secret
   const secretLine = `SHOPIFY_WEBHOOK_SECRET="${secret}"`;
   if (envContent.includes('SHOPIFY_WEBHOOK_SECRET=')) {
@@ -252,13 +267,13 @@ function updateEnvFile(secret, baseUrl) {
   } else {
     envContent += `\n# Generated webhook secret\n${secretLine}\n`;
   }
-  
+
   // Add webhook base URL for reference
   const urlComment = `\n# Webhook base URL: ${baseUrl}`;
   if (!envContent.includes('Webhook base URL:')) {
     envContent += urlComment;
   }
-  
+
   fs.writeFileSync(envPath, envContent);
   console.log(`✓ Updated ${envPath} with webhook secret`);
 }
@@ -268,22 +283,22 @@ async function main() {
   const domain = getEnv('MYSHOPIFY_DOMAIN');
   const token = getEnv('SHOPIFY_ACCESS_TOKEN');
   const apiVersion = getEnv('SHOPIFY_API_VERSION');
-  
+
   const credentials = { domain, token, apiVersion };
-  
+
   console.log('🔧 Shopify Webhook Setup');
   console.log(`📍 Base URL: ${options.url}`);
   console.log(`🏪 Shop: ${domain}`);
   console.log(`📡 API Version: ${apiVersion}`);
-  
+
   if (options.dryRun) {
     console.log('🧪 DRY RUN MODE - No changes will be made');
   }
-  
+
   // Generate or use provided webhook secret
   const webhookSecret = options.secret || generateWebhookSecret();
   console.log(`🔐 Webhook Secret: ${webhookSecret.substring(0, 8)}...`);
-  
+
   // Define webhooks to create
   const webhooksToCreate = [
     {
@@ -292,13 +307,13 @@ async function main() {
       description: 'Product creation events',
     },
     {
-      topic: 'PRODUCTS_UPDATE', 
+      topic: 'PRODUCTS_UPDATE',
       callbackUrl: `${options.url}/api/shopify/webhooks/products`,
       description: 'Product update events',
     },
     {
       topic: 'PRODUCTS_DELETE',
-      callbackUrl: `${options.url}/api/shopify/webhooks/products`, 
+      callbackUrl: `${options.url}/api/shopify/webhooks/products`,
       description: 'Product deletion events',
     },
     {
@@ -309,7 +324,7 @@ async function main() {
     {
       topic: 'COLLECTIONS_UPDATE',
       callbackUrl: `${options.url}/api/shopify/webhooks/collections`,
-      description: 'Collection update events', 
+      description: 'Collection update events',
     },
     {
       topic: 'COLLECTIONS_DELETE',
@@ -317,37 +332,41 @@ async function main() {
       description: 'Collection deletion events',
     },
   ];
-  
+
   try {
     // List existing webhooks
     console.log('\n📋 Checking existing webhooks...');
     const existingWebhooks = await listExistingWebhooks(credentials);
-    
+
     if (existingWebhooks.length > 0) {
       console.log(`Found ${existingWebhooks.length} existing webhooks:`);
-      existingWebhooks.forEach(webhook => {
+      existingWebhooks.forEach((webhook) => {
         console.log(`  - ${webhook.topic}: ${webhook.callbackUrl}`);
       });
-      
+
       // Ask user if they want to delete existing webhooks
       console.log('\n⚠️  Note: Existing webhooks may conflict with new ones');
-      console.log('💡 Consider deleting old webhooks first with: --delete-existing');
+      console.log(
+        '💡 Consider deleting old webhooks first with: --delete-existing'
+      );
     }
-    
+
     if (options.dryRun) {
       console.log('\n📝 Would create these webhooks:');
-      webhooksToCreate.forEach(webhook => {
+      webhooksToCreate.forEach((webhook) => {
         console.log(`  - ${webhook.topic}: ${webhook.callbackUrl}`);
         console.log(`    ${webhook.description}`);
       });
-      console.log(`\n🔐 Would update env.local with secret: ${webhookSecret.substring(0, 8)}...`);
+      console.log(
+        `\n🔐 Would update env.local with secret: ${webhookSecret.substring(0, 8)}...`
+      );
       return;
     }
-    
+
     // Create webhooks
     console.log('\n🚀 Creating webhooks...');
     const createdWebhooks = [];
-    
+
     for (const webhookData of webhooksToCreate) {
       try {
         console.log(`Creating ${webhookData.topic}...`);
@@ -355,30 +374,36 @@ async function main() {
         createdWebhooks.push(webhook);
         console.log(`✓ Created: ${webhook.id}`);
       } catch (error) {
-        console.error(`❌ Failed to create ${webhookData.topic}:`, error.message);
+        console.error(
+          `❌ Failed to create ${webhookData.topic}:`,
+          error.message
+        );
         if (error.message.includes('already exists')) {
           console.log(`  → Webhook already exists, skipping...`);
         }
       }
     }
-    
+
     // Update environment file
     updateEnvFile(webhookSecret, options.url);
-    
+
     console.log('\n🎉 Webhook setup completed!');
     console.log(`✅ Created ${createdWebhooks.length} webhooks`);
     console.log('✅ Updated env.local with webhook secret');
-    
+
     console.log('\n📋 Next steps:');
-    console.log('1. Restart your development server to load new environment variables');
+    console.log(
+      '1. Restart your development server to load new environment variables'
+    );
     console.log('2. Test webhook endpoints with ngrok (for local development)');
     console.log('3. Monitor webhook delivery in your application logs');
-    
+
     console.log('\n🔍 Testing commands:');
     console.log('  npm run dev              # Start development server');
     console.log('  npm run sync:delta       # Test delta sync');
-    console.log('  ngrok http 3000          # Expose local server (if using --ngrok)');
-    
+    console.log(
+      '  ngrok http 3000          # Expose local server (if using --ngrok)'
+    );
   } catch (error) {
     console.error('\n❌ Setup failed:', error.message);
     process.exit(1);

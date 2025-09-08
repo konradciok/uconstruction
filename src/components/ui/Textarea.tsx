@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import styles from './Textarea.module.css';
 
-interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   error?: string;
   className?: string;

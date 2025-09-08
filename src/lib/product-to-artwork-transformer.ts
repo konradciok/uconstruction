@@ -6,26 +6,25 @@ import { Artwork } from '@/types/portfolio2';
  * Maintains the 4:5 aspect ratio expected by Portfolio2 components
  */
 export class ProductToArtworkTransformer {
-  
   /**
    * Convert a single ProductWithRelations to Artwork
    */
   static transformProduct(product: ProductWithRelations): Artwork {
     const primaryImage = product.media?.[0];
     const firstVariant = product.variants?.[0];
-    
+
     // Generate artwork ID (prefixed to avoid conflicts)
     const artworkId = `shopify-${product.id}`;
-    
+
     // Create dimensions string from product info
     const dimensions = this.createDimensionsString(product);
-    
+
     // Get price display
     const price = this.getPriceDisplay(product);
-    
+
     // Extract tags
-    const tags = product.productTags?.map(pt => pt.tag.name) || [];
-    
+    const tags = product.productTags?.map((pt) => pt.tag.name) || [];
+
     // Create artwork object
     const artwork: Artwork = {
       id: artworkId,
@@ -45,27 +44,27 @@ export class ProductToArtworkTransformer {
           vendor: product.vendor,
           status: product.status,
           shopifyId: product.shopifyId,
-          lastUpdated: product.shopifyUpdatedAt 
-            ? (product.shopifyUpdatedAt instanceof Date 
-                ? product.shopifyUpdatedAt.toISOString() 
-                : new Date(product.shopifyUpdatedAt).toISOString())
-            : new Date().toISOString()
-        }
-      }
+          lastUpdated: product.shopifyUpdatedAt
+            ? product.shopifyUpdatedAt instanceof Date
+              ? product.shopifyUpdatedAt.toISOString()
+              : new Date(product.shopifyUpdatedAt).toISOString()
+            : new Date().toISOString(),
+        },
+      },
     };
-    
+
     return artwork;
   }
-  
+
   /**
    * Convert multiple products to artworks
    */
   static transformProducts(products: ProductWithRelations[]): Artwork[] {
     return products
-      .filter(product => product.media && product.media.length > 0) // Only products with images
-      .map(product => this.transformProduct(product));
+      .filter((product) => product.media && product.media.length > 0) // Only products with images
+      .map((product) => this.transformProduct(product));
   }
-  
+
   /**
    * Create dimensions string from product data
    */
@@ -73,17 +72,17 @@ export class ProductToArtworkTransformer {
     // Try to extract dimensions from product title or description
     const titleDimensions = this.extractDimensionsFromText(product.title);
     if (titleDimensions) return titleDimensions;
-    
+
     // Try to extract from first image dimensions
     const primaryImage = product.media?.[0];
     if (primaryImage?.width && primaryImage?.height) {
       return `${primaryImage.width} × ${primaryImage.height} px, ${product.productType || 'digital'}`;
     }
-    
+
     // Fallback
     return `${product.productType || 'Art Print'}, ${product.vendor}`;
   }
-  
+
   /**
    * Extract dimensions from text (e.g., "Painting 30x40cm" -> "30 × 40 cm")
    */
@@ -92,9 +91,9 @@ export class ProductToArtworkTransformer {
     const patterns = [
       /(\d+)\s*[x×]\s*(\d+)\s*(cm|in|inch|inches)/i,
       /(\d+)\s*(cm|in|inch|inches)\s*[x×]\s*(\d+)\s*(cm|in|inch|inches)/i,
-      /(\d+["'′])\s*[x×]\s*(\d+["'′])/i
+      /(\d+["'′])\s*[x×]\s*(\d+["'′])/i,
     ];
-    
+
     for (const pattern of patterns) {
       const match = text.match(pattern);
       if (match) {
@@ -105,10 +104,10 @@ export class ProductToArtworkTransformer {
         }
       }
     }
-    
+
     return null;
   }
-  
+
   /**
    * Get price display string from product variants
    */
@@ -116,32 +115,32 @@ export class ProductToArtworkTransformer {
     if (!product.variants || product.variants.length === 0) {
       return '';
     }
-    
+
     const prices = product.variants
-      .filter(v => v.priceAmount)
-      .map(v => parseFloat(v.priceAmount as string));
-    
+      .filter((v) => v.priceAmount)
+      .map((v) => parseFloat(v.priceAmount as string));
+
     if (prices.length === 0) return '';
-    
+
     if (prices.length === 1) {
       return `$${prices[0].toFixed(2)}`;
     }
-    
+
     const min = Math.min(...prices);
     const max = Math.max(...prices);
-    
+
     if (min === max) {
       return `$${min.toFixed(2)}`;
     }
-    
+
     return `$${min.toFixed(2)} - $${max.toFixed(2)}`;
   }
-  
+
   /**
    * Create image configuration for Portfolio2 format
    */
   private static createImageConfig(
-    media: ProductWithRelations['media'][0] | undefined, 
+    media: ProductWithRelations['media'][0] | undefined,
     type: 'thumbnail' | 'full'
   ): Artwork['thumbnail'] | Artwork['full'] {
     if (!media) {
@@ -149,38 +148,38 @@ export class ProductToArtworkTransformer {
       return {
         jpg: '/images/placeholder-artwork.jpg',
         width: 320,
-        height: 400 // 4:5 ratio
+        height: 400, // 4:5 ratio
       };
     }
-    
+
     // Use original image for both thumbnail and full
     // In a production setup, you might want to generate optimized thumbnails
     const config = {
       jpg: media.url,
       width: media.width || 320,
-      height: media.height || 400
+      height: media.height || 400,
     };
-    
+
     // Ensure 4:5 aspect ratio for Portfolio2 compatibility
     if (type === 'thumbnail') {
       // Scale down for thumbnail while maintaining aspect ratio
       const targetWidth = 320;
       const aspectRatio = config.height / config.width;
       const targetHeight = Math.round(targetWidth * aspectRatio);
-      
+
       // Adjust to be closer to 4:5 if needed
       const idealHeight = Math.round(targetWidth * 1.25); // 4:5 ratio
-      
+
       return {
         jpg: config.jpg,
         width: targetWidth,
-        height: Math.min(targetHeight, idealHeight + 50) // Allow some flexibility
+        height: Math.min(targetHeight, idealHeight + 50), // Allow some flexibility
       };
     }
-    
+
     return config;
   }
-  
+
   /**
    * Create a placeholder artwork for products without images
    */
@@ -192,16 +191,16 @@ export class ProductToArtworkTransformer {
       thumbnail: {
         jpg: '/images/placeholder-artwork.jpg',
         width: 320,
-        height: 400
+        height: 400,
       },
       full: {
         jpg: '/images/placeholder-artwork.jpg',
         width: 800,
-        height: 1000
+        height: 1000,
       },
       alt: product.title,
       medium: product.productType || 'Digital Art',
-      tags: product.productTags?.map(pt => pt.tag.name) || [],
+      tags: product.productTags?.map((pt) => pt.tag.name) || [],
       source: {
         type: 'shopify',
         id: product.id,
@@ -211,21 +210,21 @@ export class ProductToArtworkTransformer {
           vendor: product.vendor,
           status: product.status,
           shopifyId: product.shopifyId,
-          lastUpdated: new Date().toISOString()
-        }
-      }
+          lastUpdated: new Date().toISOString(),
+        },
+      },
     };
   }
-  
+
   /**
    * Filter and validate transformed artworks
    */
   static validateArtworks(artworks: Artwork[]): Artwork[] {
-    return artworks.filter(artwork => {
+    return artworks.filter((artwork) => {
       // Basic validation
       if (!artwork.id || !artwork.title) return false;
       if (!artwork.thumbnail?.jpg || !artwork.full?.jpg) return false;
-      
+
       return true;
     });
   }

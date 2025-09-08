@@ -35,7 +35,9 @@ export class ProductService {
         where,
         orderBy,
         take: pagination.take ? pagination.take + 1 : 21, // Take one extra to check if there are more
-        cursor: pagination.cursor ? { id: parseInt(pagination.cursor) } : undefined,
+        cursor: pagination.cursor
+          ? { id: parseInt(pagination.cursor) }
+          : undefined,
         skip: pagination.cursor ? 1 : 0,
         include: {
           variants: true,
@@ -62,9 +64,10 @@ export class ProductService {
       return {
         products: resultProducts as ProductWithRelations[],
         hasMore,
-        nextCursor: hasMore && resultProducts.length > 0 
-          ? resultProducts[resultProducts.length - 1].id.toString()
-          : undefined,
+        nextCursor:
+          hasMore && resultProducts.length > 0
+            ? resultProducts[resultProducts.length - 1].id.toString()
+            : undefined,
       };
     } catch (error) {
       this.handleError('Failed to get products', error);
@@ -107,7 +110,9 @@ export class ProductService {
   /**
    * Get a single product by handle
    */
-  async getProductByHandle(handle: string): Promise<ProductWithRelations | null> {
+  async getProductByHandle(
+    handle: string
+  ): Promise<ProductWithRelations | null> {
     try {
       const product = await this.prisma.product.findUnique({
         where: { handle },
@@ -178,7 +183,9 @@ export class ProductService {
       const products = await this.prisma.product.findMany({
         where,
         take: pagination.take || 20,
-        cursor: pagination.cursor ? { id: parseInt(pagination.cursor) } : undefined,
+        cursor: pagination.cursor
+          ? { id: parseInt(pagination.cursor) }
+          : undefined,
         skip: pagination.cursor ? 1 : 0,
         include: {
           variants: true,
@@ -196,10 +203,7 @@ export class ProductService {
             },
           },
         },
-        orderBy: [
-          { title: 'asc' },
-          { updatedAt: 'desc' },
-        ],
+        orderBy: [{ title: 'asc' }, { updatedAt: 'desc' }],
       });
 
       const totalResults = await this.prisma.product.count({ where });
@@ -231,7 +235,7 @@ export class ProductService {
         orderBy: { title: 'asc' },
       });
 
-      return collections.map(collection => ({
+      return collections.map((collection) => ({
         id: collection.id,
         name: collection.title,
         handle: collection.handle,
@@ -260,7 +264,7 @@ export class ProductService {
         orderBy: { name: 'asc' },
       });
 
-      return tags.map(tag => ({
+      return tags.map((tag) => ({
         id: tag.id,
         name: tag.name,
         productCount: tag._count.productTags,
@@ -291,7 +295,9 @@ export class ProductService {
           deletedAt: null,
         },
         take: pagination.take ? pagination.take + 1 : 21,
-        cursor: pagination.cursor ? { id: parseInt(pagination.cursor) } : undefined,
+        cursor: pagination.cursor
+          ? { id: parseInt(pagination.cursor) }
+          : undefined,
         skip: pagination.cursor ? 1 : 0,
         include: {
           variants: true,
@@ -319,12 +325,16 @@ export class ProductService {
       return {
         products: resultProducts as ProductWithRelations[],
         hasMore,
-        nextCursor: hasMore && resultProducts.length > 0 
-          ? resultProducts[resultProducts.length - 1].id.toString()
-          : undefined,
+        nextCursor:
+          hasMore && resultProducts.length > 0
+            ? resultProducts[resultProducts.length - 1].id.toString()
+            : undefined,
       };
     } catch (error) {
-      this.handleError(`Failed to get products by category: ${categoryHandle}`, error);
+      this.handleError(
+        `Failed to get products by category: ${categoryHandle}`,
+        error
+      );
       throw error;
     }
   }
@@ -343,9 +353,15 @@ export class ProductService {
         totalMedia,
       ] = await Promise.all([
         this.prisma.product.count({ where: { deletedAt: null } }),
-        this.prisma.product.count({ where: { status: 'ACTIVE', deletedAt: null } }),
-        this.prisma.product.count({ where: { status: 'DRAFT', deletedAt: null } }),
-        this.prisma.product.count({ where: { status: 'ARCHIVED', deletedAt: null } }),
+        this.prisma.product.count({
+          where: { status: 'ACTIVE', deletedAt: null },
+        }),
+        this.prisma.product.count({
+          where: { status: 'DRAFT', deletedAt: null },
+        }),
+        this.prisma.product.count({
+          where: { status: 'ARCHIVED', deletedAt: null },
+        }),
         this.prisma.variant.count(),
         this.prisma.productMedia.count(),
       ]);

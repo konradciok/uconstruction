@@ -29,7 +29,7 @@ export default function MultiSelectFilter({
   onLogicChange,
   placeholder = 'Select categories...',
   className = '',
-  maxVisible = 3
+  maxVisible = 3,
 }: MultiSelectFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,7 +38,10 @@ export default function MultiSelectFilter({
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -59,19 +62,19 @@ export default function MultiSelectFilter({
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
 
-  const filteredOptions = options.filter(option =>
+  const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleToggleOption = (value: string) => {
     const newSelection = selectedValues.includes(value)
-      ? selectedValues.filter(v => v !== value)
+      ? selectedValues.filter((v) => v !== value)
       : [...selectedValues, value];
     onSelectionChange(newSelection);
   };
 
   const handleSelectAll = () => {
-    onSelectionChange(options.map(option => option.value));
+    onSelectionChange(options.map((option) => option.value));
   };
 
   const handleClearAll = () => {
@@ -82,15 +85,15 @@ export default function MultiSelectFilter({
     if (selectedValues.length === 0) {
       return placeholder;
     }
-    
+
     const selectedLabels = selectedValues
-      .map(value => options.find(option => option.value === value)?.label)
+      .map((value) => options.find((option) => option.value === value)?.label)
       .filter(Boolean);
-    
+
     if (selectedLabels.length <= maxVisible) {
       return selectedLabels.join(', ');
     }
-    
+
     return `${selectedLabels.slice(0, maxVisible).join(', ')} +${selectedLabels.length - maxVisible} more`;
   };
 
@@ -109,19 +112,19 @@ export default function MultiSelectFilter({
           aria-label={`Filter by categories. ${selectedCount} of ${totalCount} selected.`}
         >
           <span className={styles.triggerText}>{getDisplayText()}</span>
-          <svg 
-            className={styles.chevron} 
-            width="16" 
-            height="16" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            className={styles.chevron}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
             strokeWidth="2"
           >
             <polyline points="6,9 12,15 18,9"></polyline>
           </svg>
         </button>
-        
+
         {selectedCount > 0 && (
           <motion.button
             type="button"
@@ -146,7 +149,7 @@ export default function MultiSelectFilter({
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
           >
             {/* Logic Toggle */}
             <div className={styles.logicToggle}>
@@ -186,9 +189,7 @@ export default function MultiSelectFilter({
             {/* Options */}
             <div className={styles.optionsContainer}>
               {filteredOptions.length === 0 ? (
-                <div className={styles.noResults}>
-                  No categories found
-                </div>
+                <div className={styles.noResults}>No categories found</div>
               ) : (
                 <>
                   <button
@@ -198,12 +199,9 @@ export default function MultiSelectFilter({
                   >
                     Select All ({totalCount})
                   </button>
-                  
+
                   {filteredOptions.map((option) => (
-                    <label
-                      key={option.value}
-                      className={styles.option}
-                    >
+                    <label key={option.value} className={styles.option}>
                       <input
                         type="checkbox"
                         checked={selectedValues.includes(option.value)}

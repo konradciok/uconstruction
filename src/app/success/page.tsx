@@ -29,8 +29,8 @@ function SuccessPageContent() {
             name: 'Abstract Watercolor Workshop',
             date: 'March 15, 2025',
             time: '11:00',
-            location: 'Güímar, Tenerife'
-          }
+            location: 'Güímar, Tenerife',
+          },
         });
         setLoading(false);
       } catch {
@@ -47,7 +47,9 @@ function SuccessPageContent() {
       <div className={styles.successPage}>
         <Container>
           <div className={styles.content}>
-            <div className={styles.loading}>Loading your booking details...</div>
+            <div className={styles.loading}>
+              Loading your booking details...
+            </div>
           </div>
         </Container>
       </div>
@@ -62,37 +64,46 @@ function SuccessPageContent() {
             <div className={styles.successIcon}>
               <span>✓</span>
             </div>
-            
+
             <h1 className={styles.title}>Thank you for your booking!</h1>
-            
+
             <p className={styles.subtitle}>
-              Your watercolor workshop has been successfully booked. We&apos;ve sent a confirmation email with all the details.
+              Your watercolor workshop has been successfully booked. We&apos;ve
+              sent a confirmation email with all the details.
             </p>
 
             {orderDetails && (
               <div className={styles.orderDetails}>
                 <h2 className={styles.detailsTitle}>Booking Details</h2>
-                
+
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>Workshop:</span>
-                  <span className={styles.detailValue}>{orderDetails.workshop?.name}</span>
+                  <span className={styles.detailValue}>
+                    {orderDetails.workshop?.name}
+                  </span>
                 </div>
-                
+
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>Date:</span>
-                  <span className={styles.detailValue}>{orderDetails.workshop?.date}</span>
+                  <span className={styles.detailValue}>
+                    {orderDetails.workshop?.date}
+                  </span>
                 </div>
-                
+
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>Time:</span>
-                  <span className={styles.detailValue}>{orderDetails.workshop?.time}</span>
+                  <span className={styles.detailValue}>
+                    {orderDetails.workshop?.time}
+                  </span>
                 </div>
-                
+
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>Location:</span>
-                  <span className={styles.detailValue}>{orderDetails.workshop?.location}</span>
+                  <span className={styles.detailValue}>
+                    {orderDetails.workshop?.location}
+                  </span>
                 </div>
-                
+
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>Amount:</span>
                   <span className={styles.detailValue}>
@@ -105,9 +116,13 @@ function SuccessPageContent() {
             <div className={styles.whatsNext}>
               <h3 className={styles.whatsNextTitle}>What&apos;s Next?</h3>
               <ul className={styles.whatsNextList}>
-                <li>Check your email for the confirmation and workshop details</li>
+                <li>
+                  Check your email for the confirmation and workshop details
+                </li>
                 <li>Mark your calendar for the workshop date</li>
-                <li>We&apos;ll send you a reminder 24 hours before the workshop</li>
+                <li>
+                  We&apos;ll send you a reminder 24 hours before the workshop
+                </li>
                 <li>Bring comfortable clothes and your creativity!</li>
               </ul>
             </div>
@@ -116,7 +131,7 @@ function SuccessPageContent() {
               <Link href="/workshops" className={styles.backButton}>
                 ← Back to Workshops
               </Link>
-              
+
               <Link href="/" className={styles.homeButton}>
                 Go to Homepage
               </Link>
@@ -124,8 +139,14 @@ function SuccessPageContent() {
 
             {error && (
               <div className={styles.error}>
-                <p>There was an issue loading your booking details, but your payment was successful.</p>
-                <p>Please check your email for confirmation, or contact us if you have any questions.</p>
+                <p>
+                  There was an issue loading your booking details, but your
+                  payment was successful.
+                </p>
+                <p>
+                  Please check your email for confirmation, or contact us if you
+                  have any questions.
+                </p>
               </div>
             )}
           </div>
@@ -137,15 +158,19 @@ function SuccessPageContent() {
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={
-      <div className={styles.successPage}>
-        <Container>
-          <div className={styles.content}>
-            <div className={styles.loading}>Loading your booking details...</div>
-          </div>
-        </Container>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className={styles.successPage}>
+          <Container>
+            <div className={styles.content}>
+              <div className={styles.loading}>
+                Loading your booking details...
+              </div>
+            </div>
+          </Container>
+        </div>
+      }
+    >
       <SuccessPageContent />
     </Suspense>
   );

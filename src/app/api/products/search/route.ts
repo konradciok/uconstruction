@@ -10,10 +10,10 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    
+
     // Get and validate search query
     const query = searchParams.get('q')?.trim();
-    
+
     if (!query) {
       return NextResponse.json(
         {
@@ -55,25 +55,28 @@ export async function GET(request: NextRequest) {
 
     // Build optional filters (same as main products endpoint)
     const filters: ProductFilters = {};
-    
+
     if (searchParams.get('category')) {
       filters.category = searchParams.get('category') as string;
     }
-    
+
     if (searchParams.get('status')) {
       filters.status = searchParams.get('status') as string;
     }
-    
+
     if (searchParams.get('publishedOnly') === 'true') {
       filters.publishedOnly = true;
     }
-    
+
     // Handle tags (comma-separated)
     const tagsParam = searchParams.get('tags');
     if (tagsParam) {
-      filters.tags = tagsParam.split(',').map(tag => tag.trim()).filter(Boolean);
+      filters.tags = tagsParam
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean);
     }
-    
+
     // Handle price range
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
@@ -87,16 +90,22 @@ export async function GET(request: NextRequest) {
 
     // Handle pagination
     const limitParam = searchParams.get('limit');
-    const limit = limitParam ? Math.min(Math.max(parseInt(limitParam), 1), 100) : 20;
+    const limit = limitParam
+      ? Math.min(Math.max(parseInt(limitParam), 1), 100)
+      : 20;
     const cursor = searchParams.get('cursor') || undefined;
-    
+
     const pagination = {
       cursor,
       take: limit,
     };
 
     // Perform search
-    const result = await productService.searchProducts(query, filters, pagination);
+    const result = await productService.searchProducts(
+      query,
+      filters,
+      pagination
+    );
 
     return NextResponse.json({
       success: true,
@@ -112,10 +121,9 @@ export async function GET(request: NextRequest) {
         },
       },
     });
-
   } catch (error) {
     console.error('[API] Error searching products:', error);
-    
+
     return NextResponse.json(
       {
         success: false,

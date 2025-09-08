@@ -30,7 +30,7 @@ export class ImageProcessor {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      
+
       if (!ctx) {
         reject(new Error('Canvas context not available'));
         return;
@@ -45,7 +45,7 @@ export class ImageProcessor {
           reject(error);
         }
       };
-      
+
       img.onerror = () => reject(new Error('Failed to load image'));
       img.src = URL.createObjectURL(file);
     });
@@ -55,18 +55,18 @@ export class ImageProcessor {
    * Process a loaded image to create different sizes and formats
    */
   private static async processLoadedImage(
-    img: HTMLImageElement, 
+    img: HTMLImageElement,
     ctx: CanvasRenderingContext2D
   ): Promise<ProcessedImageResult> {
     const result: ProcessedImageResult = {
       thumbnail: {
         jpg: new Blob(),
-        dimensions: { width: 0, height: 0 }
+        dimensions: { width: 0, height: 0 },
       },
       full: {
         jpg: new Blob(),
-        dimensions: { width: 0, height: 0 }
-      }
+        dimensions: { width: 0, height: 0 },
+      },
     };
 
     // Process thumbnail
@@ -77,20 +77,32 @@ export class ImageProcessor {
 
     // Draw thumbnail with 4:5 aspect ratio
     this.drawImageWithAspectRatio(img, thumbnailCtx, this.THUMBNAIL_SIZE);
-    
+
     // Generate thumbnail formats
-    result.thumbnail.jpg = await this.canvasToBlob(thumbnailCanvas, 'image/jpeg', this.QUALITY);
+    result.thumbnail.jpg = await this.canvasToBlob(
+      thumbnailCanvas,
+      'image/jpeg',
+      this.QUALITY
+    );
     result.thumbnail.dimensions = { ...this.THUMBNAIL_SIZE };
 
     // Try to generate WebP and AVIF for thumbnail
     try {
-      result.thumbnail.webp = await this.canvasToBlob(thumbnailCanvas, 'image/webp', this.QUALITY);
+      result.thumbnail.webp = await this.canvasToBlob(
+        thumbnailCanvas,
+        'image/webp',
+        this.QUALITY
+      );
     } catch (error) {
       console.warn('WebP not supported for thumbnail');
     }
 
     try {
-      result.thumbnail.avif = await this.canvasToBlob(thumbnailCanvas, 'image/avif', this.QUALITY);
+      result.thumbnail.avif = await this.canvasToBlob(
+        thumbnailCanvas,
+        'image/avif',
+        this.QUALITY
+      );
     } catch (error) {
       console.warn('AVIF not supported for thumbnail');
     }
@@ -103,20 +115,32 @@ export class ImageProcessor {
 
     // Draw full size with 4:5 aspect ratio
     this.drawImageWithAspectRatio(img, fullCtx, this.FULL_SIZE);
-    
+
     // Generate full size formats
-    result.full.jpg = await this.canvasToBlob(fullCanvas, 'image/jpeg', this.QUALITY);
+    result.full.jpg = await this.canvasToBlob(
+      fullCanvas,
+      'image/jpeg',
+      this.QUALITY
+    );
     result.full.dimensions = { ...this.FULL_SIZE };
 
     // Try to generate WebP and AVIF for full size
     try {
-      result.full.webp = await this.canvasToBlob(fullCanvas, 'image/webp', this.QUALITY);
+      result.full.webp = await this.canvasToBlob(
+        fullCanvas,
+        'image/webp',
+        this.QUALITY
+      );
     } catch (error) {
       console.warn('WebP not supported for full size');
     }
 
     try {
-      result.full.avif = await this.canvasToBlob(fullCanvas, 'image/avif', this.QUALITY);
+      result.full.avif = await this.canvasToBlob(
+        fullCanvas,
+        'image/avif',
+        this.QUALITY
+      );
     } catch (error) {
       console.warn('AVIF not supported for full size');
     }
@@ -128,12 +152,12 @@ export class ImageProcessor {
    * Draw image maintaining 4:5 aspect ratio with white background
    */
   private static drawImageWithAspectRatio(
-    img: HTMLImageElement, 
-    ctx: CanvasRenderingContext2D, 
+    img: HTMLImageElement,
+    ctx: CanvasRenderingContext2D,
     targetSize: ImageDimensions
   ): void {
     const { width, height } = targetSize;
-    
+
     // Fill with white background
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
@@ -166,8 +190,8 @@ export class ImageProcessor {
    * Convert canvas to blob
    */
   private static canvasToBlob(
-    canvas: HTMLCanvasElement, 
-    type: string, 
+    canvas: HTMLCanvasElement,
+    type: string,
     quality: number
   ): Promise<Blob> {
     return new Promise((resolve, reject) => {
@@ -202,16 +226,16 @@ export class ImageProcessor {
     const maxSize = 10 * 1024 * 1024; // 10MB
 
     if (!validTypes.includes(file.type)) {
-      return { 
-        valid: false, 
-        error: 'Invalid file type. Please upload JPEG, PNG, or WebP images.' 
+      return {
+        valid: false,
+        error: 'Invalid file type. Please upload JPEG, PNG, or WebP images.',
       };
     }
 
     if (file.size > maxSize) {
-      return { 
-        valid: false, 
-        error: 'File too large. Please upload images smaller than 10MB.' 
+      return {
+        valid: false,
+        error: 'File too large. Please upload images smaller than 10MB.',
       };
     }
 

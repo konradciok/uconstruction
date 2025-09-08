@@ -6,7 +6,11 @@ import { Artwork } from '@/types/portfolio2';
 // Mock the GalleryGrid component
 jest.mock('../GalleryGrid', () => {
   return function MockGalleryGrid({ artworks }: { artworks: Artwork[] }) {
-    return <div data-testid="gallery-grid">Gallery Grid with {artworks.length} artworks</div>;
+    return (
+      <div data-testid="gallery-grid">
+        Gallery Grid with {artworks.length} artworks
+      </div>
+    );
   };
 });
 
@@ -19,13 +23,13 @@ describe('Portfolio2Page', () => {
       thumbnail: {
         jpg: '/test-thumb-1.jpg',
         width: 800,
-        height: 1000
+        height: 1000,
       },
       full: {
         jpg: '/test-full-1.jpg',
         width: 1600,
-        height: 2000
-      }
+        height: 2000,
+      },
     },
     {
       id: 'test-2',
@@ -34,28 +38,32 @@ describe('Portfolio2Page', () => {
       thumbnail: {
         jpg: '/test-thumb-2.jpg',
         width: 800,
-        height: 1000
+        height: 1000,
       },
       full: {
         jpg: '/test-full-2.jpg',
         width: 1600,
-        height: 2000
-      }
-    }
+        height: 2000,
+      },
+    },
   ];
 
   it('renders with artworks', () => {
     render(<Portfolio2Page artworks={mockArtworks} />);
-    
+
     expect(screen.getByText('Portfolio 2')).toBeInTheDocument();
-    expect(screen.getByText('Kolekcja prac artystycznych w formacie 4:5')).toBeInTheDocument();
+    expect(
+      screen.getByText('Kolekcja prac artystycznych w formacie 4:5')
+    ).toBeInTheDocument();
     expect(screen.getByTestId('gallery-grid')).toBeInTheDocument();
-    expect(screen.getByText('Gallery Grid with 2 artworks')).toBeInTheDocument();
+    expect(
+      screen.getByText('Gallery Grid with 2 artworks')
+    ).toBeInTheDocument();
   });
 
   it('renders empty state when no artworks', () => {
     render(<Portfolio2Page artworks={[]} />);
-    
+
     expect(screen.getByText('Portfolio 2')).toBeInTheDocument();
     expect(screen.getByText('Brak prac do wyświetlenia.')).toBeInTheDocument();
     expect(screen.queryByTestId('gallery-grid')).not.toBeInTheDocument();
@@ -63,14 +71,14 @@ describe('Portfolio2Page', () => {
 
   it('renders empty state when artworks is null', () => {
     render(<Portfolio2Page artworks={null as any} />);
-    
+
     expect(screen.getByText('Portfolio 2')).toBeInTheDocument();
     expect(screen.getByText('Brak prac do wyświetlenia.')).toBeInTheDocument();
   });
 
   it('renders empty state when artworks is undefined', () => {
     render(<Portfolio2Page artworks={undefined as any} />);
-    
+
     expect(screen.getByText('Portfolio 2')).toBeInTheDocument();
     expect(screen.getByText('Brak prac do wyświetlenia.')).toBeInTheDocument();
   });

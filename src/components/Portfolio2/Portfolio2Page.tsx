@@ -7,20 +7,20 @@ import GalleryGrid from './GalleryGrid';
 import Portfolio2Manager from './Portfolio2Manager';
 import styles from './Portfolio2Page.module.css';
 
-export default function Portfolio2Page({ 
-  artworks: staticArtworks, 
+export default function Portfolio2Page({
+  artworks: staticArtworks,
   enableShopifyProducts = true,
-  showSourceBadges = false 
+  showSourceBadges = false,
 }: Portfolio2PageProps) {
-  const { 
-    artworks, 
-    isLoading, 
-    error, 
-    refresh, 
-    stats, 
+  const {
+    artworks,
+    isLoading,
+    error,
+    refresh,
+    stats,
     refreshShopify,
     sourceConfig,
-    updateSourceConfig
+    updateSourceConfig,
   } = usePortfolio2Data();
 
   // Use dynamic artworks if available, otherwise fall back to static props
@@ -74,7 +74,7 @@ export default function Portfolio2Page({
         <p className={styles.description}>
           Kolekcja prac artystycznych w formacie 4:5
         </p>
-        
+
         {/* Portfolio Stats */}
         <div className={styles.statsContainer}>
           <div className={styles.stats}>
@@ -101,27 +101,41 @@ export default function Portfolio2Page({
               </div>
             )}
           </div>
-          
+
           {/* Action Buttons */}
           <div className={styles.actionButtons}>
-            <button 
-              onClick={refresh} 
+            <button
+              onClick={refresh}
               className={styles.refreshButton}
               title="Refresh all portfolio data"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M21 12a9 9 0 11-6.219-8.56" />
               </svg>
               Refresh All
             </button>
-            
+
             {stats.shopify > 0 && (
-              <button 
-                onClick={refreshShopify} 
+              <button
+                onClick={refreshShopify}
                 className={styles.refreshButton}
                 title="Sync with Shopify products"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M2 3h6l2 13h7" />
                   <circle cx="20" cy="20" r="1" />
                   <circle cx="9" cy="20" r="1" />
@@ -136,9 +150,9 @@ export default function Portfolio2Page({
       <main className={styles.main}>
         {/* Portfolio Management */}
         <Portfolio2Manager onRefresh={refresh} />
-        
+
         {/* Gallery Grid */}
-        <GalleryGrid 
+        <GalleryGrid
           artworks={displayArtworks}
           gap={16}
           showSourceBadges={showSourceBadges}

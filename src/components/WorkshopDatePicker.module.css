@@ -2,7 +2,11 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(240, 248, 255, 0.8)
+  );
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
@@ -37,7 +41,11 @@
 
 .dateButton {
   position: relative;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(240, 248, 255, 0.8)
+  );
   border: 2px solid rgba(102, 126, 234, 0.2);
   border-radius: 15px;
   padding: 1.5rem;
@@ -55,7 +63,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1),
+    rgba(118, 75, 162, 0.1)
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
   border-radius: 13px;
@@ -73,14 +85,22 @@
 
 .dateButton.selected {
   border-color: #667eea;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1),
+    rgba(118, 75, 162, 0.1)
+  );
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
 .dateButton.soldOut {
   opacity: 0.6;
   cursor: not-allowed;
-  background: linear-gradient(135deg, rgba(108, 117, 125, 0.1), rgba(108, 117, 125, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(108, 117, 125, 0.1),
+    rgba(108, 117, 125, 0.05)
+  );
   border-color: rgba(108, 117, 125, 0.3);
 }
 
@@ -151,7 +171,11 @@
 }
 
 .bookingSection {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.05),
+    rgba(118, 75, 162, 0.05)
+  );
   border: 2px solid rgba(102, 126, 234, 0.2);
   border-radius: 15px;
   padding: 2rem;
@@ -226,28 +250,28 @@
     padding: 1.5rem;
     margin: 0 1rem;
   }
-  
+
   .title {
     font-size: 1.5rem;
   }
-  
+
   .dateGrid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .dateButton {
     padding: 1.25rem;
   }
-  
+
   .dateText {
     font-size: 1.1rem;
   }
-  
+
   .bookingSection {
     padding: 1.5rem;
   }
-  
+
   .bookWorkshopButton {
     padding: 0.875rem 1.5rem;
     font-size: 1rem;
@@ -259,27 +283,27 @@
     padding: 1rem;
     margin: 0 0.5rem;
   }
-  
+
   .title {
     font-size: 1.25rem;
   }
-  
+
   .subtitle {
     font-size: 1rem;
   }
-  
+
   .dateButton {
     padding: 1rem;
   }
-  
+
   .dateText {
     font-size: 1rem;
   }
-  
+
   .timeText {
     font-size: 0.95rem;
   }
-  
+
   .bookingSection {
     padding: 1rem;
   }

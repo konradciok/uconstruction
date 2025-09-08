@@ -9,7 +9,7 @@ import styles from './GalleryGrid.module.css';
 export default function GalleryGrid({
   artworks,
   columns,
-  gap = 16
+  gap = 16,
 }: GalleryGridProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -29,7 +29,7 @@ export default function GalleryGrid({
 
     if (typeof window !== 'undefined') {
       window.addEventListener('portfolio2-update', handlePortfolioUpdate);
-      
+
       return () => {
         window.removeEventListener('portfolio2-update', handlePortfolioUpdate);
       };
@@ -64,14 +64,16 @@ export default function GalleryGrid({
     <div className={styles.galleryContainer}>
       <div
         className={styles.grid}
-        style={{
-          '--gap': `${gap}px`,
-          '--columns-xl': responsiveColumns.xl,
-          '--columns-lg': responsiveColumns.lg,
-          '--columns-md': responsiveColumns.md,
-          '--columns-sm': responsiveColumns.sm,
-          '--columns-xs': responsiveColumns.xs,
-        } as React.CSSProperties}
+        style={
+          {
+            '--gap': `${gap}px`,
+            '--columns-xl': responsiveColumns.xl,
+            '--columns-lg': responsiveColumns.lg,
+            '--columns-md': responsiveColumns.md,
+            '--columns-sm': responsiveColumns.sm,
+            '--columns-xs': responsiveColumns.xs,
+          } as React.CSSProperties
+        }
       >
         {currentArtworks.map((artwork, index) => (
           <GalleryItem

@@ -70,7 +70,9 @@
 }
 
 .checkbox:checked:focus ~ .label .checkmark {
-  box-shadow: 0 0 0 3px rgba(128, 166, 242, 0.2), 0 2px 8px rgba(128, 166, 242, 0.3);
+  box-shadow:
+    0 0 0 3px rgba(128, 166, 242, 0.2),
+    0 2px 8px rgba(128, 166, 242, 0.3);
 }
 
 .checkbox.error ~ .label .checkmark {

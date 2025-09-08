@@ -19,7 +19,7 @@ export default function SearchInput({
   placeholder = 'Search...',
   className = '',
   debounceMs = 300,
-  onClear
+  onClear,
 }: SearchInputProps) {
   const [localValue, setLocalValue] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
@@ -56,20 +56,22 @@ export default function SearchInput({
 
   return (
     <div className={`${styles.searchContainer} ${className}`}>
-      <div className={`${styles.inputWrapper} ${isFocused ? styles.focused : ''}`}>
-        <svg 
-          className={styles.searchIcon} 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
+      <div
+        className={`${styles.inputWrapper} ${isFocused ? styles.focused : ''}`}
+      >
+        <svg
+          className={styles.searchIcon}
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
           strokeWidth="2"
         >
           <circle cx="11" cy="11" r="8"></circle>
           <path d="m21 21-4.35-4.35"></path>
         </svg>
-        
+
         <input
           ref={inputRef}
           type="text"
@@ -82,7 +84,7 @@ export default function SearchInput({
           className={styles.input}
           aria-label="Search gallery items"
         />
-        
+
         <AnimatePresence>
           {localValue && (
             <motion.button
@@ -97,7 +99,14 @@ export default function SearchInput({
               transition={{ duration: 0.2 }}
               aria-label="Clear search"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>

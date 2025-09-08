@@ -12,7 +12,7 @@
 
 - Env vars (add to `.env.local`, never commit secrets):
   - MYSHOPIFY_DOMAIN=mystore.myshopify.com
-  - SHOPIFY_ACCESS_TOKEN=shpat_...
+  - SHOPIFY*ACCESS_TOKEN=shpat*...
   - SHOPIFY_API_VERSION=2025-07
 
 - Verification command:
@@ -23,5 +23,3 @@
 - Rotation & upgrades:
   - Reinstall the app and regenerate token after scope changes.
   - Document quarterly review for Admin API version; upgrade in a test window.
-
-

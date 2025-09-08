@@ -1,37 +1,37 @@
 // Extended artwork interface to support multiple sources
 export interface Artwork {
-  id: string;                // unikalne
-  title: string;             // tytuł do wyświetlenia w lightbox
-  dimensions: string;        // „60 × 75 cm, olej na płótnie"
+  id: string; // unikalne
+  title: string; // tytuł do wyświetlenia w lightbox
+  dimensions: string; // „60 × 75 cm, olej na płótnie"
   thumbnail: {
     avif?: string;
     webp?: string;
     jpg: string;
-    width: number;           // natural width (proporcja 4:5)
-    height: number;          // natural height (proporcja 4:5)
+    width: number; // natural width (proporcja 4:5)
+    height: number; // natural height (proporcja 4:5)
   };
   full: {
     avif?: string;
     webp?: string;
     jpg: string;
-    width: number;           // ratio 4:5
-    height: number;          // ratio 4:5
+    width: number; // ratio 4:5
+    height: number; // ratio 4:5
   };
-  alt?: string;              // krótkie alt; domyślnie title
+  alt?: string; // krótkie alt; domyślnie title
   medium?: string;
-  tags?: string[];           // e.g. kolekcja/seria, tematy
-  
+  tags?: string[]; // e.g. kolekcja/seria, tematy
+
   // NEW: Source tracking and product integration
   source?: {
     type: 'static' | 'uploaded' | 'shopify';
-    id?: string | number;    // Original source ID (e.g. Shopify product ID)
-    url?: string;            // Link to product page or source
+    id?: string | number; // Original source ID (e.g. Shopify product ID)
+    url?: string; // Link to product page or source
     metadata?: {
-      price?: string;        // Display price for products
-      vendor?: string;       // Artist/vendor name
-      status?: string;       // Product status
-      shopifyId?: string;    // Original Shopify ID
-      lastUpdated?: string;  // When product was last synced
+      price?: string; // Display price for products
+      vendor?: string; // Artist/vendor name
+      status?: string; // Product status
+      shopifyId?: string; // Original Shopify ID
+      lastUpdated?: string; // When product was last synced
     };
   };
 }
@@ -45,7 +45,7 @@ export interface Portfolio2PageProps {
 
 export interface GalleryGridProps {
   artworks: Artwork[];
-  columns?: Partial<Record<"xl"|"lg"|"md"|"sm"|"xs", number>>; // override kolumn
+  columns?: Partial<Record<'xl' | 'lg' | 'md' | 'sm' | 'xs', number>>; // override kolumn
   gap?: number; // w px, domyślnie 16
   // New: Display configuration
   showSourceBadges?: boolean;
@@ -65,7 +65,7 @@ export interface GalleryItemProps {
 
 export interface LightboxModalProps {
   artworks: Artwork[];
-  index: number;                 // aktualnie otwarty
+  index: number; // aktualnie otwarty
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (nextIndex: number) => void; // wrap-around

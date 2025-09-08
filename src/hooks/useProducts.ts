@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ProductWithRelations, ProductFilters, ProductListResult } from '@/types/product';
+import {
+  ProductWithRelations,
+  ProductFilters,
+  ProductListResult,
+} from '@/types/product';
 
 interface UseProductsOptions {
   initialFilters?: ProductFilters;
@@ -21,9 +25,13 @@ interface UseProductsResult {
 }
 
 // Build query string from filters
-function buildQueryString(filters: ProductFilters, limit?: number, cursor?: string): string {
+function buildQueryString(
+  filters: ProductFilters,
+  limit?: number,
+  cursor?: string
+): string {
   const params = new URLSearchParams();
-  
+
   if (filters.search) params.set('q', filters.search);
   if (filters.category) params.set('category', filters.category);
   if (filters.status) params.set('status', filters.status);
@@ -43,7 +51,7 @@ function buildQueryString(filters: ProductFilters, limit?: number, cursor?: stri
   }
   if (limit) params.set('limit', limit.toString());
   if (cursor) params.set('cursor', cursor);
-  
+
   return params.toString();
 }
 
@@ -60,65 +68,68 @@ export function useProducts({
   const [nextCursor, setNextCursor] = useState<string | null>(null);
 
   // Fetch products from API
-  const fetchProducts = useCallback(async (
-    currentFilters: ProductFilters, 
-    cursor?: string,
-    append = false
-  ) => {
-    setLoading(true);
-    setError(null);
+  const fetchProducts = useCallback(
+    async (currentFilters: ProductFilters, cursor?: string, append = false) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const queryString = buildQueryString(currentFilters, limit, cursor);
-      const endpoint = currentFilters.search 
-        ? `/api/products/search?${queryString}`
-        : `/api/products?${queryString}`;
+      try {
+        const queryString = buildQueryString(currentFilters, limit, cursor);
+        const endpoint = currentFilters.search
+          ? `/api/products/search?${queryString}`
+          : `/api/products?${queryString}`;
 
-      const response = await fetch(endpoint);
+        const response = await fetch(endpoint);
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch products: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch products: ${response.status}`);
+        }
+
+        const result: ProductListResult = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error?.message || 'Failed to fetch products');
+        }
+
+        const newProducts = result.data.products;
+
+        if (append) {
+          setProducts((prev) => [...prev, ...newProducts]);
+        } else {
+          setProducts(newProducts);
+        }
+
+        setHasMore(result.data.hasMore || false);
+        setNextCursor(result.data.nextCursor || null);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError(
+          err instanceof Error ? err.message : 'Failed to fetch products'
+        );
+
+        // Don't clear products on error if we're appending (pagination)
+        if (!append) {
+          setProducts([]);
+        }
+        setHasMore(false);
+        setNextCursor(null);
+      } finally {
+        setLoading(false);
       }
-
-      const result: ProductListResult = await response.json();
-
-      if (!result.success) {
-        throw new Error(result.error?.message || 'Failed to fetch products');
-      }
-
-      const newProducts = result.data.products;
-      
-      if (append) {
-        setProducts(prev => [...prev, ...newProducts]);
-      } else {
-        setProducts(newProducts);
-      }
-
-      setHasMore(result.data.hasMore || false);
-      setNextCursor(result.data.nextCursor || null);
-
-    } catch (err) {
-      console.error('Error fetching products:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch products');
-      
-      // Don't clear products on error if we're appending (pagination)
-      if (!append) {
-        setProducts([]);
-      }
-      setHasMore(false);
-      setNextCursor(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [limit]);
+    },
+    [limit]
+  );
 
   // Set filters and trigger refetch
-  const setFilters = useCallback((newFilters: ProductFilters) => {
-    setFiltersState(newFilters);
-    if (enableAutoFetch) {
-      fetchProducts(newFilters);
-    }
-  }, [fetchProducts, enableAutoFetch]);
+  const setFilters = useCallback(
+    (newFilters: ProductFilters) => {
+      setFiltersState(newFilters);
+      if (enableAutoFetch) {
+        fetchProducts(newFilters);
+      }
+    },
+    [fetchProducts, enableAutoFetch]
+  );
 
   // Load more products (pagination)
   const loadMore = useCallback(() => {

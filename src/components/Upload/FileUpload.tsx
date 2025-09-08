@@ -10,73 +10,88 @@ interface FileUploadProps {
   disabled?: boolean;
 }
 
-export default function FileUpload({ onFilesSelected, disabled = false }: FileUploadProps) {
+export default function FileUpload({
+  onFilesSelected,
+  disabled = false,
+}: FileUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const processFiles = useCallback(async (files: FileList | File[]) => {
-    setIsProcessing(true);
-    const uploadedFiles: UploadedFile[] = [];
+  const processFiles = useCallback(
+    async (files: FileList | File[]) => {
+      setIsProcessing(true);
+      const uploadedFiles: UploadedFile[] = [];
 
-    try {
-      for (const file of Array.from(files)) {
-        const fileId = `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        
-        // Create preview
-        const preview = await UploadService.getFilePreview(file);
-        
-        const uploadedFile: UploadedFile = {
-          id: fileId,
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          preview,
-          status: 'pending',
-          progress: 0
-        };
+      try {
+        for (const file of Array.from(files)) {
+          const fileId = `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-        uploadedFiles.push(uploadedFile);
+          // Create preview
+          const preview = await UploadService.getFilePreview(file);
+
+          const uploadedFile: UploadedFile = {
+            id: fileId,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            preview,
+            status: 'pending',
+            progress: 0,
+          };
+
+          uploadedFiles.push(uploadedFile);
+        }
+
+        onFilesSelected(uploadedFiles);
+      } catch (error) {
+        console.error('Error processing files:', error);
+      } finally {
+        setIsProcessing(false);
       }
+    },
+    [onFilesSelected]
+  );
 
-      onFilesSelected(uploadedFiles);
-    } catch (error) {
-      console.error('Error processing files:', error);
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [onFilesSelected]);
+  const handleFileSelect = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        processFiles(files);
+      }
+    },
+    [processFiles]
+  );
 
-  const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      processFiles(files);
-    }
-  }, [processFiles]);
-
-  const handleDragOver = useCallback((event: React.DragEvent) => {
-    event.preventDefault();
-    if (!disabled) {
-      setIsDragOver(true);
-    }
-  }, [disabled]);
+  const handleDragOver = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+      if (!disabled) {
+        setIsDragOver(true);
+      }
+    },
+    [disabled]
+  );
 
   const handleDragLeave = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     setIsDragOver(false);
   }, []);
 
-  const handleDrop = useCallback((event: React.DragEvent) => {
-    event.preventDefault();
-    setIsDragOver(false);
-    
-    if (disabled) return;
+  const handleDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+      setIsDragOver(false);
 
-    const files = event.dataTransfer.files;
-    if (files && files.length > 0) {
-      processFiles(files);
-    }
-  }, [disabled, processFiles]);
+      if (disabled) return;
+
+      const files = event.dataTransfer.files;
+      if (files && files.length > 0) {
+        processFiles(files);
+      }
+    },
+    [disabled, processFiles]
+  );
 
   const handleClick = useCallback(() => {
     if (!disabled && fileInputRef.current) {
@@ -84,12 +99,15 @@ export default function FileUpload({ onFilesSelected, disabled = false }: FileUp
     }
   }, [disabled]);
 
-  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      handleClick();
-    }
-  }, [handleClick]);
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick]
+  );
 
   return (
     <div className={styles.container}>
@@ -113,7 +131,7 @@ export default function FileUpload({ onFilesSelected, disabled = false }: FileUp
           className={styles.fileInput}
           disabled={disabled}
         />
-        
+
         <div className={styles.content}>
           {isProcessing ? (
             <div className={styles.processing}>
@@ -123,7 +141,14 @@ export default function FileUpload({ onFilesSelected, disabled = false }: FileUp
           ) : (
             <>
               <div className={styles.icon}>
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="7,10 12,15 17,10" />
                   <line x1="12" y1="15" x2="12" y2="3" />

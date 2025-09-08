@@ -11,7 +11,7 @@ interface ProductGridProps {
   hasMore?: boolean;
   onLoadMore?: () => void;
   onProductSelect?: (product: ProductWithRelations) => void;
-  columns?: Partial<Record<"xl"|"lg"|"md"|"sm"|"xs", number>>;
+  columns?: Partial<Record<'xl' | 'lg' | 'md' | 'sm' | 'xs', number>>;
   cardSize?: 'small' | 'medium' | 'large';
   showPrice?: boolean;
   showVendor?: boolean;
@@ -24,7 +24,10 @@ interface ProductGridSkeletonProps {
   cardSize?: 'small' | 'medium' | 'large';
 }
 
-function ProductGridSkeleton({ count, cardSize = 'medium' }: ProductGridSkeletonProps) {
+function ProductGridSkeleton({
+  count,
+  cardSize = 'medium',
+}: ProductGridSkeletonProps) {
   return (
     <div className={styles.grid}>
       {Array.from({ length: count }, (_, i) => (
@@ -48,11 +51,11 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-function EmptyState({ 
-  title = "No products found",
+function EmptyState({
+  title = 'No products found',
   message = "We couldn't find any products matching your criteria.",
   actionLabel,
-  onAction
+  onAction,
 }: EmptyStateProps) {
   return (
     <div className={styles.emptyState}>
@@ -60,10 +63,7 @@ function EmptyState({
       <h3 className={styles.emptyTitle}>{title}</h3>
       <p className={styles.emptyMessage}>{message}</p>
       {actionLabel && onAction && (
-        <button 
-          className={styles.emptyAction}
-          onClick={onAction}
-        >
+        <button className={styles.emptyAction} onClick={onAction}>
           {actionLabel}
         </button>
       )}
@@ -76,9 +76,9 @@ interface ErrorStateProps {
   onRetry?: () => void;
 }
 
-function ErrorState({ 
-  message = "Something went wrong while loading products.",
-  onRetry
+function ErrorState({
+  message = 'Something went wrong while loading products.',
+  onRetry,
 }: ErrorStateProps) {
   return (
     <div className={styles.errorState}>
@@ -86,10 +86,7 @@ function ErrorState({
       <h3 className={styles.errorTitle}>Error loading products</h3>
       <p className={styles.errorMessage}>{message}</p>
       {onRetry && (
-        <button 
-          className={styles.errorAction}
-          onClick={onRetry}
-        >
+        <button className={styles.errorAction} onClick={onRetry}>
           Try Again
         </button>
       )}
@@ -115,11 +112,14 @@ export default function ProductGrid({
   const shouldVirtualize = products.length > 50;
 
   // Handle product selection
-  const handleProductSelect = useCallback((product: ProductWithRelations) => {
-    if (onProductSelect) {
-      onProductSelect(product);
-    }
-  }, [onProductSelect]);
+  const handleProductSelect = useCallback(
+    (product: ProductWithRelations) => {
+      if (onProductSelect) {
+        onProductSelect(product);
+      }
+    },
+    [onProductSelect]
+  );
 
   // Handle retry for error state
   const handleRetry = useCallback(() => {
@@ -137,7 +137,7 @@ export default function ProductGrid({
       lg: 4,
       xl: 5,
     };
-    
+
     return { ...defaultColumns, ...columns };
   };
 
@@ -159,11 +159,9 @@ export default function ProductGrid({
   });
 
   // Grid classes
-  const gridClasses = [
-    styles.grid,
-    styles[cardSize],
-    className,
-  ].filter(Boolean).join(' ');
+  const gridClasses = [styles.grid, styles[cardSize], className]
+    .filter(Boolean)
+    .join(' ');
 
   // Error state
   if (error && products.length === 0) {
@@ -187,8 +185,8 @@ export default function ProductGrid({
   if (products.length === 0 && !loading) {
     return (
       <div className={styles.container}>
-        <EmptyState 
-          actionLabel={onLoadMore ? "Refresh" : undefined}
+        <EmptyState
+          actionLabel={onLoadMore ? 'Refresh' : undefined}
           onAction={handleRetry}
         />
       </div>
@@ -198,7 +196,7 @@ export default function ProductGrid({
   // Virtualized grid (for large datasets)
   if (shouldVirtualize) {
     return (
-      <div 
+      <div
         className={styles.container}
         ref={containerRef}
         style={{ height: '600px', overflow: 'auto' }}
@@ -245,15 +243,17 @@ export default function ProductGrid({
   // Regular grid (for smaller datasets)
   return (
     <div className={styles.container}>
-      <div 
+      <div
         className={gridClasses}
-        style={{
-          '--grid-cols-xs': columnsConfig.xs,
-          '--grid-cols-sm': columnsConfig.sm,
-          '--grid-cols-md': columnsConfig.md,
-          '--grid-cols-lg': columnsConfig.lg,
-          '--grid-cols-xl': columnsConfig.xl,
-        } as React.CSSProperties}
+        style={
+          {
+            '--grid-cols-xs': columnsConfig.xs,
+            '--grid-cols-sm': columnsConfig.sm,
+            '--grid-cols-md': columnsConfig.md,
+            '--grid-cols-lg': columnsConfig.lg,
+            '--grid-cols-xl': columnsConfig.xl,
+          } as React.CSSProperties
+        }
       >
         {products.map((product) => (
           <ProductCard
@@ -278,10 +278,7 @@ export default function ProductGrid({
             </div>
           ) : (
             onLoadMore && (
-              <button 
-                className={styles.loadMoreButton}
-                onClick={onLoadMore}
-              >
+              <button className={styles.loadMoreButton} onClick={onLoadMore}>
                 Load More Products
               </button>
             )
@@ -293,10 +290,7 @@ export default function ProductGrid({
       {error && products.length > 0 && (
         <div className={styles.paginationError}>
           <p className={styles.errorText}>Failed to load more products</p>
-          <button 
-            className={styles.retryButton}
-            onClick={handleRetry}
-          >
+          <button className={styles.retryButton} onClick={handleRetry}>
             Try Again
           </button>
         </div>

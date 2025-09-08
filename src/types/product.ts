@@ -1,4 +1,10 @@
-import type { Product as PrismaProduct, Variant, ProductMedia, Tag, Collection } from '@/generated/prisma';
+import type {
+  Product as PrismaProduct,
+  Variant,
+  ProductMedia,
+  Tag,
+  Collection,
+} from '@/generated/prisma';
 
 export interface ProductWithRelations extends PrismaProduct {
   variants: Variant[];

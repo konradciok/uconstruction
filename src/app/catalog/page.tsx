@@ -15,12 +15,11 @@ export default function CatalogPage() {
     filters,
     setFilters,
     loadMore,
-    refresh
+    refresh,
   } = useProducts({
     initialFilters: { publishedOnly: true },
-    limit: 12
+    limit: 12,
   });
-
 
   const handleLoadMore = () => {
     loadMore();
@@ -44,14 +43,15 @@ export default function CatalogPage() {
           <section className={styles.productsSection}>
             <div className={styles.resultsHeader}>
               <div className={styles.resultsCount}>
-                {loading ? 'Loading...' : error ? 'Error loading products' : `${products.length} products found`}
+                {loading
+                  ? 'Loading...'
+                  : error
+                    ? 'Error loading products'
+                    : `${products.length} products found`}
               </div>
-              
+
               {error && (
-                <button 
-                  onClick={refresh}
-                  className={styles.retryButton}
-                >
+                <button onClick={refresh} className={styles.retryButton}>
                   Retry
                 </button>
               )}
@@ -59,7 +59,7 @@ export default function CatalogPage() {
 
             <div className={styles.catalogGrid}>
               {products.map((product) => (
-                <div 
+                <div
                   key={product.id}
                   className={styles.catalogItem}
                   onClick={() => handleProductSelect(product)}
@@ -78,23 +78,32 @@ export default function CatalogPage() {
                       </div>
                     )}
                     <div className={styles.catalogOverlay}>
-                      <span className={styles.catalogViewButton}>View Details</span>
+                      <span className={styles.catalogViewButton}>
+                        View Details
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className={styles.catalogInfo}>
                     <h3 className={styles.catalogTitle}>{product.title}</h3>
                     <div className={styles.catalogPrice}>
-                      {product.variants && product.variants.length > 0 && product.variants[0].priceAmount ? (
+                      {product.variants &&
+                      product.variants.length > 0 &&
+                      product.variants[0].priceAmount ? (
                         <span className={styles.price}>
-                          ${parseFloat(product.variants[0].priceAmount.toString()).toFixed(2)}
+                          $
+                          {parseFloat(
+                            product.variants[0].priceAmount.toString()
+                          ).toFixed(2)}
                         </span>
                       ) : (
                         <span className={styles.price}>Price on request</span>
                       )}
                     </div>
                     {product.vendor && (
-                      <div className={styles.catalogArtist}>by {product.vendor}</div>
+                      <div className={styles.catalogArtist}>
+                        by {product.vendor}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -104,7 +113,7 @@ export default function CatalogPage() {
             {/* Load More Button */}
             {hasMore && !loading && (
               <div className={styles.loadMoreContainer}>
-                <button 
+                <button
                   onClick={handleLoadMore}
                   className={styles.loadMoreButton}
                 >
@@ -138,7 +147,7 @@ export default function CatalogPage() {
               <div className={styles.emptyState}>
                 <h3>No products found</h3>
                 <p>Try adjusting your filters to see more results</p>
-                <button 
+                <button
                   onClick={() => setFilters({})}
                   className={styles.clearFiltersButton}
                 >

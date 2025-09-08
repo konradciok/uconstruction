@@ -3,6 +3,7 @@
 This plan outlines how to replicate Shopify product data into a local database inside this repository. It is split into phases with clear tasks, definitions of done (DOD), and deliverables. The approach favors SQLite + Prisma for local development (easy to swap to Postgres later), GraphQL Bulk API for the initial backfill, and webhooks + scheduled deltas for ongoing sync.
 
 Must-have improvements incorporated from current Shopify Admin API best practices:
+
 - Pin a specific Admin API version and set a regular upgrade cadence.
 - Handle GraphQL cost-based throttling and REST 429s with backoff.
 - Implement webhook HMAC verification, deduplication, and async processing.
@@ -231,5 +232,3 @@ Must-have improvements incorporated from current Shopify Admin API best practice
 - [ ] Webhooks apply new/updated/deleted product changes within seconds.
 - [ ] Delta sync reconciles any missed updates at least daily.
 - [ ] Developers can set up and run sync in under 10 minutes.
-
-

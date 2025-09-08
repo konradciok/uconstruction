@@ -10,7 +10,9 @@ interface ContactFormProps {
 }
 
 export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
-  const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID || 'mldlknny');
+  const [state, handleSubmit] = useForm(
+    process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID || 'mldlknny'
+  );
   const [gdprConsent, setGdprConsent] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -24,18 +26,21 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
   // Show success message when form is submitted successfully
   if (state.succeeded && showSuccess) {
     return (
-      <div className={`${styles.container} ${styles.successContainer} ${className}`}>
+      <div
+        className={`${styles.container} ${styles.successContainer} ${className}`}
+      >
         <div className={styles.successContent}>
           <div className={styles.successIcon}>✓</div>
           <h3 className={styles.successTitle}>Message Sent!</h3>
           <p className={styles.successMessage}>
-            Thank you for your message. I&apos;ll get back to you as soon as possible.
+            Thank you for your message. I&apos;ll get back to you as soon as
+            possible.
           </p>
-          <Button 
+          <Button
             onClick={() => {
               setShowSuccess(false);
               setGdprConsent(false);
-            }} 
+            }}
             variant="secondary"
           >
             Send Another Message
@@ -50,13 +55,16 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
       <div className={styles.formHeader}>
         <h2 className={styles.title}>Get in Touch</h2>
         <p className={styles.subtitle}>
-          Have a question or want to discuss a project? I&apos;d love to hear from you!
+          Have a question or want to discuss a project? I&apos;d love to hear
+          from you!
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputContainer}>
-          <label htmlFor="name" className={styles.label}>Name</label>
+          <label htmlFor="name" className={styles.label}>
+            Name
+          </label>
           <input
             id="name"
             type="text"
@@ -65,8 +73,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
             className={styles.input}
             required
           />
-          <ValidationError 
-            prefix="Name" 
+          <ValidationError
+            prefix="Name"
             field="name"
             errors={state.errors}
             className={styles.errorMessage}
@@ -74,7 +82,9 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
         </div>
 
         <div className={styles.inputContainer}>
-          <label htmlFor="email" className={styles.label}>Email</label>
+          <label htmlFor="email" className={styles.label}>
+            Email
+          </label>
           <input
             id="email"
             type="email"
@@ -83,8 +93,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
             className={styles.input}
             required
           />
-          <ValidationError 
-            prefix="Email" 
+          <ValidationError
+            prefix="Email"
             field="email"
             errors={state.errors}
             className={styles.errorMessage}
@@ -92,7 +102,9 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
         </div>
 
         <div className={styles.inputContainer}>
-          <label htmlFor="message" className={styles.label}>Message</label>
+          <label htmlFor="message" className={styles.label}>
+            Message
+          </label>
           <textarea
             id="message"
             name="message"
@@ -101,8 +113,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
             required
             rows={4}
           />
-          <ValidationError 
-            prefix="Message" 
+          <ValidationError
+            prefix="Message"
             field="message"
             errors={state.errors}
             className={styles.errorMessage}
@@ -118,8 +130,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = '' }) => {
               className={styles.checkbox}
               required
             />
-            <span className={styles.checkmark}></span>
-            I agree to the privacy policy and consent to being contacted
+            <span className={styles.checkmark}></span>I agree to the privacy
+            policy and consent to being contacted
           </label>
         </div>
 

@@ -26,7 +26,9 @@ export default function Button({
     styles[size],
     disabled ? styles.disabled : '',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <button

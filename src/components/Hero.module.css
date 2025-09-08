@@ -19,9 +19,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(242, 237, 167, 0.4) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(128, 166, 242, 0.3) 0%, transparent 50%);
+  background:
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(242, 237, 167, 0.4) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(128, 166, 242, 0.3) 0%,
+      transparent 50%
+    );
   pointer-events: none;
   z-index: 1;
 }
@@ -47,7 +55,11 @@
   color: var(--color-text);
   margin-bottom: var(--spacing-lg);
   line-height: 1.2;
-  background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary-blue) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-text) 0%,
+    var(--color-primary-blue) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -102,7 +114,7 @@
   transform: translate(-50%, -50%);
   width: 150px;
   height: 150px;
-  background: 
+  background:
     radial-gradient(circle, rgba(242, 237, 167, 0.6) 0%, transparent 70%),
     radial-gradient(circle, rgba(128, 166, 242, 0.4) 0%, transparent 70%);
   border-radius: 50%;
@@ -123,7 +135,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
@@ -138,20 +151,20 @@
   .hero {
     min-height: 75vh;
   }
-  
+
   .headline {
     font-size: var(--font-size-3xl);
   }
-  
+
   .subtext {
     font-size: var(--font-size-lg);
   }
-  
+
   .ctaButtons {
     flex-direction: row;
     width: auto;
   }
-  
+
   .button {
     width: auto;
     min-width: 140px;
@@ -163,31 +176,31 @@
   .hero {
     min-height: 90vh;
   }
-  
+
   .heroContent {
     flex-direction: row;
     text-align: left;
     gap: var(--spacing-2xl);
     align-items: center;
   }
-  
+
   .heroText {
     flex: 1;
     margin-bottom: 0;
   }
-  
+
   .headline {
     font-size: var(--font-size-4xl);
   }
-  
+
   .subtext {
     font-size: var(--font-size-xl);
   }
-  
+
   .ctaButtons {
     justify-content: flex-start;
   }
-  
+
   .heroVisual {
     flex: 1;
     max-width: 500px;
@@ -200,11 +213,11 @@
   .hero {
     min-height: 95vh;
   }
-  
+
   .headline {
     font-size: 3.5rem;
   }
-  
+
   .heroVisual {
     max-width: 600px;
     aspect-ratio: 1 / 1;
@@ -216,25 +229,25 @@
   .hero {
     min-height: 70vh;
   }
-  
+
   .headline {
     font-size: var(--font-size-2xl);
   }
-  
+
   .subtext {
     font-size: var(--font-size-base);
   }
-  
+
   .ctaButtons {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .button {
     width: 100%;
     text-align: center;
   }
-  
+
   .heroVisual {
     aspect-ratio: 1 / 1;
   }
@@ -322,11 +335,11 @@
   .contactFormOverlay {
     padding: var(--spacing-sm);
   }
-  
+
   .contactFormContainer {
     max-height: 95vh;
   }
-  
+
   .closeButton {
     top: var(--spacing-sm);
     right: var(--spacing-sm);

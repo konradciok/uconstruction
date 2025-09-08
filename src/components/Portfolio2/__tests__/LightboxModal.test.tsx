@@ -25,14 +25,14 @@ describe('LightboxModal', () => {
       thumbnail: {
         jpg: '/test-thumb-1.jpg',
         width: 800,
-        height: 1000
+        height: 1000,
       },
       full: {
         jpg: '/test-full-1.jpg',
         width: 1600,
-        height: 2000
+        height: 2000,
       },
-      alt: 'Test artwork 1 description'
+      alt: 'Test artwork 1 description',
     },
     {
       id: 'test-2',
@@ -41,15 +41,15 @@ describe('LightboxModal', () => {
       thumbnail: {
         jpg: '/test-thumb-2.jpg',
         width: 800,
-        height: 1000
+        height: 1000,
       },
       full: {
         jpg: '/test-full-2.jpg',
         width: 1600,
-        height: 2000
+        height: 2000,
       },
-      alt: 'Test artwork 2 description'
-    }
+      alt: 'Test artwork 2 description',
+    },
   ];
 
   const mockOnClose = jest.fn();
@@ -75,7 +75,10 @@ describe('LightboxModal', () => {
     expect(screen.getByText('Test Artwork 1')).toBeInTheDocument();
     expect(screen.getByText('60 × 75 cm, olej na płótnie')).toBeInTheDocument();
     expect(screen.getByText('1 / 2')).toBeInTheDocument();
-    expect(screen.getByTestId('lightbox-image')).toHaveAttribute('src', '/test-full-1.jpg');
+    expect(screen.getByTestId('lightbox-image')).toHaveAttribute(
+      'src',
+      '/test-full-1.jpg'
+    );
   });
 
   it('does not render when closed', () => {

@@ -10,7 +10,7 @@
   display: grid;
   gap: var(--spacing-lg, 24px);
   width: 100%;
-  
+
   /* Responsive grid using CSS custom properties */
   grid-template-columns: repeat(var(--grid-cols-xs, 1), 1fr);
 }
@@ -24,19 +24,19 @@
 
 @media (min-width: 768px) {
   .grid {
-    grid-template-columns: repeat(var(--grid-cols-md, 3), 1fr);
+    grid-template-columns: repeat(var(--grid-cols-md, 2), 1fr);
   }
 }
 
 @media (min-width: 1024px) {
   .grid {
-    grid-template-columns: repeat(var(--grid-cols-lg, 4), 1fr);
+    grid-template-columns: repeat(var(--grid-cols-lg, 2), 1fr);
   }
 }
 
 @media (min-width: 1280px) {
   .grid {
-    grid-template-columns: repeat(var(--grid-cols-xl, 5), 1fr);
+    grid-template-columns: repeat(var(--grid-cols-xl, 2), 1fr);
   }
 }
 
@@ -110,7 +110,7 @@
 
 .skeletonPrice {
   height: 18px;
-  background: var(--color-primary, #80A6F2);
+  background: var(--color-primary, #80a6f2);
   opacity: 0.3;
   border-radius: var(--border-radius-sm, 4px);
   width: 40%;
@@ -118,7 +118,8 @@
 
 /* Animations */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -168,7 +169,7 @@
 }
 
 .emptyAction {
-  background: var(--color-primary, #80A6F2);
+  background: var(--color-primary, #80a6f2);
   color: white;
   border: none;
   padding: var(--spacing-sm, 12px) var(--spacing-lg, 24px);
@@ -180,11 +181,11 @@
 }
 
 .emptyAction:hover {
-  background: var(--color-primary-dark, #6B8FE6);
+  background: var(--color-primary-dark, #6b8fe6);
 }
 
 .emptyAction:focus {
-  outline: 2px solid var(--color-primary, #80A6F2);
+  outline: 2px solid var(--color-primary, #80a6f2);
   outline-offset: 2px;
 }
 
@@ -250,7 +251,7 @@
 }
 
 .loadMoreButton {
-  background: var(--color-primary, #80A6F2);
+  background: var(--color-primary, #80a6f2);
   color: white;
   border: none;
   padding: var(--spacing-md, 16px) var(--spacing-xl, 48px);
@@ -263,13 +264,13 @@
 }
 
 .loadMoreButton:hover {
-  background: var(--color-primary-dark, #6B8FE6);
+  background: var(--color-primary-dark, #6b8fe6);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .loadMoreButton:focus {
-  outline: 2px solid var(--color-primary, #80A6F2);
+  outline: 2px solid var(--color-primary, #80a6f2);
   outline-offset: 2px;
 }
 
@@ -290,14 +291,18 @@
   width: 24px;
   height: 24px;
   border: 3px solid var(--color-border, #e5e5e5);
-  border-top: 3px solid var(--color-primary, #80A6F2);
+  border-top: 3px solid var(--color-primary, #80a6f2);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Pagination Error */
@@ -340,27 +345,27 @@
   .grid {
     gap: var(--spacing-md, 16px);
   }
-  
+
   .grid.small {
     gap: var(--spacing-sm, 12px);
   }
-  
+
   .emptyState,
   .errorState {
     padding: var(--spacing-lg, 24px) var(--spacing-md, 16px);
     min-height: 300px;
   }
-  
+
   .emptyIcon,
   .errorIcon {
     font-size: 3rem;
   }
-  
+
   .emptyTitle,
   .errorTitle {
     font-size: var(--font-size-lg, 20px);
   }
-  
+
   .loadMoreButton {
     padding: var(--spacing-sm, 12px) var(--spacing-lg, 24px);
     font-size: var(--font-size-sm, 14px);
@@ -372,7 +377,7 @@
   .skeletonCard {
     border-color: var(--color-text, #111111);
   }
-  
+
   .emptyAction,
   .errorAction,
   .loadMoreButton {
@@ -388,7 +393,7 @@
   .loadMoreButton {
     animation: none;
   }
-  
+
   .loadMoreButton:hover {
     transform: none;
   }

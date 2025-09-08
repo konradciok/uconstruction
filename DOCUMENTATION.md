@@ -7,6 +7,7 @@ Professional watercolor artist website for Anna Ciok featuring elegant watercolo
 ### Current Status: ✅ Production Ready (95% Complete)
 
 **Live Features:**
+
 - ✅ Elegant watercolor-inspired design with CSS Modules
 - ✅ Responsive layout (mobile + desktop)
 - ✅ Contact form with Formspree integration
@@ -15,28 +16,33 @@ Professional watercolor artist website for Anna Ciok featuring elegant watercolo
 - ✅ Clean, maintainable codebase
 
 **Pending:**
+
 - ⚠️ Production environment configuration
 - ⚠️ Stripe Payment Link testing and deployment
 
 ## Tech Stack
 
 ### Core Framework
+
 - **Next.js 15.4.6** with TypeScript
 - **React 19.1.0** with App Router
 - **CSS Modules** with CSS variables for styling
 
 ### Styling System
+
 - **CSS Variables**: Design tokens (colors, spacing, typography)
 - **CSS Modules**: Component-scoped styling (`.module.css`)
 - **Global Utilities**: Custom utility classes for common patterns
 - **Responsive Design**: Mobile-first approach with CSS media queries
 
 ### External Services
+
 - **Formspree**: Contact form handling and email delivery
 - **Stripe**: Payment processing for workshop bookings
 - **Vercel**: Deployment platform (ready for deployment)
 
 ### Development Tools
+
 - **TypeScript**: Type safety and better development experience
 - **ESLint**: Code quality and consistency
 - **Prettier**: Code formatting
@@ -81,6 +87,7 @@ src/
 ## Design System
 
 ### Color Palette
+
 - **Background**: `#F2F2F2` (light gray)
 - **Text**: `#111111` (dark gray)
 - **Primary Blue**: `#80A6F2` (soft blue for buttons/links)
@@ -88,16 +95,19 @@ src/
 - **White**: `#FFFFFF` (button text)
 
 ### Typography
+
 - **Sans-serif**: System fonts for body text
 - **Serif**: Georgia for headings and artistic elements
 - **Responsive Scale**: Mobile-first font sizing
 
 ### Spacing System
+
 - **Mobile-first**: Responsive spacing with CSS variables
 - **Consistent**: 4px base unit with multipliers
 - **Breakpoints**: 640px, 768px, 1024px, 1280px
 
 ### Animations
+
 - **Fade In**: Gentle page load animations
 - **Hover Effects**: Subtle interactive feedback
 - **Reduced Motion**: Accessibility support
@@ -108,18 +118,22 @@ src/
 
 **Technology**: Formspree integration
 **Features**:
+
 - Form validation and error handling
 - Reliable email delivery
 - Spam protection
 - Success/error feedback
 
 **Implementation**:
+
 ```typescript
 // src/components/ContactForm.tsx
 import { useForm, ValidationError } from '@formspree/react';
 
 export function ContactForm() {
-  const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID);
+  const [state, handleSubmit] = useForm(
+    process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID
+  );
   // Form implementation with validation and feedback
 }
 ```
@@ -128,18 +142,21 @@ export function ContactForm() {
 
 **Technology**: Stripe Payment Links
 **Features**:
+
 - Date selection interface
 - Payment processing
 - Capacity management
 - Confirmation system
 
 **Current Implementation**:
+
 - ✅ Workshop page with date picker
 - ✅ Stripe Payment Link integration
 - ✅ Responsive design
 - ⚠️ Needs production Payment Links
 
 **Recommended Approach**: Stripe Payment Links with Dynamic Date Selection
+
 - No backend required
 - Simple implementation
 - Secure payment processing
@@ -149,6 +166,7 @@ export function ContactForm() {
 
 **Approach**: Mobile-first with CSS Modules
 **Features**:
+
 - Responsive typography
 - Flexible layouts
 - Touch-friendly interactions
@@ -157,6 +175,7 @@ export function ContactForm() {
 ### 4. Performance ✅ Optimized
 
 **Optimizations**:
+
 - CSS Modules for minimal CSS
 - Next.js Image optimization
 - Static generation where possible
@@ -183,11 +202,13 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ### Development vs Production
 
 **Development**:
+
 - Use test keys for Stripe
 - Formspree test form ID
 - Local development server
 
 **Production**:
+
 - Use live Stripe keys
 - Formspree production form ID
 - Vercel deployment
@@ -197,6 +218,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ### Vercel Deployment (Recommended)
 
 1. **Push to GitHub**:
+
    ```bash
    git add .
    git commit -m "Ready for production"
@@ -240,6 +262,7 @@ npm run format
 ### Payment Links Strategy
 
 **Why Payment Links**:
+
 - ✅ No backend required
 - ✅ Simple implementation
 - ✅ Secure payment processing
@@ -255,6 +278,7 @@ npm run format
    - Set "Limit the number of payments"
 
 2. **Configure Workshop Dates**:
+
    ```typescript
    // src/lib/workshop-dates.ts
    export const workshopDates = [
@@ -263,8 +287,8 @@ npm run format
        time: '14:00-17:00',
        paymentLink: 'https://buy.stripe.com/...',
        capacity: 8,
-       available: true
-     }
+       available: true,
+     },
    ];
    ```
 
@@ -276,11 +300,13 @@ npm run format
 ### Capacity Management
 
 **Payment Link Limits**:
+
 - Set "Limit the number of payments" = workshop capacity
 - Link automatically deactivates when limit reached
 - UI shows "Sold out" for deactivated links
 
 **Trade-offs**:
+
 - ✅ No risk of overselling
 - ✅ Simple implementation
 - ⚠️ No real-time availability count
@@ -290,12 +316,14 @@ npm run format
 ### Current State ✅ Clean
 
 **Recent Improvements**:
+
 - ✅ Removed unused dependencies (react-hook-form, zod)
 - ✅ Cleaned up duplicate type definitions
 - ✅ Removed Tailwind CSS, restored CSS Modules
 - ✅ Fixed build issues and cache problems
 
 **Code Standards**:
+
 - TypeScript for type safety
 - ESLint for code quality
 - Prettier for formatting
@@ -304,11 +332,13 @@ npm run format
 ### Maintenance Tasks
 
 **Regular**:
+
 - Update dependencies monthly
 - Monitor Formspree and Stripe usage
 - Check for security updates
 
 **As Needed**:
+
 - Add new workshop dates
 - Update content and images
 - Modify styling and layout
@@ -318,6 +348,7 @@ npm run format
 ### Manual Testing Checklist
 
 **Functionality**:
+
 - [x] Contact form submission
 - [x] Navigation between pages
 - [x] Responsive design on mobile/desktop
@@ -325,11 +356,13 @@ npm run format
 - [ ] Stripe payment flow (pending production setup)
 
 **Performance**:
+
 - [x] Page load times
 - [x] Image optimization
 - [x] Bundle size optimization
 
 **Accessibility**:
+
 - [x] Keyboard navigation
 - [x] Screen reader compatibility
 - [x] Color contrast
@@ -338,6 +371,7 @@ npm run format
 ### Browser Compatibility
 
 **Supported Browsers**:
+
 - Chrome (latest)
 - Firefox (latest)
 - Safari (latest)
@@ -349,16 +383,19 @@ npm run format
 ### Potential Improvements
 
 **Short Term**:
+
 - Add analytics (Google Analytics, Plausible)
 - Implement SEO optimization
 - Add loading states and better error handling
 
 **Medium Term**:
+
 - Add blog/news section
 - Implement image gallery
 - Add newsletter signup
 
 **Long Term**:
+
 - Add e-commerce for art sales
 - Implement customer reviews
 - Add multi-language support
@@ -366,12 +403,14 @@ npm run format
 ### Scalability Considerations
 
 **Current Architecture**:
+
 - Static generation for performance
 - CSS Modules for maintainable styling
 - Component-based architecture
 - Environment-based configuration
 
 **Future-Proof**:
+
 - Modular component design
 - Configurable content management
 - Scalable styling system
@@ -382,6 +421,7 @@ npm run format
 ### Common Issues
 
 **Build Errors**:
+
 ```bash
 # Clear Next.js cache
 rm -rf .next
@@ -389,16 +429,19 @@ npm run build
 ```
 
 **Styling Issues**:
+
 - Check CSS Module imports
 - Verify CSS variable definitions
 - Clear browser cache
 
 **Form Issues**:
+
 - Verify Formspree form ID
 - Check environment variables
 - Test in incognito mode
 
 **Payment Issues**:
+
 - Verify Stripe keys
 - Check Payment Link configuration
 - Test with Stripe test mode
@@ -419,6 +462,7 @@ The watercolor artist website is **95% complete** and ready for production deplo
 3. **Deployment** to Vercel
 
 The project successfully delivers:
+
 - ✅ Beautiful, responsive design
 - ✅ Reliable contact form functionality
 - ✅ Workshop booking system

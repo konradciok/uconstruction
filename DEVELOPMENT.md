@@ -26,16 +26,19 @@ npm run type-check
 ## Key Files
 
 ### Core Components
+
 - `src/app/page.tsx` - Home page
 - `src/components/Hero.tsx` - Hero section
 - `src/components/ContactForm.tsx` - Contact form
 - `src/components/WorkshopDatePicker.tsx` - Workshop booking
 
 ### Styling
+
 - `src/styles/globals.css` - Global styles and CSS variables
 - `src/components/*.module.css` - Component-scoped styles
 
 ### Configuration
+
 - `package.json` - Dependencies and scripts
 - `tsconfig.json` - TypeScript configuration
 - `next.config.ts` - Next.js configuration
@@ -43,6 +46,7 @@ npm run type-check
 ## Styling System
 
 ### CSS Variables (Design Tokens)
+
 ```css
 :root {
   --color-background: #f2f2f2;
@@ -55,6 +59,7 @@ npm run type-check
 ```
 
 ### CSS Modules Usage
+
 ```typescript
 import styles from './Component.module.css';
 
@@ -64,15 +69,23 @@ export default function Component() {
 ```
 
 ### Utility Classes
+
 ```css
-.text-lg { font-size: var(--font-size-lg); }
-.p-md { padding: var(--spacing-md); }
-.animate-fadeInUp { animation: fadeInUp 0.8s ease-out; }
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+.p-md {
+  padding: var(--spacing-md);
+}
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s ease-out;
+}
 ```
 
 ## Environment Variables
 
 Create `.env.local`:
+
 ```bash
 NEXT_PUBLIC_FORMSPREE_FORM_ID=your_form_id
 STRIPE_SECRET_KEY=sk_test_...
@@ -82,21 +95,25 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ## Common Tasks
 
 ### Adding a New Page
+
 1. Create `src/app/new-page/page.tsx`
 2. Add CSS module: `src/app/new-page/page.module.css`
 3. Update navigation if needed
 
 ### Adding a New Component
+
 1. Create `src/components/NewComponent.tsx`
 2. Create `src/components/NewComponent.module.css`
 3. Import and use in pages
 
 ### Modifying Styles
+
 1. Update CSS variables in `globals.css` for global changes
 2. Modify component `.module.css` files for component-specific changes
 3. Use utility classes for common patterns
 
 ### Adding Workshop Dates
+
 1. Update `src/lib/workshop-dates.ts`
 2. Create Stripe Payment Link for each date
 3. Test booking flow
@@ -104,18 +121,21 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ## Development Workflow
 
 ### Before Starting
+
 ```bash
 npm install
 npm run type-check
 ```
 
 ### During Development
+
 ```bash
 npm run dev
 # Visit http://localhost:3000
 ```
 
 ### Before Committing
+
 ```bash
 npm run lint
 npm run format
@@ -126,6 +146,7 @@ npm run build
 ## Troubleshooting
 
 ### Build Issues
+
 ```bash
 # Clear cache
 rm -rf .next
@@ -134,11 +155,13 @@ npm run build
 ```
 
 ### Styling Issues
+
 - Check CSS Module imports
 - Verify CSS variable definitions
 - Clear browser cache
 
 ### TypeScript Errors
+
 ```bash
 npm run type-check
 # Fix any type errors before committing
@@ -147,16 +170,19 @@ npm run type-check
 ## Code Standards
 
 ### TypeScript
+
 - Use strict mode
 - Define interfaces for props
 - Use proper typing for all functions
 
 ### CSS
+
 - Use CSS Modules for component styles
 - Use CSS variables for design tokens
 - Mobile-first responsive design
 
 ### React
+
 - Use functional components
 - Use hooks for state management
 - Follow Next.js App Router patterns
@@ -164,12 +190,14 @@ npm run type-check
 ## Deployment
 
 ### Vercel (Recommended)
+
 1. Push to GitHub
 2. Connect repository to Vercel
 3. Configure environment variables
 4. Deploy automatically
 
 ### Environment Variables for Production
+
 - Use live Stripe keys
 - Use production Formspree form ID
 - Set up custom domain (optional)

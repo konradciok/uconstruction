@@ -1,7 +1,7 @@
 /* Catalog Page Styles */
 .main {
   padding: 2rem 0;
-  background: var(--color-background, #F2F2F2);
+  background: var(--color-background, #f2f2f2);
   min-height: 100vh;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .retryButton {
-  background: var(--color-primary, #80A6F2);
+  background: var(--color-primary, #80a6f2);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -62,7 +62,7 @@
 }
 
 .retryButton:hover {
-  background: var(--color-primary-dark, #6B94E8);
+  background: var(--color-primary-dark, #6b94e8);
 }
 
 /* Catalog Grid - Full Width Layout */
@@ -174,7 +174,7 @@
 }
 
 .loadMoreButton {
-  background: var(--color-primary, #80A6F2);
+  background: var(--color-primary, #80a6f2);
   color: white;
   border: none;
   padding: 1rem 2.5rem;
@@ -187,7 +187,7 @@
 }
 
 .loadMoreButton:hover {
-  background: var(--color-primary-dark, #6B94E8);
+  background: var(--color-primary-dark, #6b94e8);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(128, 166, 242, 0.4);
 }
@@ -248,7 +248,7 @@
   width: 24px;
   height: 24px;
   border: 3px solid var(--color-background-secondary, #f3f4f6);
-  border-top: 3px solid var(--color-primary, #80A6F2);
+  border-top: 3px solid var(--color-primary, #80a6f2);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -263,7 +263,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -272,8 +273,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .emptyState {
@@ -296,7 +301,7 @@
 }
 
 .clearFiltersButton {
-  background: var(--color-accent, #F2EDA7);
+  background: var(--color-accent, #f2eda7);
   color: var(--color-text, #111111);
   border: 1px solid var(--color-border, #e5e5e5);
   padding: 0.75rem 1.5rem;
@@ -308,7 +313,7 @@
 }
 
 .clearFiltersButton:hover {
-  background: var(--color-accent-dark, #EDE49A);
+  background: var(--color-accent-dark, #ede49a);
   border-color: var(--color-border-dark, #d1d1d1);
 }
 

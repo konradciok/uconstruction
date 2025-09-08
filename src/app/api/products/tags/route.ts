@@ -24,10 +24,9 @@ export async function GET(request: NextRequest) {
         },
       }
     );
-
   } catch (error) {
     console.error('[API] Error fetching tags:', error);
-    
+
     return NextResponse.json(
       {
         success: false,
