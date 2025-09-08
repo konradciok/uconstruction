@@ -235,8 +235,8 @@ export default function UploadPage() {
                   </li>
                   <li>
                     Visit{' '}
-                    <a href="/portfolio2" className={styles.link}>
-                      Portfolio 2
+                    <a href="/gallery" className={styles.link}>
+                      Gallery
                     </a>{' '}
                     to see your new images
                   </li>

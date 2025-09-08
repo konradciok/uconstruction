@@ -25,7 +25,7 @@ export default function ArtMatters() {
               Thank you for supporting my art!
             </p>
             <div className={styles.ctaSection}>
-              <Link href="/portfolio">
+              <Link href="/gallery">
                 <Button variant="primary" size="md">
                   Explore My Portfolio
                 </Button>

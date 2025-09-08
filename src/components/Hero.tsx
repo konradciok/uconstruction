@@ -37,7 +37,7 @@ export default function Hero() {
               >
                 Take a look!
               </Button>
-              <Link href="/portfolio">
+              <Link href="/gallery">
                 <Button variant="outline" size="lg">
                   Visit Gallery
                 </Button>
