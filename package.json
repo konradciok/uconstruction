@@ -12,10 +12,19 @@
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:reset": "prisma migrate reset --force",
     "prisma:db:push": "prisma db push",
     "prisma:studio": "prisma studio",
-    "db:reset": "prisma migrate reset --force"
+    "db:reset": "prisma migrate reset --force",
+    "db:backup": "node scripts/backup-sqlite.js",
+    "db:migrate": "node scripts/migrate-to-postgres.js",
+    "db:switch": "./scripts/switch-db.sh",
+    "postgres:setup": "./scripts/setup-postgres.sh",
+    "postgres:start": "docker-compose up -d postgres",
+    "postgres:stop": "docker-compose down",
+    "migrate:full": "./scripts/full-migration.sh",
+    "db:seed": "node scripts/seed-sample-data.js"
   },
   "dependencies": {
     "@formspree/react": "^3.0.0",
@@ -28,16 +37,19 @@
     "next": "15.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "sqlite3": "^5.1.7",
     "stripe": "^14.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
+    "@types/pg": "^8.11.10",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
+    "pg": "^8.12.0",
     "prettier": "^3.6.2",
     "prisma": "^6.15.0",
     "typescript": "^5.9.2"

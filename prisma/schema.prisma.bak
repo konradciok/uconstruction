@@ -63,7 +63,7 @@ model Variant {
   // PostgreSQL decimal with precision for currency
   priceAmount               Decimal? @db.Decimal(18, 6) 
   priceCurrency             String?
-  compareAtPriceAmount      Decimal? @db.Decimal(18, 6) 
+  compareAtPriceAmount      Decimal? 
   compareAtPriceCurrency    String?
   position                  Int?
   barcode                   String?

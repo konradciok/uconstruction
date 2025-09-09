@@ -4,7 +4,12 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     remotePatterns: [
-      // Add any external image domains here as needed
+      {
+        protocol: 'https',
+        hostname: 'cdn.shopify.com',
+        port: '',
+        pathname: '/s/files/**',
+      },
     ],
   },
   webpack: (config, { isServer }) => {

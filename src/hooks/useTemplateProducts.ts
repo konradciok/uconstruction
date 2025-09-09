@@ -5,7 +5,7 @@
  * and the API routes for template data.
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import {
   TemplateProduct,
   TemplateSearchFilters
@@ -59,6 +59,16 @@ export function useShopProducts(
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
+  const isMountedRef = useRef(true)
+
+  // Memoize filters to prevent infinite re-renders
+  const memoizedFilters = useMemo(() => filters, [
+    filters?.searchQuery,
+    filters?.categories?.join(','),
+    filters?.tags?.join(','),
+    filters?.priceRange?.min,
+    filters?.priceRange?.max
+  ])
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -71,39 +81,68 @@ export function useShopProducts(
         limit: limit.toString()
       })
       
-      if (filters?.searchQuery) {
-        params.append('search', filters.searchQuery)
+      if (memoizedFilters?.searchQuery) {
+        params.append('search', memoizedFilters.searchQuery)
       }
-      if (filters?.categories.length) {
-        params.append('category', filters.categories[0])
+      if (memoizedFilters?.categories?.length) {
+        params.append('category', memoizedFilters.categories[0])
       }
-      if (filters?.tags.length) {
-        params.append('tags', filters.tags.join(','))
+      if (memoizedFilters?.tags?.length) {
+        params.append('tags', memoizedFilters.tags.join(','))
       }
-      if (filters?.priceRange) {
-        params.append('minPrice', filters.priceRange.min.toString())
-        params.append('maxPrice', filters.priceRange.max.toString())
-      }
-      
-      const response = await fetch(`/api/template/products?${params.toString()}`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+      if (memoizedFilters?.priceRange) {
+        params.append('minPrice', memoizedFilters.priceRange.min.toString())
+        params.append('maxPrice', memoizedFilters.priceRange.max.toString())
       }
       
-      const data = await response.json()
-      setProducts(data.products || [])
-      setHasMore(data.hasMore || false)
-      setTotalCount(data.totalCount || 0)
+      // Add request timeout and abort controller for resource management
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      
+      try {
+        const response = await fetch(`/api/template/products?${params.toString()}`, {
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const data = await response.json()
+        
+        // Only update state if component is still mounted
+        if (isMountedRef.current) {
+          setProducts(data.products || [])
+          setHasMore(data.hasMore || false)
+          setTotalCount(data.totalCount || 0)
+        }
+      } catch (fetchError) {
+        clearTimeout(timeoutId)
+        if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+          throw new Error('Request timeout - please try again')
+        }
+        throw fetchError
+      }
     } catch (err) {
       console.error('Error fetching shop products:', err)
-      setError(err instanceof Error ? err.message : 'Failed to fetch shop products')
+      if (isMountedRef.current) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch shop products')
+      }
     } finally {
-      setLoading(false)
+      if (isMountedRef.current) {
+        setLoading(false)
+      }
     }
-  }, [page, limit, filters])
+  }, [page, limit, memoizedFilters])
 
   useEffect(() => {
     fetchProducts()
+    
+    // Cleanup function to prevent state updates on unmounted components
+    return () => {
+      isMountedRef.current = false
+    }
   }, [fetchProducts])
 
   const loadMore = useCallback(async () => {
@@ -118,18 +157,18 @@ export function useShopProducts(
         limit: limit.toString()
       })
       
-      if (filters?.searchQuery) {
-        params.append('search', filters.searchQuery)
+      if (memoizedFilters?.searchQuery) {
+        params.append('search', memoizedFilters.searchQuery)
       }
-      if (filters?.categories.length) {
-        params.append('category', filters.categories[0])
+      if (memoizedFilters?.categories?.length) {
+        params.append('category', memoizedFilters.categories[0])
       }
-      if (filters?.tags.length) {
-        params.append('tags', filters.tags.join(','))
+      if (memoizedFilters?.tags?.length) {
+        params.append('tags', memoizedFilters.tags.join(','))
       }
-      if (filters?.priceRange) {
-        params.append('minPrice', filters.priceRange.min.toString())
-        params.append('maxPrice', filters.priceRange.max.toString())
+      if (memoizedFilters?.priceRange) {
+        params.append('minPrice', memoizedFilters.priceRange.min.toString())
+        params.append('maxPrice', memoizedFilters.priceRange.max.toString())
       }
       
       const response = await fetch(`/api/template/products?${params.toString()}`)
@@ -138,15 +177,23 @@ export function useShopProducts(
       }
       
       const data = await response.json()
-      setProducts(prev => [...prev, ...(data.products || [])])
-      setHasMore(data.hasMore || false)
+      
+      // Only update state if component is still mounted
+      if (isMountedRef.current) {
+        setProducts(prev => [...prev, ...(data.products || [])])
+        setHasMore(data.hasMore || false)
+      }
     } catch (err) {
       console.error('Error loading more products:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load more products')
+      if (isMountedRef.current) {
+        setError(err instanceof Error ? err.message : 'Failed to load more products')
+      }
     } finally {
-      setLoading(false)
+      if (isMountedRef.current) {
+        setLoading(false)
+      }
     }
-  }, [page, limit, filters, loading, hasMore])
+  }, [page, limit, memoizedFilters, loading, hasMore])
 
   return {
     products,
@@ -265,10 +312,10 @@ export function useProductSearch() {
         search: query
       })
       
-      if (filters?.categories.length) {
+      if (filters?.categories?.length) {
         params.append('category', filters.categories[0])
       }
-      if (filters?.tags.length) {
+      if (filters?.tags?.length) {
         params.append('tags', filters.tags.join(','))
       }
       if (filters?.priceRange) {
@@ -317,7 +364,27 @@ export function useSearchFilters() {
   })
 
   const updateFilters = useCallback((newFilters: Partial<TemplateSearchFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }))
+    setFilters(prev => {
+      // Only update if there are actual changes
+      const hasChanges = Object.keys(newFilters).some(key => {
+        const typedKey = key as keyof TemplateSearchFilters
+        if (typedKey === 'categories' || typedKey === 'tags') {
+          const prevArray = prev[typedKey] || []
+          const newArray = newFilters[typedKey] || []
+          return JSON.stringify(prevArray) !== JSON.stringify(newArray)
+        }
+        if (typedKey === 'priceRange') {
+          const prevRange = prev.priceRange || { min: 0, max: 1000 }
+          const newRange = newFilters.priceRange || { min: 0, max: 1000 }
+          return prevRange.min !== newRange.min || prevRange.max !== newRange.max
+        }
+        return prev[typedKey] !== newFilters[typedKey]
+      })
+      
+      if (!hasChanges) return prev
+      
+      return { ...prev, ...newFilters }
+    })
   }, [])
 
   const clearFilters = useCallback(() => {
@@ -329,11 +396,14 @@ export function useSearchFilters() {
     })
   }, [])
 
-  const hasActiveFilters = filters.categories.length > 0 ||
-                          filters.tags.length > 0 ||
-                          filters.priceRange.min > 0 ||
-                          filters.priceRange.max < 1000 ||
-                          filters.searchQuery.length > 0
+  const hasActiveFilters = useMemo(() => 
+    filters.categories.length > 0 ||
+    filters.tags.length > 0 ||
+    filters.priceRange.min > 0 ||
+    filters.priceRange.max < 1000 ||
+    filters.searchQuery.length > 0,
+    [filters.categories.length, filters.tags.length, filters.priceRange.min, filters.priceRange.max, filters.searchQuery.length]
+  )
 
   return {
     filters,
