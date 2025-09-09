@@ -43,7 +43,6 @@ describe('ProductService', () => {
     const mockProducts = [
       {
         id: 1,
-        shopifyId: 'gid://shopify/Product/1',
         handle: 'test-product',
         title: 'Test Product',
         variants: [],
@@ -242,7 +241,6 @@ describe('ProductService', () => {
     const mockProducts = [
       {
         id: 1,
-        shopifyId: 'gid://shopify/Product/1',
         handle: 'landscape-painting',
         title: 'Beautiful Landscape',
         variants: [],

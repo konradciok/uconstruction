@@ -2,7 +2,7 @@ import { ProductWithRelations } from '@/types/product';
 import { Artwork } from '@/types/portfolio2';
 
 /**
- * Transform Shopify products into Portfolio2 Artwork format
+ * Transform products into Portfolio2 Artwork format
  * Maintains the 4:5 aspect ratio expected by Portfolio2 components
  */
 export class ProductToArtworkTransformer {
@@ -13,7 +13,7 @@ export class ProductToArtworkTransformer {
     const primaryImage = product.media?.[0];
 
     // Generate artwork ID (prefixed to avoid conflicts)
-    const artworkId = `shopify-${product.id}`;
+    const artworkId = `product-${product.id}`;
 
     // Create dimensions string from product info
     const dimensions = this.createDimensionsString(product);
@@ -35,18 +35,17 @@ export class ProductToArtworkTransformer {
       medium: product.productType || 'Digital Art',
       tags,
       source: {
-        type: 'shopify',
+        type: 'product',
         id: product.id,
         url: `/products/${product.handle}`, // Future product page URL
         metadata: {
           price,
           vendor: product.vendor || undefined,
           status: product.status || undefined,
-          shopifyId: product.shopifyId,
-          lastUpdated: product.shopifyUpdatedAt
-            ? product.shopifyUpdatedAt instanceof Date
-              ? product.shopifyUpdatedAt.toISOString()
-              : new Date(product.shopifyUpdatedAt).toISOString()
+          lastUpdated: product.updatedAt
+            ? product.updatedAt instanceof Date
+              ? product.updatedAt.toISOString()
+              : new Date(product.updatedAt).toISOString()
             : new Date().toISOString(),
         },
       },
@@ -184,7 +183,7 @@ export class ProductToArtworkTransformer {
    */
   static createPlaceholderArtwork(product: ProductWithRelations): Artwork {
     return {
-      id: `shopify-${product.id}`,
+      id: `product-${product.id}`,
       title: product.title,
       dimensions: `${product.productType || 'Art'}, ${product.vendor}`,
       thumbnail: {
@@ -201,14 +200,13 @@ export class ProductToArtworkTransformer {
       medium: product.productType || 'Digital Art',
       tags: product.productTags?.map((pt) => pt.tag.name) || [],
       source: {
-        type: 'shopify',
+        type: 'product',
         id: product.id,
         url: `/products/${product.handle}`,
         metadata: {
           price: this.getPriceDisplay(product),
           vendor: product.vendor || undefined,
           status: product.status || undefined,
-          shopifyId: product.shopifyId,
           lastUpdated: new Date().toISOString(),
         },
       },

@@ -243,7 +243,7 @@ const showHelp = () => {
   log(`  ${colors.green}npm run prisma:studio${colors.reset} - Open database admin interface\n`);
   log('Environment variables needed:');
   log('  DATABASE_URL - Path to SQLite database');
-  log('  Other vars from .env.local for Shopify/Stripe integration');
+  log('  Other vars from .env.local for Stripe integration');
 };
 
 // Handle command line arguments

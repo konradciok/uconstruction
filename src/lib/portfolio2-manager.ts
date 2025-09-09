@@ -19,7 +19,6 @@ export class Portfolio2Manager {
     return {
       total: 0,
       uploaded: 0,
-      shopify: 0,
       lastSync: new Date().toISOString(),
     };
   }
@@ -28,10 +27,6 @@ export class Portfolio2Manager {
     console.warn('Portfolio2Manager.getSourceConfig() is deprecated.');
     return {
       includeUploaded: true,
-      includeShopify: true,
-      shopifyFilters: {
-        publishedOnly: true,
-      },
     };
   }
 
@@ -52,8 +47,8 @@ export class Portfolio2Manager {
     return [];
   }
 
-  static async refreshShopifyArtworks(): Promise<void> {
-    console.warn('Portfolio2Manager.refreshShopifyArtworks() is deprecated.');
+  static async refreshArtworks(): Promise<void> {
+    console.warn('Portfolio2Manager.refreshArtworks() is deprecated.');
   }
 
   static exportPortfolioData(): void {

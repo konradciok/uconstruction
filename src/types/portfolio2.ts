@@ -23,14 +23,13 @@ export interface Artwork {
 
   // NEW: Source tracking and product integration
   source?: {
-    type: 'static' | 'uploaded' | 'shopify';
-    id?: string | number; // Original source ID (e.g. Shopify product ID)
+    type: 'static' | 'uploaded' | 'product';
+    id?: string | number; // Original source ID (e.g. product ID)
     url?: string; // Link to product page or source
     metadata?: {
       price?: string; // Display price for products
       vendor?: string; // Artist/vendor name
       status?: string; // Product status
-      shopifyId?: string; // Original Shopify ID
       lastUpdated?: string; // When product was last synced
     };
   };
@@ -39,7 +38,7 @@ export interface Artwork {
 export interface Portfolio2PageProps {
   artworks: Artwork[];
   // New: Configuration for product integration
-  enableShopifyProducts?: boolean;
+  enableProducts?: boolean;
   showSourceBadges?: boolean;
 }
 
@@ -78,18 +77,10 @@ export interface LightboxModalProps {
 export interface PortfolioStats {
   total: number;
   uploaded: number;
-  shopify: number;
   lastSync?: string;
 }
 
 // New: Source configuration for Portfolio2Manager
 export interface SourceConfig {
   includeUploaded?: boolean;
-  includeShopify?: boolean;
-  shopifyFilters?: {
-    publishedOnly?: boolean;
-    tags?: string[];
-    categories?: string[];
-    vendor?: string;
-  };
 }

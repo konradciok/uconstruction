@@ -8,7 +8,7 @@ interface UsePortfolio2DataReturn {
   error: string | null;
   refresh: () => Promise<void>;
   stats: PortfolioStats;
-  refreshShopify: () => Promise<void>;
+  refreshProducts: () => Promise<void>;
   sourceConfig: SourceConfig;
   updateSourceConfig: (config: SourceConfig) => void;
 }
@@ -22,7 +22,6 @@ export function usePortfolio2Data(
   const [stats, setStats] = useState<PortfolioStats>({
     total: 0,
     uploaded: 0,
-    shopify: 0,
   });
   const [sourceConfig, setSourceConfig] = useState<SourceConfig>(
     config || Portfolio2Manager.getSourceConfig()
@@ -75,15 +74,15 @@ export function usePortfolio2Data(
     await loadArtworks();
   }, [loadArtworks]);
 
-  // Refresh Shopify products specifically
-  const refreshShopify = useCallback(async () => {
+  // Refresh products specifically
+  const refreshProducts = useCallback(async () => {
     try {
-      await Portfolio2Manager.refreshShopifyArtworks();
+      await Portfolio2Manager.refreshArtworks();
       await loadArtworks();
     } catch (err) {
-      console.error('Error refreshing Shopify artworks:', err);
+      console.error('Error refreshing artworks:', err);
       setError(
-        err instanceof Error ? err.message : 'Failed to refresh Shopify data'
+        err instanceof Error ? err.message : 'Failed to refresh product data'
       );
     }
   }, [loadArtworks]);
@@ -105,7 +104,7 @@ export function usePortfolio2Data(
     error,
     refresh,
     stats,
-    refreshShopify,
+    refreshProducts,
     sourceConfig,
     updateSourceConfig,
   };
