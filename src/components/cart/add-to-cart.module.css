@@ -1,18 +1,4 @@
-/* AddToCart Component Styles */
-.button {
-  width: 100%;
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--border-radius);
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-  font-size: var(--font-size-base);
-}
-
-.button:hover {
+ .button:hover {
   background-color: var(--color-primary-blue);
 }
 

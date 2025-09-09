@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { TemplateProduct } from '@/lib/template-adapters'
+import { AddToCart } from '@/components/cart/add-to-cart'
 import clsx from 'clsx'
 import styles from './variant-selector.module.css'
 
@@ -108,12 +109,12 @@ export function VariantSelector({ product, onVariantChange }: VariantSelectorPro
       </div>
 
       {/* Add to Cart Button */}
-      <button
+      <AddToCart
+        product={product}
+        variantId={selectedVariantId}
+        quantity={1}
         className={styles.addToCartButton}
-        disabled={selectedVariant?.availableForSale === false}
-      >
-        {selectedVariant?.availableForSale === false ? 'Out of Stock' : 'Add to Cart'}
-      </button>
+      />
     </div>
   )
 }

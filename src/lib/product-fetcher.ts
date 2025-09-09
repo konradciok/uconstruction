@@ -7,11 +7,37 @@
 import { ProductService } from './product-service'
 import { validateProductHandle, validateProductId } from './param-validators'
 import type { ProductWithRelations } from '@/types/product'
+import type { Variant } from '@/generated/prisma'
 
 export interface ProductFetchResult {
   success: boolean
-  product?: ProductWithRelations
+  product?: SerializedProductWithRelations
   error?: string
+}
+
+// Type for serialized variant with number prices instead of Decimal
+type SerializedVariant = Omit<Variant, 'priceAmount' | 'compareAtPriceAmount'> & {
+  priceAmount: number | null
+  compareAtPriceAmount: number | null
+}
+
+// Type for serialized product with serialized variants
+type SerializedProductWithRelations = Omit<ProductWithRelations, 'variants'> & {
+  variants: SerializedVariant[]
+}
+
+/**
+ * Serialize Decimal objects to numbers for client-side compatibility
+ */
+function serializeProductForClient(product: ProductWithRelations): SerializedProductWithRelations {
+  return {
+    ...product,
+    variants: product.variants.map(variant => ({
+      ...variant,
+      priceAmount: variant.priceAmount ? Number(variant.priceAmount) : null,
+      compareAtPriceAmount: variant.compareAtPriceAmount ? Number(variant.compareAtPriceAmount) : null,
+    }))
+  }
 }
 
 /**
@@ -41,7 +67,7 @@ export async function fetchProductByHandle(handle: string): Promise<ProductFetch
 
     return {
       success: true,
-      product
+      product: serializeProductForClient(product)
     }
   } catch (error) {
     console.error('Error fetching product by handle:', error)
@@ -81,7 +107,7 @@ export async function fetchProductById(id: string): Promise<ProductFetchResult> 
 
     return {
       success: true,
-      product
+      product: serializeProductForClient(product)
     }
   } catch (error) {
     console.error('Error fetching product by ID:', error)
@@ -105,7 +131,7 @@ export async function fetchProducts(filters: {
   publishedOnly?: boolean
 } = {}): Promise<{
   success: boolean
-  products?: ProductWithRelations[]
+  products?: SerializedProductWithRelations[]
   hasMore?: boolean
   nextCursor?: string | null
   error?: string
@@ -128,7 +154,7 @@ export async function fetchProducts(filters: {
 
     return {
       success: true,
-      products: result.products,
+      products: result.products.map(serializeProductForClient),
       hasMore: result.hasMore,
       nextCursor: result.nextCursor
     }
@@ -153,7 +179,7 @@ export async function searchProducts(query: string, filters: {
   tags?: string[]
 } = {}): Promise<{
   success: boolean
-  products?: ProductWithRelations[]
+  products?: SerializedProductWithRelations[]
   totalResults?: number
   searchTime?: number
   error?: string
@@ -179,7 +205,7 @@ export async function searchProducts(query: string, filters: {
 
     return {
       success: true,
-      products: result.products,
+      products: result.products.map(serializeProductForClient),
       totalResults: result.totalResults,
       searchTime: result.searchTime
     }

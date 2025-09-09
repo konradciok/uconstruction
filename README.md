@@ -1,4 +1,4 @@
-# UConstruction - Watercolor Artist Platform
+# Watercolor Artist Site
 
 A Next.js portfolio and workshop booking platform for watercolor artist Anna Ciok, featuring local product database with Shopify data sync.
 
@@ -21,7 +21,7 @@ A Next.js portfolio and workshop booking platform for watercolor artist Anna Cio
 - **Database**: SQLite with Prisma ORM
 - **Payments**: Stripe integration for workshops
 - **Data Sync**: Shopify Admin API for product data import
-- **Styling**: Tailwind CSS with custom modules
+- **Styling**: Custom CSS modules with responsive design system
 - **Deployment**: Vercel-ready configuration
 
 ### Key Pages
@@ -36,6 +36,7 @@ A Next.js portfolio and workshop booking platform for watercolor artist Anna Cio
 ### Data Architecture
 
 **Local Product Database** (not live Shopify integration):
+
 - SQLite database with Prisma ORM
 - Products, variants, collections, media, and tags
 - Shopify data imported via bulk sync scripts
@@ -45,8 +46,9 @@ A Next.js portfolio and workshop booking platform for watercolor artist Anna Cio
 ### Shopify Integration
 
 **Data Import Only** (not live e-commerce):
+
 - Bulk import script: `npm run sync:backfill`
-- Delta sync script: `npm run sync:delta` 
+- Delta sync script: `npm run sync:delta`
 - Webhook handlers for product updates
 - Verification script: `npm run shopify:verify`
 - No live checkout or cart functionality
@@ -54,11 +56,12 @@ A Next.js portfolio and workshop booking platform for watercolor artist Anna Cio
 ### Environment Setup
 
 Required environment variables:
+
 - `STRIPE_SECRET_KEY` - Workshop payment processing
 - `SHOPIFY_ACCESS_TOKEN` - Product data import
 - `MYSHOPIFY_DOMAIN` - Shopify store connection
-- `SHOPIFY_WEBHOOK_SECRET` - Webhook verification
-- `DATABASE_URL` - SQLite database path
+- `SHOPIFY_WEBHOOK_SECRET` - Webhook verification secret
+- `DATABASE_URL` - SQLite database path (e.g., `file:./prisma/dev.db`)
 
 ### Development
 
@@ -72,8 +75,9 @@ npm run sync:delta   # Incremental product sync
 
 ### Architecture
 
-- **Frontend**: React components with TypeScript
+- **Frontend**: React components with TypeScript and custom CSS modules
 - **Backend**: Next.js API routes for data and webhooks
 - **Data Layer**: Prisma with local SQLite database
 - **Payment**: Stripe Checkout for workshop bookings only
 - **Sync**: Shopify Admin API for data import (not live e-commerce)
+- **Styling**: Custom CSS with responsive design system and CSS custom properties

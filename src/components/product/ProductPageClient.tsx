@@ -11,15 +11,16 @@ import Link from 'next/link'
 import { ProductGallery } from './gallery'
 import { ProductDescription } from './description'
 import { VariantSelector } from './variant-selector'
-import { PriceAndCta } from './price-and-cta'
+import { AddToCart } from '../cart/add-to-cart'
 import { CartModal } from '../cart/cart-modal'
 import Container from '../Container'
 import { adaptProductForTemplate } from '@/lib/template-adapters'
 import type { ProductWithRelations } from '@/types/product'
+import type { ProductWithSerializedVariants } from '@/lib/template-adapters'
 import styles from './ProductPageClient.module.css'
 
 interface ProductPageClientProps {
-  product: ProductWithRelations
+  product: ProductWithRelations | ProductWithSerializedVariants
 }
 
 export default function ProductPageClient({ product }: ProductPageClientProps) {
@@ -64,13 +65,6 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
               <div className={styles.infoSection}>
                 <ProductDescription product={templateProduct} />
                 
-                {/* Price and CTA */}
-                <PriceAndCta
-                  product={templateProduct}
-                  selectedVariantId={selectedVariantId}
-                  quantity={1}
-                />
-                
                 {/* Variant Selector */}
                 {product.variants.length > 1 && (
                   <div className={styles.variantSection}>
@@ -80,7 +74,8 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
                     />
                   </div>
                 )}
-
+                
+                
                 {/* Additional Info */}
                 <div className={styles.additionalInfo}>
                   <div className={styles.infoList}>

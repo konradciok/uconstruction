@@ -6,7 +6,7 @@ import { CartProvider } from '../components/cart';
 import styles from './layout.module.css';
 
 export const metadata: Metadata = {
-  title: 'UConstruction - Watercolor Artwork',
+  title: 'Watercolor Artist Site',
   description:
     'Discover beautiful watercolor artwork and prints. Handpicked collection of unique pieces from talented artists.',
 };

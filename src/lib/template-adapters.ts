@@ -8,6 +8,14 @@
 import type { ProductWithRelations } from '@/types/product'
 import type { PrismaClient } from '@/generated/prisma'
 
+// Type for products with serialized variants (numbers instead of Decimals)
+export type ProductWithSerializedVariants = Omit<ProductWithRelations, 'variants'> & {
+  variants: Array<Omit<ProductWithRelations['variants'][0], 'priceAmount' | 'compareAtPriceAmount'> & {
+    priceAmount: number | null
+    compareAtPriceAmount: number | null
+  }>
+}
+
 // Template-compatible product interface
 export interface TemplateProduct {
   id: string
@@ -81,14 +89,14 @@ export interface TemplateSearchFilters {
 /**
  * Convert Prisma ProductWithRelations to TemplateProduct
  */
-export function adaptProductForTemplate(product: ProductWithRelations): TemplateProduct {
+export function adaptProductForTemplate(product: ProductWithRelations | ProductWithSerializedVariants): TemplateProduct {
   const variants = product.variants || []
   const media = product.media || []
   
   // Calculate price range
   const prices = variants
     .filter(v => v.priceAmount)
-    .map(v => parseFloat(v.priceAmount?.toString() || '0'))
+    .map(v => typeof v.priceAmount === 'number' ? v.priceAmount : parseFloat(v.priceAmount?.toString() || '0'))
   
   const minPrice = prices.length > 0 ? Math.min(...prices) : 0
   const maxPrice = prices.length > 0 ? Math.max(...prices) : 0
@@ -118,11 +126,11 @@ export function adaptProductForTemplate(product: ProductWithRelations): Template
     id: variant.id.toString(),
     title: variant.title || 'Default',
     price: {
-      amount: variant.priceAmount?.toString() || '0',
+      amount: (typeof variant.priceAmount === 'number' ? variant.priceAmount : parseFloat(variant.priceAmount?.toString() || '0')).toString(),
       currencyCode: variant.priceCurrency || 'USD'
     },
     compareAtPrice: variant.compareAtPriceAmount ? {
-      amount: variant.compareAtPriceAmount.toString(),
+      amount: (typeof variant.compareAtPriceAmount === 'number' ? variant.compareAtPriceAmount : parseFloat(variant.compareAtPriceAmount.toString())).toString(),
       currencyCode: variant.compareAtPriceCurrency || 'USD'
     } : undefined,
     availableForSale: true, // Default to true, can be enhanced with inventory checks
