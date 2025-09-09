@@ -5,15 +5,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@/generated/prisma'
+import { prisma } from '@/lib/db'
 import {
   getShopProducts,
   getFeaturedProducts,
-  convertSearchFiltersToPrisma,
   TemplateSearchFilters
 } from '@/lib/template-adapters'
-
-const prisma = new PrismaClient()
 
 export async function GET(request: NextRequest) {
   try {

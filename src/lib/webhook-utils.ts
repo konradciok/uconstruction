@@ -20,7 +20,7 @@ export interface WebhookEvent {
   triggeredAt: Date;
   apiVersion: string;
   shopDomain: string;
-  body: any;
+  body: unknown;
   processed: boolean;
   createdAt: Date;
   retryCount?: number;

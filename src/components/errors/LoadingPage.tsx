@@ -6,6 +6,7 @@
 
 import React from 'react'
 import Container from '../Container'
+import styles from './LoadingPage.module.css'
 
 interface LoadingPageProps {
   message?: string
@@ -18,14 +19,14 @@ export default function LoadingPage({
 }: LoadingPageProps) {
   return (
     <Container>
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div className={styles.container}>
+        <div className={styles.content}>
           {showSpinner && (
-            <div className="mb-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <div className={styles.spinnerContainer}>
+              <div className={styles.spinner}></div>
             </div>
           )}
-          <p className="text-lg text-gray-600">{message}</p>
+          <p className={styles.message}>{message}</p>
         </div>
       </div>
     </Container>

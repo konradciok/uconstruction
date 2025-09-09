@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { FilterDropdown } from './filter-dropdown'
 import { PriceRangeFilter } from './price-range-filter'
 import { ProductCategory, ProductTag } from '@/types/product'
@@ -30,19 +30,19 @@ export function SearchFilters({
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 })
   const [searchQuery, setSearchQuery] = useState('')
 
-  const handleFiltersChange = () => {
+  const handleFiltersChange = useCallback(() => {
     onFiltersChange({
       categories: selectedCategories,
       tags: selectedTags,
       priceRange,
       searchQuery
     })
-  }
+  }, [selectedCategories, selectedTags, priceRange, searchQuery, onFiltersChange])
 
   // Update filters when any filter changes
   React.useEffect(() => {
     handleFiltersChange()
-  }, [selectedCategories, selectedTags, priceRange, searchQuery])
+  }, [selectedCategories, selectedTags, priceRange, searchQuery, handleFiltersChange])
 
   const clearAllFilters = () => {
     setSelectedCategories([])

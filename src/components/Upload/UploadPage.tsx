@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
+import Link from 'next/link';
 import { UploadedFile, ProcessedImage, UploadFormData } from '@/types/upload';
 import { UploadService } from '@/lib/upload-service';
 import { Portfolio2Manager } from '@/lib/portfolio2-manager';
-import { ImageProcessor } from '@/lib/image-processor';
 import { parsePaintingMetaFromFilename } from '@/lib/image-utils';
 import FileUpload from './FileUpload';
 import FileList from './FileList';
@@ -56,16 +56,23 @@ export default function UploadPage() {
       setError(null);
 
       try {
-        // Convert UploadedFile[] to File[] for processing
+        // Extract File objects directly from UploadedFile objects (no conversion needed)
         const files: File[] = [];
         for (const uploadedFile of uploadedFiles) {
-          // Create a File object from the preview URL
-          const response = await fetch(uploadedFile.preview!);
-          const blob = await response.blob();
-          const file = new File([blob], uploadedFile.name, {
-            type: uploadedFile.type,
-          });
-          files.push(file);
+          if (uploadedFile.file) {
+            // Use stored original file (optimized path)
+            files.push(uploadedFile.file);
+          } else if (uploadedFile.preview) {
+            // Fallback: convert from preview URL (legacy support)
+            const response = await fetch(uploadedFile.preview);
+            const blob = await response.blob();
+            const file = new File([blob], uploadedFile.name, {
+              type: uploadedFile.type,
+            });
+            files.push(file);
+          } else {
+            throw new Error(`No file data available for ${uploadedFile.name}`);
+          }
         }
 
         // Process and upload images
@@ -235,9 +242,9 @@ export default function UploadPage() {
                   </li>
                   <li>
                     Visit{' '}
-                    <a href="/gallery" className={styles.link}>
+                    <Link href="/gallery" className={styles.link}>
                       Gallery
-                    </a>{' '}
+                    </Link>{' '}
                     to see your new images
                   </li>
                   <li>
@@ -247,7 +254,7 @@ export default function UploadPage() {
               ) : (
                 <>
                   <li>
-                    Click "Export to Portfolio" to add images to your gallery
+                    Click &quot;Export to Portfolio&quot; to add images to your gallery
                   </li>
                   <li>
                     Place the processed images in the correct directories:

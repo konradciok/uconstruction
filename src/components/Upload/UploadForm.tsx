@@ -49,6 +49,19 @@ export default function UploadForm({
     }
   };
 
+  const handleTagsChange = (value: string) => {
+    const tags = value
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    setFormData((prev) => ({ ...prev, tags }));
+
+    // Clear error when user starts typing
+    if (errors.tags) {
+      setErrors((prev) => ({ ...prev, tags: undefined }));
+    }
+  };
+
   const validateForm = (): boolean => {
     const newErrors: Partial<UploadFormData> = {};
 
@@ -78,7 +91,10 @@ export default function UploadForm({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      handleSubmit(e as any);
+      e.preventDefault();
+      if (validateForm()) {
+        onSubmit(formData);
+      }
     }
   };
 
@@ -177,15 +193,7 @@ export default function UploadForm({
             id="tags"
             type="text"
             value={(formData.tags ?? []).join(', ')}
-            onChange={(e) =>
-              handleInputChange(
-                'tags',
-                e.target.value
-                  .split(',')
-                  .map((t) => t.trim())
-                  .filter(Boolean) as any
-              )
-            }
+            onChange={(e) => handleTagsChange(e.target.value)}
             className={styles.input}
             placeholder="e.g., Obsidian, Series A"
             disabled={disabled}

@@ -38,9 +38,6 @@ export function FilterDropdown({
     }
   }
 
-  const selectedLabels = options
-    .filter(option => selectedValues.includes(option.value))
-    .map(option => option.label)
 
   return (
     <Menu as="div" className={styles.container}>

@@ -5,7 +5,6 @@
  */
 
 import React from 'react'
-import { notFound } from 'next/navigation'
 import BasePage from './BasePage'
 import LoadingPage from '../errors/LoadingPage'
 import ErrorPage from '../errors/ErrorPage'

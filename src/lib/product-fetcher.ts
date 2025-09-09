@@ -50,7 +50,7 @@ export async function fetchProductByHandle(handle: string): Promise<ProductFetch
       error: 'Failed to fetch product'
     }
   } finally {
-    await productService.disconnect()
+    // No disconnect needed - using singleton PrismaClient
   }
 }
 
@@ -90,7 +90,7 @@ export async function fetchProductById(id: string): Promise<ProductFetchResult> 
       error: 'Failed to fetch product'
     }
   } finally {
-    await productService.disconnect()
+    // No disconnect needed - using singleton PrismaClient
   }
 }
 
@@ -139,7 +139,7 @@ export async function fetchProducts(filters: {
       error: 'Failed to fetch products'
     }
   } finally {
-    await productService.disconnect()
+    // No disconnect needed - using singleton PrismaClient
   }
 }
 
@@ -190,6 +190,6 @@ export async function searchProducts(query: string, filters: {
       error: 'Failed to search products'
     }
   } finally {
-    await productService.disconnect()
+    // No disconnect needed - using singleton PrismaClient
   }
 }

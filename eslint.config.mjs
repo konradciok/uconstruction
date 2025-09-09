@@ -11,6 +11,16 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  // Ignore generated files
+  {
+    ignores: [
+      'src/generated/**/*',
+      'node_modules/**/*',
+      '.next/**/*',
+      'dist/**/*',
+      'build/**/*'
+    ],
+  },
   // Tighten rules: no explicit any, exhaustive deps, a11y
   {
     files: ['**/*.ts', '**/*.tsx'],

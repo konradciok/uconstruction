@@ -36,6 +36,7 @@ export default function FileUpload({
             size: file.size,
             type: file.type,
             preview,
+            file, // Store original file to avoid unnecessary conversions
             status: 'pending',
             progress: 0,
           };

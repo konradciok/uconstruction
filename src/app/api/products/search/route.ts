@@ -1,5 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { ProductService } from '@/lib/product-service';
+import { 
+  validateSearchQuery,
+  validatePriceRange, 
+  validatePagination,
+  handleValidationError 
+} from '@/lib/param-validators';
+import { 
+  createSuccessResponse, 
+  ApiErrors 
+} from '@/lib/api-response';
 import type { ProductFilters } from '@/types/product';
 
 /**
@@ -11,47 +21,12 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
-    // Get and validate search query
-    const query = searchParams.get('q')?.trim();
-
-    if (!query) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_INPUT',
-            message: 'Search query parameter "q" is required',
-          },
-        },
-        { status: 400 }
-      );
-    }
-
-    if (query.length < 2) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_INPUT',
-            message: 'Search query must be at least 2 characters long',
-          },
-        },
-        { status: 400 }
-      );
-    }
-
-    if (query.length > 100) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_INPUT',
-            message: 'Search query must not exceed 100 characters',
-          },
-        },
-        { status: 400 }
-      );
-    }
+    // Validate search query
+    const queryValidation = validateSearchQuery(searchParams.get('q') || undefined);
+    const queryError = handleValidationError(queryValidation);
+    if (queryError) return queryError;
+    
+    const query = queryValidation.value!;
 
     // Build optional filters (same as main products endpoint)
     const filters: ProductFilters = {};
@@ -77,27 +52,29 @@ export async function GET(request: NextRequest) {
         .filter(Boolean);
     }
 
-    // Handle price range
-    const minPrice = searchParams.get('minPrice');
-    const maxPrice = searchParams.get('maxPrice');
-    if (minPrice && maxPrice) {
-      const min = parseFloat(minPrice);
-      const max = parseFloat(maxPrice);
-      if (!isNaN(min) && !isNaN(max) && min >= 0 && max >= min) {
-        filters.priceRange = { min, max };
-      }
+    // Validate price range
+    const priceRangeValidation = validatePriceRange(
+      searchParams.get('minPrice') || null,
+      searchParams.get('maxPrice') || null
+    );
+    const priceRangeError = handleValidationError(priceRangeValidation);
+    if (priceRangeError) return priceRangeError;
+    
+    if (priceRangeValidation.value) {
+      filters.priceRange = priceRangeValidation.value;
     }
 
-    // Handle pagination
-    const limitParam = searchParams.get('limit');
-    const limit = limitParam
-      ? Math.min(Math.max(parseInt(limitParam), 1), 100)
-      : 20;
-    const cursor = searchParams.get('cursor') || undefined;
-
+    // Validate pagination
+    const paginationValidation = validatePagination(
+      searchParams.get('limit') || null,
+      searchParams.get('cursor') || null
+    );
+    const paginationError = handleValidationError(paginationValidation);
+    if (paginationError) return paginationError;
+    
     const pagination = {
-      cursor,
-      take: limit,
+      cursor: paginationValidation.value!.cursor,
+      take: paginationValidation.value!.limit,
     };
 
     // Perform search
@@ -107,35 +84,22 @@ export async function GET(request: NextRequest) {
       pagination
     );
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        products: result.products,
-        query,
-        totalResults: result.totalResults,
-        searchTime: result.searchTime,
-        filters: filters,
-        pagination: {
-          limit,
-          cursor: cursor || null,
-        },
+    return createSuccessResponse({
+      products: result.products,
+      query,
+      totalResults: result.totalResults,
+      searchTime: result.searchTime,
+      filters: filters,
+      pagination: {
+        limit: paginationValidation.value!.limit,
+        cursor: paginationValidation.value!.cursor || null,
       },
     });
   } catch (error) {
     console.error('[API] Error searching products:', error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'SERVER_ERROR',
-          message: 'Failed to search products',
-          details: error instanceof Error ? error.message : String(error),
-        },
-      },
-      { status: 500 }
+    return ApiErrors.serverError(
+      'Failed to search products',
+      error instanceof Error ? error.message : String(error)
     );
-  } finally {
-    await productService.disconnect();
   }
 }

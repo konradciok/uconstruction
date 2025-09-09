@@ -78,7 +78,6 @@ export interface LightboxModalProps {
 export interface PortfolioStats {
   total: number;
   uploaded: number;
-  static: number;
   shopify: number;
   lastSync?: string;
 }
@@ -86,7 +85,6 @@ export interface PortfolioStats {
 // New: Source configuration for Portfolio2Manager
 export interface SourceConfig {
   includeUploaded?: boolean;
-  includeStatic?: boolean;
   includeShopify?: boolean;
   shopifyFilters?: {
     publishedOnly?: boolean;

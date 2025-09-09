@@ -1,5 +1,5 @@
 import { ImageProcessor, ProcessedImageResult } from './image-processor';
-import { UploadedFile, ProcessedImage, UploadFormData } from '@/types/upload';
+import { ProcessedImage, UploadFormData } from '@/types/upload';
 
 export class UploadService {
   private static readonly UPLOAD_ENDPOINT = '/api/upload';
@@ -14,12 +14,11 @@ export class UploadService {
     onProgress?: (fileId: string, progress: number) => void
   ): Promise<ProcessedImage[]> {
     const processedImages: ProcessedImage[] = [];
-    const uploadPromises: Promise<ProcessedImage>[] = [];
 
     // Process files in batches to avoid overwhelming the system
     for (let i = 0; i < files.length; i += this.MAX_CONCURRENT_UPLOADS) {
       const batch = files.slice(i, i + this.MAX_CONCURRENT_UPLOADS);
-      const batchPromises = batch.map(async (file, index) => {
+      const batchPromises = batch.map(async (file) => {
         const fileId = ImageProcessor.generateImageId();
 
         // Update progress

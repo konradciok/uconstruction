@@ -7,6 +7,7 @@
 
 'use client'
 
+import Link from 'next/link'
 import { ThreeItemGrid } from '@/components/grid/three-item'
 import { Carousel } from '@/components/carousel'
 import { useFeaturedProducts } from '@/hooks/useTemplateProducts'
@@ -63,12 +64,12 @@ export default function HomePage() {
               each one a unique expression of artistic vision and creativity.
             </p>
             <div className={styles.ctaButtons}>
-              <a href="/shop" className={styles.primaryButton}>
+              <Link href="/shop" className={styles.primaryButton}>
                 Shop Now
-              </a>
-              <a href="/about" className={styles.secondaryButton}>
+              </Link>
+              <Link href="/about" className={styles.secondaryButton}>
                 Learn More
-              </a>
+              </Link>
             </div>
           </header>
 
@@ -148,9 +149,9 @@ export default function HomePage() {
                 Browse our full collection and discover the watercolor artwork 
                 that speaks to your soul.
               </p>
-              <a href="/shop" className={styles.ctaButton}>
+              <Link href="/shop" className={styles.ctaButton}>
                 Explore Collection
-              </a>
+              </Link>
             </section>
           </div>
         </div>

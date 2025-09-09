@@ -2,10 +2,12 @@
  * Server-Side Artwork Data Fetcher
  * 
  * Provides server-side data fetching functions for artwork-related pages
+ * Now uses database data instead of static data
  */
 
 import { validateArtworkSlug } from './param-validators'
-import { ARTWORKS } from './portfolio2-data'
+import { ProductService } from './product-service'
+import { ProductToArtworkTransformer } from './product-to-artwork-transformer'
 import type { Artwork } from '@/types/portfolio2'
 
 export interface ArtworkFetchResult {
@@ -15,16 +17,7 @@ export interface ArtworkFetchResult {
 }
 
 /**
- * Find artwork by slug
- */
-function findArtworkBySlug(slug: string): Artwork | null {
-  return ARTWORKS.find(artwork => 
-    artwork.title.toLowerCase().replace(/[^a-z0-9]/g, '-') === slug
-  ) || null
-}
-
-/**
- * Fetch artwork by slug (server-side)
+ * Fetch artwork by slug (server-side) - now from database
  */
 export async function fetchArtworkBySlug(slug: string): Promise<ArtworkFetchResult> {
   // Validate slug parameter
@@ -36,15 +29,21 @@ export async function fetchArtworkBySlug(slug: string): Promise<ArtworkFetchResu
     }
   }
 
+  const productService = new ProductService()
+  
   try {
-    const artwork = findArtworkBySlug(validation.value!)
+    // Try to find product by handle (slug)
+    const product = await productService.getProductByHandle(validation.value!)
     
-    if (!artwork) {
+    if (!product) {
       return {
         success: false,
         error: 'Artwork not found'
       }
     }
+
+    // Transform product to artwork
+    const artwork = ProductToArtworkTransformer.transformProduct(product)
 
     return {
       success: true,
@@ -56,21 +55,35 @@ export async function fetchArtworkBySlug(slug: string): Promise<ArtworkFetchResu
       success: false,
       error: 'Failed to fetch artwork'
     }
+  } finally {
+    // No disconnect needed - using singleton PrismaClient
   }
 }
 
 /**
- * Fetch all artworks (server-side)
+ * Fetch all artworks (server-side) - now from database
  */
 export async function fetchAllArtworks(): Promise<{
   success: boolean
   artworks?: Artwork[]
   error?: string
 }> {
+  const productService = new ProductService()
+  
   try {
+    // Get all published products
+    const result = await productService.getProducts(
+      { publishedOnly: true },
+      { field: 'updatedAt', direction: 'desc' },
+      { take: 100 } // Reasonable limit for gallery
+    )
+
+    // Transform products to artworks
+    const artworks = ProductToArtworkTransformer.transformProducts(result.products)
+
     return {
       success: true,
-      artworks: ARTWORKS
+      artworks
     }
   } catch (error) {
     console.error('Error fetching artworks:', error)
@@ -78,26 +91,53 @@ export async function fetchAllArtworks(): Promise<{
       success: false,
       error: 'Failed to fetch artworks'
     }
+  } finally {
+    // No disconnect needed - using singleton PrismaClient
   }
 }
 
 /**
- * Generate static params for all artworks
+ * Generate static params for all artworks - now from database
  */
-export function generateArtworkStaticParams(): Array<{ slug: string }> {
-  return ARTWORKS.map((artwork) => ({
-    slug: artwork.title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-  }))
+export async function generateArtworkStaticParams(): Promise<Array<{ slug: string }>> {
+  const productService = new ProductService()
+  
+  try {
+    const result = await productService.getProducts(
+      { publishedOnly: true },
+      { field: 'updatedAt', direction: 'desc' },
+      { take: 100 }
+    )
+
+    return result.products.map((product) => ({
+      slug: product.handle,
+    }))
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  } finally {
+    // No disconnect needed - using singleton PrismaClient
+  }
 }
 
 /**
- * Check if artwork exists by slug
+ * Check if artwork exists by slug - now from database
  */
-export function artworkExists(slug: string): boolean {
+export async function artworkExists(slug: string): Promise<boolean> {
   const validation = validateArtworkSlug(slug)
   if (!validation.isValid) {
     return false
   }
   
-  return findArtworkBySlug(validation.value!) !== null
+  const productService = new ProductService()
+  
+  try {
+    const product = await productService.getProductByHandle(validation.value!)
+    return product !== null
+  } catch (error) {
+    console.error('Error checking artwork existence:', error)
+    return false
+  } finally {
+    // No disconnect needed - using singleton PrismaClient
+  }
 }

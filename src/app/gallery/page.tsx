@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 import Container from '@/components/Container'
-// import { GalleryGrid } from '@/legacy/components/Portfolio2/GalleryGrid'
-// import { ARTWORKS } from '@/lib/portfolio2-data'
 
 export const metadata: Metadata = {
   title: 'Gallery | UConstruction',
@@ -123,21 +122,21 @@ export default function GalleryPage() {
               </h2>
               <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
                 Commission a custom watercolor painting tailored to your vision. 
-                Let's create something beautiful together.
+                Let&apos;s create something beautiful together.
               </p>
               <div className="space-x-4">
-                <a
+                <Link
                   href="/commissions"
                   className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
                 >
                   View Commissions
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/shop"
                   className="inline-block border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
                   Shop Artworks
-                </a>
+                </Link>
               </div>
             </div>
           </section>

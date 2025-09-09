@@ -19,8 +19,8 @@ import styles from './page.module.css'
 export default function ShopPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const { filters, updateFilters, clearFilters, hasActiveFilters } = useSearchFilters()
-  const { collections, loading: collectionsLoading } = useTemplateCollections()
-  const { tags, loading: tagsLoading } = useTemplateTags()
+  const { collections } = useTemplateCollections()
+  const { tags } = useTemplateTags()
   const { products, loading, error, hasMore, loadMore } = useShopProducts(currentPage, 20, filters)
 
   const handleFiltersChange = (newFilters: TemplateSearchFilters) => {

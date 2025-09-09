@@ -162,7 +162,7 @@ export function adaptProductForTemplate(product: ProductWithRelations): Template
     media: templateMedia,
     tags,
     collections,
-    availableForSale: variants.some(v => true), // Simplified availability check
+    availableForSale: variants.length > 0, // Simplified availability check
     createdAt: product.createdAt.toISOString(),
     updatedAt: product.updatedAt.toISOString()
   }
@@ -179,7 +179,7 @@ export function adaptProductsForTemplate(products: ProductWithRelations[]): Temp
  * Convert search filters to Prisma-compatible format
  */
 export function convertSearchFiltersToPrisma(filters: TemplateSearchFilters) {
-  const prismaFilters: any = {
+  const prismaFilters: Record<string, unknown> = {
     publishedOnly: true, // Only show published products
     deletedAt: null
   }
@@ -267,7 +267,7 @@ export async function getShopProducts(
     const prismaFilters = filters ? convertSearchFiltersToPrisma(filters) : { publishedOnly: true, deletedAt: null }
     
     // Build where clause
-    const where: any = {
+    const where: Record<string, unknown> = {
       deletedAt: null,
       status: 'ACTIVE',
       publishedAt: { not: null }
@@ -295,7 +295,7 @@ export async function getShopProducts(
     }
     
     // Add tags filter
-    if (prismaFilters.tags && prismaFilters.tags.length > 0) {
+    if (prismaFilters.tags && Array.isArray(prismaFilters.tags) && prismaFilters.tags.length > 0) {
       where.productTags = {
         some: {
           tag: {
@@ -306,12 +306,13 @@ export async function getShopProducts(
     }
     
     // Add price range filter
-    if (prismaFilters.priceRange) {
+    if (prismaFilters.priceRange && typeof prismaFilters.priceRange === 'object' && prismaFilters.priceRange !== null) {
+      const priceRange = prismaFilters.priceRange as { min: number; max: number };
       where.variants = {
         some: {
           priceAmount: {
-            gte: prismaFilters.priceRange.min.toString(),
-            lte: prismaFilters.priceRange.max.toString()
+            gte: priceRange.min.toString(),
+            lte: priceRange.max.toString()
           }
         }
       }

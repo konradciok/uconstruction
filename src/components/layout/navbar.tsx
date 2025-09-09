@@ -10,7 +10,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Suspense, useState } from 'react'
-import { LogoSquare } from '../logo-square'
 import { CartModal, useCart } from '../cart'
 import { Search } from './search'
 import { MobileMenu } from './mobile-menu'

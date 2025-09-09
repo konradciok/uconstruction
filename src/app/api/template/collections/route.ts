@@ -5,12 +5,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@/generated/prisma'
+import { prisma } from '@/lib/db'
 import { getTemplateCollections } from '@/lib/template-adapters'
 
-const prisma = new PrismaClient()
-
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const collections = await getTemplateCollections(prisma)
     

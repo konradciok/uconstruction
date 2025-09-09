@@ -11,7 +11,6 @@ export class ProductToArtworkTransformer {
    */
   static transformProduct(product: ProductWithRelations): Artwork {
     const primaryImage = product.media?.[0];
-    const firstVariant = product.variants?.[0];
 
     // Generate artwork ID (prefixed to avoid conflicts)
     const artworkId = `shopify-${product.id}`;

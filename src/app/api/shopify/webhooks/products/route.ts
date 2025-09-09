@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@/generated/prisma';
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/db';
 import {
   extractWebhookHeaders,
   verifyWebhookSignature,
@@ -8,9 +8,86 @@ import {
   parseWebhookEvent,
   logWebhookDiagnostics,
   createWebhookResponse,
+  ShopifyWebhookHeaders,
 } from '@/lib/webhook-utils';
 
-const prisma = new PrismaClient();
+interface ShopifyProduct {
+  id: number;
+  title: string;
+  handle: string;
+  body_html?: string;
+  vendor?: string;
+  product_type?: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
+  template_suffix?: string;
+  status?: string;
+  published_scope?: string;
+  tags?: string;
+  admin_graphql_api_id?: string;
+  variants?: Array<{
+    id: number;
+    product_id: number;
+    title: string;
+    price: string;
+    sku?: string;
+    position: number;
+    inventory_policy: string;
+    compare_at_price?: string;
+    fulfillment_service: string;
+    inventory_management?: string;
+    option1?: string;
+    option2?: string;
+    option3?: string;
+    created_at: string;
+    updated_at: string;
+    taxable: boolean;
+    barcode?: string;
+    grams: number;
+    image_id?: number;
+    weight: number;
+    weight_unit: string;
+    inventory_item_id: number;
+    inventory_quantity: number;
+    old_inventory_quantity: number;
+    requires_shipping: boolean;
+    admin_graphql_api_id: string;
+  }>;
+  options?: Array<{
+    id: number;
+    product_id: number;
+    name: string;
+    position: number;
+    values: string[];
+  }>;
+  images?: Array<{
+    id: number;
+    product_id: number;
+    position: number;
+    created_at: string;
+    updated_at: string;
+    alt?: string;
+    width: number;
+    height: number;
+    src: string;
+    variant_ids: number[];
+    admin_graphql_api_id: string;
+  }>;
+  image?: {
+    id: number;
+    product_id: number;
+    position: number;
+    created_at: string;
+    updated_at: string;
+    alt?: string;
+    width: number;
+    height: number;
+    src: string;
+    variant_ids: number[];
+    admin_graphql_api_id: string;
+  };
+}
 
 /**
  * Shopify Product Webhook Handler
@@ -19,7 +96,7 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
   let webhookEvent = '';
-  let headers: any = {};
+  let headers: ShopifyWebhookHeaders = {};
 
   try {
     // Extract headers
@@ -69,7 +146,7 @@ export async function POST(request: NextRequest) {
     const eventId = headers['x-shopify-event-id'];
     const webhookId = headers['x-shopify-webhook-id'];
 
-    if (isDuplicateEvent(eventId, webhookId)) {
+    if (eventId && webhookId && isDuplicateEvent(eventId, webhookId)) {
       logWebhookDiagnostics(
         webhookEvent,
         headers,
@@ -100,12 +177,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Process the event asynchronously (don't wait)
-    processWebhookEvent(topic, event).catch((error) => {
+    processWebhookEvent(topic, event.body as ShopifyProduct).catch((error) => {
       console.error(`[Webhook] Async processing failed for ${topic}:`, error);
     });
 
     // Mark as processed to prevent duplicates
-    markEventProcessed(eventId, webhookId);
+    if (eventId && webhookId) {
+      markEventProcessed(eventId, webhookId);
+    }
 
     // Respond immediately (Shopify expects quick response)
     const processingTime = Date.now() - startTime;
@@ -134,17 +213,17 @@ export async function POST(request: NextRequest) {
 /**
  * Process webhook event asynchronously
  */
-async function processWebhookEvent(topic: string, event: any): Promise<void> {
+async function processWebhookEvent(topic: string, event: ShopifyProduct): Promise<void> {
   try {
     switch (topic) {
       case 'products/create':
-        await handleProductCreate(event.body);
+        await handleProductCreate(event);
         break;
       case 'products/update':
-        await handleProductUpdate(event.body);
+        await handleProductUpdate(event);
         break;
       case 'products/delete':
-        await handleProductDelete(event.body);
+        await handleProductDelete(event);
         break;
       default:
         console.warn(`[Webhook] Unhandled topic: ${topic}`);
@@ -158,12 +237,12 @@ async function processWebhookEvent(topic: string, event: any): Promise<void> {
 /**
  * Handle product creation
  */
-async function handleProductCreate(product: any): Promise<void> {
+async function handleProductCreate(product: ShopifyProduct): Promise<void> {
   try {
     console.log(`[Webhook] Creating product: ${product.title} (${product.id})`);
 
     await prisma.product.upsert({
-      where: { shopifyId: product.id },
+      where: { shopifyId: product.id.toString() },
       update: {
         handle: product.handle,
         title: product.title,
@@ -179,7 +258,7 @@ async function handleProductCreate(product: any): Promise<void> {
           : null,
       },
       create: {
-        shopifyId: product.id,
+        shopifyId: product.id.toString(),
         handle: product.handle,
         title: product.title,
         bodyHtml: product.body_html || null,
@@ -208,13 +287,13 @@ async function handleProductCreate(product: any): Promise<void> {
 /**
  * Handle product update
  */
-async function handleProductUpdate(product: any): Promise<void> {
+async function handleProductUpdate(product: ShopifyProduct): Promise<void> {
   try {
     console.log(`[Webhook] Updating product: ${product.title} (${product.id})`);
 
     // Check if product exists
     const existingProduct = await prisma.product.findUnique({
-      where: { shopifyId: product.id },
+      where: { shopifyId: product.id.toString() },
     });
 
     if (!existingProduct) {
@@ -225,7 +304,7 @@ async function handleProductUpdate(product: any): Promise<void> {
 
     // Update product
     await prisma.product.update({
-      where: { shopifyId: product.id },
+      where: { shopifyId: product.id.toString() },
       data: {
         handle: product.handle,
         title: product.title,
@@ -255,12 +334,12 @@ async function handleProductUpdate(product: any): Promise<void> {
 /**
  * Handle product deletion (soft delete)
  */
-async function handleProductDelete(product: any): Promise<void> {
+async function handleProductDelete(product: ShopifyProduct): Promise<void> {
   try {
     console.log(`[Webhook] Deleting product: ${product.id}`);
 
     await prisma.product.update({
-      where: { shopifyId: product.id },
+      where: { shopifyId: product.id.toString() },
       data: {
         deletedAt: new Date(),
         status: 'deleted',
@@ -288,9 +367,9 @@ async function handleProductDelete(product: any): Promise<void> {
 /**
  * Process product variants, options, and media
  */
-async function processProductRelations(product: any): Promise<void> {
+async function processProductRelations(product: ShopifyProduct): Promise<void> {
   const productRecord = await prisma.product.findUnique({
-    where: { shopifyId: product.id },
+    where: { shopifyId: product.id.toString() },
     select: { id: true },
   });
 
@@ -300,7 +379,7 @@ async function processProductRelations(product: any): Promise<void> {
   if (product.variants && Array.isArray(product.variants)) {
     for (const variant of product.variants) {
       await prisma.variant.upsert({
-        where: { shopifyId: variant.id },
+        where: { shopifyId: String(variant.id) },
         update: {
           title: variant.title || null,
           sku: variant.sku || null,
@@ -322,7 +401,7 @@ async function processProductRelations(product: any): Promise<void> {
             : null,
         },
         create: {
-          shopifyId: variant.id,
+          shopifyId: String(variant.id),
           productId: productRecord.id,
           title: variant.title || null,
           sku: variant.sku || null,
@@ -353,7 +432,7 @@ async function processProductRelations(product: any): Promise<void> {
       where: { productId: productRecord.id },
     });
 
-    const optionData = product.options.map((option: any, index: number) => ({
+    const optionData = product.options?.map((option, index: number) => ({
       productId: productRecord.id,
       name: option.name,
       position: option.position ?? index,
@@ -372,17 +451,16 @@ async function processProductRelations(product: any): Promise<void> {
       where: { productId: productRecord.id },
     });
 
-    const mediaData = product.images.map((image: any, index: number) => ({
+    const mediaData = product.images?.map((image, index: number) => ({
       productId: productRecord.id,
       shopifyId: image.id ? String(image.id) : null,
       mediaType: 'IMAGE',
-      url: image.src || image.url,
+      url: image.src,
       altText: image.alt || null,
       position: image.position ?? index,
       width: image.width ?? null,
       height: image.height ?? null,
       checksum: null,
-      previewImage: null,
     }));
 
     if (mediaData.length > 0) {

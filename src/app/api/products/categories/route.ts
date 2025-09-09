@@ -1,44 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { ProductService } from '@/lib/product-service';
+import { createSuccessResponse, ApiErrors } from '@/lib/api-response';
 
 /**
  * GET /api/products/categories - Get all product categories with counts
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const productService = new ProductService();
 
   try {
     // Fetch categories with product counts
     const categories = await productService.getCategories();
 
-    return NextResponse.json(
+    return createSuccessResponse(
+      { categories },
+      200,
       {
-        success: true,
-        data: {
-          categories,
-        },
-      },
-      {
-        headers: {
-          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-        },
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
       }
     );
   } catch (error) {
     console.error('[API] Error fetching categories:', error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'SERVER_ERROR',
-          message: 'Failed to fetch categories',
-          details: error instanceof Error ? error.message : String(error),
-        },
-      },
-      { status: 500 }
+    return ApiErrors.serverError(
+      'Failed to fetch categories',
+      error instanceof Error ? error.message : String(error)
     );
-  } finally {
-    await productService.disconnect();
   }
 }

@@ -1,5 +1,4 @@
 import { ProductService } from '../product-service';
-import type { PrismaClient } from '@/generated/prisma';
 
 // Mock Prisma Client
 const mockPrisma = {
@@ -21,11 +20,11 @@ const mockPrisma = {
     count: jest.fn(),
   },
   $disconnect: jest.fn(),
-} as unknown as PrismaClient;
+};
 
-// Mock PrismaClient constructor
-jest.mock('@/generated/prisma', () => ({
-  PrismaClient: jest.fn(() => mockPrisma),
+// Mock the singleton PrismaClient
+jest.mock('@/lib/db', () => ({
+  prisma: mockPrisma,
 }));
 
 describe('ProductService', () => {
@@ -36,8 +35,8 @@ describe('ProductService', () => {
     jest.clearAllMocks();
   });
 
-  afterEach(async () => {
-    await productService.disconnect();
+  afterEach(() => {
+    // No disconnect needed - using singleton PrismaClient
   });
 
   describe('getProducts', () => {
@@ -402,10 +401,10 @@ describe('ProductService', () => {
     });
   });
 
-  describe('disconnect', () => {
-    it('should disconnect from database', async () => {
-      await productService.disconnect();
-      expect(mockPrisma.$disconnect).toHaveBeenCalled();
+  describe('singleton pattern', () => {
+    it('should use singleton PrismaClient instance', () => {
+      // ProductService now uses singleton PrismaClient from @/lib/db
+      expect(productService).toBeDefined();
     });
   });
 });

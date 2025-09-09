@@ -41,8 +41,8 @@ export class ImageProcessor {
         try {
           const result = await this.processLoadedImage(img, ctx);
           resolve(result);
-        } catch (error) {
-          reject(error);
+        } catch (_error) {
+          reject(_error);
         }
       };
 
@@ -56,7 +56,7 @@ export class ImageProcessor {
    */
   private static async processLoadedImage(
     img: HTMLImageElement,
-    ctx: CanvasRenderingContext2D
+    _ctx: CanvasRenderingContext2D
   ): Promise<ProcessedImageResult> {
     const result: ProcessedImageResult = {
       thumbnail: {
@@ -93,7 +93,7 @@ export class ImageProcessor {
         'image/webp',
         this.QUALITY
       );
-    } catch (error) {
+    } catch (_error) {
       console.warn('WebP not supported for thumbnail');
     }
 
@@ -103,7 +103,7 @@ export class ImageProcessor {
         'image/avif',
         this.QUALITY
       );
-    } catch (error) {
+    } catch (_error) {
       console.warn('AVIF not supported for thumbnail');
     }
 
@@ -131,7 +131,7 @@ export class ImageProcessor {
         'image/webp',
         this.QUALITY
       );
-    } catch (error) {
+    } catch (_error) {
       console.warn('WebP not supported for full size');
     }
 
@@ -141,7 +141,7 @@ export class ImageProcessor {
         'image/avif',
         this.QUALITY
       );
-    } catch (error) {
+    } catch (_error) {
       console.warn('AVIF not supported for full size');
     }
 

@@ -4,6 +4,7 @@ export interface UploadedFile {
   size: number;
   type: string;
   preview?: string;
+  file?: File; // Store original file to avoid unnecessary conversions
   status: 'pending' | 'uploading' | 'processing' | 'completed' | 'error';
   progress: number;
   error?: string;

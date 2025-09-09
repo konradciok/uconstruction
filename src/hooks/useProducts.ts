@@ -149,7 +149,7 @@ export function useProducts({
     if (enableAutoFetch) {
       fetchProducts(filters);
     }
-  }, []); // Only run once on mount
+  }, [enableAutoFetch, fetchProducts, filters]); // Include all dependencies
 
   return {
     products,

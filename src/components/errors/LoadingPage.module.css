@@ -1,0 +1,47 @@
+/**
+ * Loading Page Component Styles
+ * 
+ * Consistent loading state styling with proper
+ * responsive design and accessibility.
+ */
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  text-align: center;
+}
+
+.spinnerContainer {
+  margin-bottom: var(--spacing-md);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  height: 3rem; /* h-12 */
+  width: 3rem; /* w-12 */
+  border-bottom: 2px solid var(--color-primary-blue);
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  border-top: 2px solid transparent;
+  margin: 0 auto;
+}
+
+.message {
+  font-size: var(--font-size-lg);
+  color: var(--color-gray-600);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

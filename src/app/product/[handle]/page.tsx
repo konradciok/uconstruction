@@ -9,7 +9,6 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { fetchProductByHandle } from '@/lib/product-fetcher'
 import ProductPageClient from '@/components/product/ProductPageClient'
-import type { ProductWithRelations } from '@/types/product'
 
 interface ProductPageProps {
   params: Promise<{

@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { ProductService } from '@/lib/product-service';
+import { validateProductId, handleValidationError } from '@/lib/param-validators';
+import { createSuccessResponse, ApiErrors } from '@/lib/api-response';
 
 /**
  * GET /api/products/[id] - Get single product by ID
@@ -13,58 +15,27 @@ export async function GET(
   try {
     // Validate ID parameter
     const resolvedParams = await params;
-    const productId = parseInt(resolvedParams.id);
-
-    if (isNaN(productId) || productId <= 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_INPUT',
-            message: 'Product ID must be a positive integer',
-          },
-        },
-        { status: 400 }
-      );
-    }
+    const idValidation = validateProductId(resolvedParams.id);
+    const idError = handleValidationError(idValidation);
+    if (idError) return idError;
+    
+    const productId = parseInt(idValidation.value!);
 
     // Fetch product
     const product = await productService.getProductById(productId);
 
     if (!product) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: 'Product not found',
-          },
-        },
-        { status: 404 }
-      );
+      return ApiErrors.notFound('Product not found');
     }
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        product,
-      },
+    return createSuccessResponse({
+      product,
     });
   } catch (error) {
     console.error(`[API] Error fetching product:`, error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'SERVER_ERROR',
-          message: 'Failed to fetch product',
-          details: error instanceof Error ? error.message : String(error),
-        },
-      },
-      { status: 500 }
+    return ApiErrors.serverError(
+      'Failed to fetch product',
+      error instanceof Error ? error.message : String(error)
     );
-  } finally {
-    await productService.disconnect();
   }
 }

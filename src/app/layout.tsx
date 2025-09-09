@@ -3,6 +3,7 @@ import '../styles/globals.css';
 import { Navbar } from '../components/layout/navbar';
 import { Footer } from '../components/layout/footer';
 import { CartProvider } from '../components/cart';
+import styles from './layout.module.css';
 
 export const metadata: Metadata = {
   title: 'UConstruction - Watercolor Artwork',
@@ -24,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased-text" suppressHydrationWarning={true}>
         <CartProvider>
-          <div className="min-h-screen flex flex-col">
+          <div className={styles.layout}>
             <Navbar 
               menu={[
                 { title: 'Home', path: '/' },
@@ -35,7 +36,7 @@ export default function RootLayout({
               ]}
               siteName="Watercolor Artist"
             />
-            <main className="flex-1">
+            <main className={styles.main}>
               {children}
             </main>
             <Footer 

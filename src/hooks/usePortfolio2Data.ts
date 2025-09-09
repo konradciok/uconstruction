@@ -22,7 +22,6 @@ export function usePortfolio2Data(
   const [stats, setStats] = useState<PortfolioStats>({
     total: 0,
     uploaded: 0,
-    static: 0,
     shopify: 0,
   });
   const [sourceConfig, setSourceConfig] = useState<SourceConfig>(
@@ -35,7 +34,7 @@ export function usePortfolio2Data(
       setError(null);
 
       // Get artworks with current source configuration
-      const allArtworks = await Portfolio2Manager.getAllArtworks(sourceConfig);
+      const allArtworks = await Portfolio2Manager.getAllArtworks();
       setArtworks(allArtworks);
 
       // Update stats (async now)
@@ -49,7 +48,7 @@ export function usePortfolio2Data(
     } finally {
       setIsLoading(false);
     }
-  }, [sourceConfig]);
+  }, []);
 
   // Load artworks on mount
   useEffect(() => {

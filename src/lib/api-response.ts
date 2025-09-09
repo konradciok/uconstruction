@@ -1,69 +1,86 @@
+import { NextResponse } from 'next/server'
+
 /**
- * Standardized API Response Utilities
- * 
- * Provides consistent response formats for all API endpoints
+ * Standardized API response helpers
+ * Provides consistent error and success response formats
  */
 
-export interface ApiResponse<T = any> {
+export interface ApiError {
+  code: string
+  message: string
+  details?: string
+}
+
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
-  error?: {
-    code: string
-    message: string
-    details?: string
-  }
+  error?: ApiError
 }
 
 /**
- * Create a successful API response
- */
-export function createSuccessResponse<T>(data: T): ApiResponse<T> {
-  return {
-    success: true,
-    data
-  }
-}
-
-/**
- * Create an error API response
+ * Create a standardized error response
  */
 export function createErrorResponse(
   code: string,
   message: string,
-  details?: string
-): ApiResponse {
-  return {
-    success: false,
-    error: {
-      code,
-      message,
-      ...(details && { details })
-    }
-  }
+  details?: string,
+  status: number = 400
+): NextResponse<ApiResponse> {
+  return NextResponse.json(
+    {
+      success: false,
+      error: {
+        code,
+        message,
+        details,
+      },
+    },
+    { status }
+  )
 }
 
 /**
- * Common error codes used across the application
+ * Create a standardized success response
  */
-export const ERROR_CODES = {
-  INVALID_INPUT: 'INVALID_INPUT',
-  NOT_FOUND: 'NOT_FOUND',
-  SERVER_ERROR: 'SERVER_ERROR',
-  UNAUTHORIZED: 'UNAUTHORIZED',
-  FORBIDDEN: 'FORBIDDEN',
-  VALIDATION_ERROR: 'VALIDATION_ERROR',
-  DATABASE_ERROR: 'DATABASE_ERROR'
-} as const
+export function createSuccessResponse<T>(
+  data: T,
+  status: number = 200,
+  headers?: Record<string, string>
+): NextResponse<ApiResponse<T>> {
+  return NextResponse.json({
+    success: true,
+    data,
+  }, { status, headers })
+}
 
 /**
- * Common error messages
+ * Common error response creators
  */
-export const ERROR_MESSAGES = {
-  INVALID_INPUT: 'Invalid input provided',
-  NOT_FOUND: 'Resource not found',
-  SERVER_ERROR: 'Internal server error',
-  UNAUTHORIZED: 'Unauthorized access',
-  FORBIDDEN: 'Access forbidden',
-  VALIDATION_ERROR: 'Validation failed',
-  DATABASE_ERROR: 'Database operation failed'
-} as const
+export const ApiErrors = {
+  invalidInput: (message: string, details?: string) =>
+    createErrorResponse('INVALID_INPUT', message, details, 400),
+  
+  notFound: (message: string = 'Resource not found') =>
+    createErrorResponse('NOT_FOUND', message, undefined, 404),
+  
+  serverError: (message: string = 'Internal server error', details?: string) =>
+    createErrorResponse('SERVER_ERROR', message, details, 500),
+  
+  unauthorized: (message: string = 'Unauthorized') =>
+    createErrorResponse('UNAUTHORIZED', message, undefined, 401),
+  
+  forbidden: (message: string = 'Forbidden') =>
+    createErrorResponse('FORBIDDEN', message, undefined, 403),
+}
+
+/**
+ * Handle validation errors from param-validators
+ */
+export function handleValidationError(
+  validationResult: { isValid: boolean; error?: string }
+): NextResponse<ApiResponse> | null {
+  if (!validationResult.isValid && validationResult.error) {
+    return ApiErrors.invalidInput(validationResult.error)
+  }
+  return null
+}

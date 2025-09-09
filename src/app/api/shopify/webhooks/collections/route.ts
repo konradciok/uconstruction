@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { PrismaClient } from '@/generated/prisma';
+import { prisma } from '@/lib/db';
 import {
   extractWebhookHeaders,
   verifyWebhookSignature,
@@ -8,9 +8,27 @@ import {
   parseWebhookEvent,
   logWebhookDiagnostics,
   createWebhookResponse,
+  ShopifyWebhookHeaders,
 } from '@/lib/webhook-utils';
 
-const prisma = new PrismaClient();
+interface ShopifyCollection {
+  id: number;
+  title: string;
+  handle: string;
+  body_html?: string;
+  published_at?: string;
+  sort_order?: string;
+  template_suffix?: string;
+  disjunctive?: boolean;
+  rules?: Array<{
+    column: string;
+    relation: string;
+    condition: string;
+  }>;
+  published_scope?: string;
+  updated_at?: string;
+  created_at?: string;
+}
 
 /**
  * Shopify Collection Webhook Handler
@@ -19,7 +37,7 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
   let webhookEvent = '';
-  let headers: any = {};
+  let headers: ShopifyWebhookHeaders = {};
 
   try {
     // Extract headers
@@ -70,7 +88,7 @@ export async function POST(request: NextRequest) {
     const eventId = headers['x-shopify-event-id'];
     const webhookId = headers['x-shopify-webhook-id'];
 
-    if (isDuplicateEvent(eventId, webhookId)) {
+    if (eventId && webhookId && isDuplicateEvent(eventId, webhookId)) {
       logWebhookDiagnostics(
         webhookEvent,
         headers,
@@ -101,12 +119,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Process the event asynchronously (don't wait)
-    processWebhookEvent(topic, event).catch((error) => {
+    processWebhookEvent(topic, event.body as ShopifyCollection).catch((error) => {
       console.error(`[Webhook] Async processing failed for ${topic}:`, error);
     });
 
     // Mark as processed to prevent duplicates
-    markEventProcessed(eventId, webhookId);
+    if (eventId && webhookId) {
+      markEventProcessed(eventId, webhookId);
+    }
 
     // Respond immediately (Shopify expects quick response)
     const processingTime = Date.now() - startTime;
@@ -135,17 +155,17 @@ export async function POST(request: NextRequest) {
 /**
  * Process webhook event asynchronously
  */
-async function processWebhookEvent(topic: string, event: any): Promise<void> {
+async function processWebhookEvent(topic: string, event: ShopifyCollection): Promise<void> {
   try {
     switch (topic) {
       case 'collections/create':
-        await handleCollectionCreate(event.body);
+        await handleCollectionCreate(event);
         break;
       case 'collections/update':
-        await handleCollectionUpdate(event.body);
+        await handleCollectionUpdate(event);
         break;
       case 'collections/delete':
-        await handleCollectionDelete(event.body);
+        await handleCollectionDelete(event);
         break;
       default:
         console.warn(`[Webhook] Unhandled collection topic: ${topic}`);
@@ -159,14 +179,14 @@ async function processWebhookEvent(topic: string, event: any): Promise<void> {
 /**
  * Handle collection creation
  */
-async function handleCollectionCreate(collection: any): Promise<void> {
+async function handleCollectionCreate(collection: ShopifyCollection): Promise<void> {
   try {
     console.log(
       `[Webhook] Creating collection: ${collection.title} (${collection.id})`
     );
 
     await prisma.collection.upsert({
-      where: { shopifyId: collection.id },
+      where: { shopifyId: collection.id.toString() },
       update: {
         handle: collection.handle,
         title: collection.title,
@@ -177,7 +197,7 @@ async function handleCollectionCreate(collection: any): Promise<void> {
           : null,
       },
       create: {
-        shopifyId: collection.id,
+        shopifyId: collection.id.toString(),
         handle: collection.handle,
         title: collection.title,
         bodyHtml: collection.body_html || null,
@@ -203,14 +223,14 @@ async function handleCollectionCreate(collection: any): Promise<void> {
 /**
  * Handle collection update
  */
-async function handleCollectionUpdate(collection: any): Promise<void> {
+async function handleCollectionUpdate(collection: ShopifyCollection): Promise<void> {
   try {
     console.log(
       `[Webhook] Updating collection: ${collection.title} (${collection.id})`
     );
 
     const existingCollection = await prisma.collection.findUnique({
-      where: { shopifyId: collection.id },
+      where: { shopifyId: collection.id.toString() },
     });
 
     if (!existingCollection) {
@@ -222,7 +242,7 @@ async function handleCollectionUpdate(collection: any): Promise<void> {
     }
 
     await prisma.collection.update({
-      where: { shopifyId: collection.id },
+      where: { shopifyId: collection.id.toString() },
       data: {
         handle: collection.handle,
         title: collection.title,
@@ -249,12 +269,12 @@ async function handleCollectionUpdate(collection: any): Promise<void> {
 /**
  * Handle collection deletion (soft delete)
  */
-async function handleCollectionDelete(collection: any): Promise<void> {
+async function handleCollectionDelete(collection: ShopifyCollection): Promise<void> {
   try {
     console.log(`[Webhook] Deleting collection: ${collection.id}`);
 
     await prisma.collection.update({
-      where: { shopifyId: collection.id },
+      where: { shopifyId: collection.id.toString() },
       data: {
         deletedAt: new Date(),
       },

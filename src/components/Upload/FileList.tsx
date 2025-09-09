@@ -14,7 +14,7 @@ interface FileListProps {
 export default function FileList({
   files,
   onRemoveFile,
-  onUpdateProgress,
+  onUpdateProgress: _onUpdateProgress,
 }: FileListProps) {
   if (files.length === 0) {
     return null;

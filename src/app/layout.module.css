@@ -1,0 +1,16 @@
+/**
+ * Root Layout Styles
+ * 
+ * Main layout container with proper flex structure
+ * and consistent spacing.
+ */
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+}

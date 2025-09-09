@@ -1,5 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { ProductService } from '@/lib/product-service';
+import { 
+  validatePriceRange, 
+  validatePagination, 
+  validateSort,
+  handleValidationError 
+} from '@/lib/param-validators';
+import { 
+  createSuccessResponse, 
+  ApiErrors 
+} from '@/lib/api-response';
 import type { ProductFilters, ProductSortOptions } from '@/types/product';
 
 /**
@@ -44,76 +54,60 @@ export async function GET(request: NextRequest) {
         .filter(Boolean);
     }
 
-    // Handle price range
-    const minPrice = searchParams.get('minPrice');
-    const maxPrice = searchParams.get('maxPrice');
-    if (minPrice && maxPrice) {
-      const min = parseFloat(minPrice);
-      const max = parseFloat(maxPrice);
-      if (!isNaN(min) && !isNaN(max) && min >= 0 && max >= min) {
-        filters.priceRange = { min, max };
-      }
+    // Validate price range
+    const priceRangeValidation = validatePriceRange(
+      searchParams.get('minPrice') || null,
+      searchParams.get('maxPrice') || null
+    );
+    const priceRangeError = handleValidationError(priceRangeValidation);
+    if (priceRangeError) return priceRangeError;
+    
+    if (priceRangeValidation.value) {
+      filters.priceRange = priceRangeValidation.value;
     }
 
-    // Build sort options
-    const sortField = searchParams.get('sortBy') || 'updatedAt';
-    const sortDirection = searchParams.get('sortOrder') || 'desc';
+    // Validate sort options
+    const sortValidation = validateSort(
+      searchParams.get('sortBy') || null,
+      searchParams.get('sortOrder') || null
+    );
+    const sortError = handleValidationError(sortValidation);
+    if (sortError) return sortError;
+    
+    const sort: ProductSortOptions = sortValidation.value!;
 
-    const sort: ProductSortOptions = {
-      field: ['title', 'createdAt', 'updatedAt', 'publishedAt'].includes(
-        sortField
-      )
-        ? (sortField as ProductSortOptions['field'])
-        : 'updatedAt',
-      direction: ['asc', 'desc'].includes(sortDirection)
-        ? (sortDirection as 'asc' | 'desc')
-        : 'desc',
-    };
-
-    // Build pagination options
-    const cursor = searchParams.get('cursor') || undefined;
-    const limitParam = searchParams.get('limit');
-    const limit = limitParam
-      ? Math.min(Math.max(parseInt(limitParam), 1), 100)
-      : 20;
-
+    // Validate pagination options
+    const paginationValidation = validatePagination(
+      searchParams.get('limit') || null,
+      searchParams.get('cursor') || null
+    );
+    const paginationError = handleValidationError(paginationValidation);
+    if (paginationError) return paginationError;
+    
     const pagination = {
-      cursor,
-      take: limit,
+      cursor: paginationValidation.value!.cursor,
+      take: paginationValidation.value!.limit,
     };
 
     // Fetch products
     const result = await productService.getProducts(filters, sort, pagination);
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        products: result.products,
-        hasMore: result.hasMore,
-        nextCursor: result.nextCursor,
-        filters: filters,
-        sort: sort,
-        pagination: {
-          limit,
-          cursor: cursor || null,
-        },
+    return createSuccessResponse({
+      products: result.products,
+      hasMore: result.hasMore,
+      nextCursor: result.nextCursor,
+      filters: filters,
+      sort: sort,
+      pagination: {
+        limit: paginationValidation.value!.limit,
+        cursor: paginationValidation.value!.cursor || null,
       },
     });
   } catch (error) {
     console.error('[API] Error fetching products:', error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'SERVER_ERROR',
-          message: 'Failed to fetch products',
-          details: error instanceof Error ? error.message : String(error),
-        },
-      },
-      { status: 500 }
+    return ApiErrors.serverError(
+      'Failed to fetch products',
+      error instanceof Error ? error.message : String(error)
     );
-  } finally {
-    await productService.disconnect();
   }
 }

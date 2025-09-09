@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useReducer, useMemo } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
 import { TemplateProduct } from '@/lib/template-adapters'
 
 // Cart Types
@@ -149,25 +149,25 @@ export function CartProvider({ children }: CartProviderProps) {
     localStorage.setItem('cart', JSON.stringify(cart))
   }, [cart])
 
-  const addItem = (product: TemplateProduct, variantId: string, quantity = 1) => {
+  const addItem = useCallback((product: TemplateProduct, variantId: string, quantity = 1) => {
     dispatch({ type: 'ADD_ITEM', payload: { product, variantId, quantity } })
-  }
+  }, [])
 
-  const removeItem = (id: string) => {
+  const removeItem = useCallback((id: string) => {
     dispatch({ type: 'REMOVE_ITEM', payload: { id } })
-  }
+  }, [])
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = useCallback((id: string, quantity: number) => {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } })
-  }
+  }, [])
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     dispatch({ type: 'CLEAR_CART' })
-  }
+  }, [])
 
-  const getItemCount = () => cart.totalQuantity
+  const getItemCount = useCallback(() => cart.totalQuantity, [cart.totalQuantity])
 
-  const getTotalAmount = () => cart.totalAmount
+  const getTotalAmount = useCallback(() => cart.totalAmount, [cart.totalAmount])
 
   const value = useMemo(
     () => ({
@@ -179,7 +179,7 @@ export function CartProvider({ children }: CartProviderProps) {
       getItemCount,
       getTotalAmount
     }),
-    [cart]
+    [cart, addItem, removeItem, updateQuantity, clearCart, getItemCount, getTotalAmount]
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

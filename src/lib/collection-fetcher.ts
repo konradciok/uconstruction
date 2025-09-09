@@ -99,7 +99,7 @@ export async function fetchCollectionByHandle(handle: string): Promise<Collectio
       error: 'Failed to fetch collection data'
     }
   } finally {
-    await productService.disconnect()
+    // No disconnect needed - using singleton PrismaClient
   }
 }
 
@@ -121,24 +121,19 @@ export async function fetchAllCollections(): Promise<{
   try {
     const collections = []
     
-    // Fetch each collection with product count
+    // Fetch each collection with product count using optimized count queries
     for (const [slug, info] of Object.entries(MOCK_COLLECTIONS)) {
-      const result = await productService.getProducts(
-        {
-          category: slug,
-          publishedOnly: true
-        },
-        { field: 'updatedAt', direction: 'desc' },
-        {
-          take: 1 // We only need the count
-        }
-      )
+      // Use count method instead of fetching actual products
+      const productCount = await productService.getProductCount({
+        category: slug,
+        publishedOnly: true
+      })
 
       collections.push({
         title: info.title,
         description: info.description,
         slug: info.slug,
-        productCount: result.products.length
+        productCount
       })
     }
 
@@ -153,7 +148,7 @@ export async function fetchAllCollections(): Promise<{
       error: 'Failed to fetch collections'
     }
   } finally {
-    await productService.disconnect()
+    // No disconnect needed - using singleton PrismaClient
   }
 }
 

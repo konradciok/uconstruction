@@ -7,6 +7,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Container from '../Container'
+import styles from './NotFoundPage.module.css'
 
 interface NotFoundPageProps {
   title?: string
@@ -25,13 +26,13 @@ export default function NotFoundPage({
 }: NotFoundPageProps) {
   return (
     <Container>
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto">
+      <div className={styles.container}>
+        <div className={styles.content}>
           {/* 404 Icon */}
-          <div className="mb-6">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100">
+          <div className={styles.iconContainer}>
+            <div className={styles.iconWrapper}>
               <svg
-                className="h-6 w-6 text-gray-600"
+                className={styles.icon}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -47,21 +48,21 @@ export default function NotFoundPage({
           </div>
 
           {/* 404 Title */}
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className={styles.title}>
             {title}
           </h1>
 
           {/* 404 Message */}
-          <p className="text-gray-600 mb-6">
+          <p className={styles.message}>
             {message}
           </p>
 
           {/* Back Button */}
           {showBackButton && (
-            <div className="space-y-4">
+            <div className={styles.actions}>
               <Link
                 href={backButtonHref}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className={styles.backButton}
               >
                 {backButtonText}
               </Link>
@@ -69,14 +70,14 @@ export default function NotFoundPage({
           )}
 
           {/* Additional Help */}
-          <div className="mt-8 text-sm text-gray-500">
+          <div className={styles.help}>
             <p>
               Looking for something specific? Try browsing our{' '}
-              <Link href="/gallery" className="text-blue-600 hover:text-blue-500">
+              <Link href="/gallery" className={styles.helpLink}>
                 gallery
               </Link>
               {' '}or{' '}
-              <Link href="/shop" className="text-blue-600 hover:text-blue-500">
+              <Link href="/shop" className={styles.helpLink}>
                 shop
               </Link>
               .

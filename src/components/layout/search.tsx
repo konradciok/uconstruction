@@ -165,7 +165,7 @@ export function Search() {
           ) : query.trim() ? (
             <div className={styles.noResults}>
               <span className={styles.noResultsText}>
-                No products found for "{query}"
+                No products found for &quot;{query}&quot;
               </span>
             </div>
           ) : null}

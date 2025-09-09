@@ -7,6 +7,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { ProductGallery } from './gallery'
 import { ProductDescription } from './description'
 import { VariantSelector } from './variant-selector'
@@ -38,11 +39,11 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
           <nav className={`${styles.breadcrumb} animate-fadeInUp`}>
             <ol className={styles.breadcrumbList}>
               <li className={styles.breadcrumbItem}>
-                <a href="/" className={styles.breadcrumbLink}>Home</a>
+                <Link href="/" className={styles.breadcrumbLink}>Home</Link>
                 <span className={styles.breadcrumbSeparator}>/</span>
               </li>
               <li className={styles.breadcrumbItem}>
-                <a href="/shop" className={styles.breadcrumbLink}>Shop</a>
+                <Link href="/shop" className={styles.breadcrumbLink}>Shop</Link>
                 <span className={styles.breadcrumbSeparator}>/</span>
               </li>
               <li className={styles.breadcrumbItem}>

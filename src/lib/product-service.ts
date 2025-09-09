@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/generated/prisma';
+import { prisma } from '@/lib/db';
 import type {
   ProductWithRelations,
   ProductFilters,
@@ -13,10 +13,10 @@ import type {
 } from '@/types/product';
 
 export class ProductService {
-  private prisma: PrismaClient;
+  private prisma = prisma;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    // Use singleton PrismaClient instance
   }
 
   /**
@@ -449,6 +449,22 @@ export class ProductService {
   }
 
   /**
+   * Get product count with filters (optimized for counting without fetching data)
+   */
+  async getProductCount(filters: ProductFilters = {}): Promise<number> {
+    try {
+      const where = this.buildWhereClause(filters);
+      
+      return await this.prisma.product.count({
+        where
+      });
+    } catch (error) {
+      this.handleError('Failed to get product count', error);
+      return 0;
+    }
+  }
+
+  /**
    * Handle and log errors consistently
    */
   private handleError(message: string, error: unknown): void {
@@ -470,9 +486,7 @@ export class ProductService {
   }
 
   /**
-   * Clean up database connection
+   * Note: No disconnect method needed when using singleton PrismaClient
+   * The singleton instance is managed globally and cleaned up on process exit
    */
-  async disconnect(): Promise<void> {
-    await this.prisma.$disconnect();
-  }
 }

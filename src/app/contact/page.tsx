@@ -7,6 +7,7 @@
 import { Metadata } from 'next'
 import Container from '@/components/Container'
 import { ContactForm } from '@/components/ContactForm'
+import styles from './page.module.css'
 
 export const metadata: Metadata = {
   title: 'Contact | UConstruction - Watercolor Artist',
@@ -18,35 +19,35 @@ export default function ContactPage() {
   return (
     <main>
       <Container>
-        <div className="py-16">
+        <div className={styles.page}>
           {/* Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <div className={styles.header}>
+            <h1 className={styles.title}>
               Get In Touch
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              I'd love to hear from you! Whether you're interested in a commission, 
+            <p className={styles.subtitle}>
+              I&apos;d love to hear from you! Whether you&apos;re interested in a commission, 
               workshop, or just want to say hello, feel free to reach out.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className={styles.content}>
             {/* Contact Form */}
-            <div>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>
                 Send a Message
               </h2>
               <ContactForm />
             </div>
 
             {/* Contact Information */}
-            <div className="space-y-8">
+            <div className={styles.section}>
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                <h2 className={styles.sectionTitle}>
                   Contact Information
                 </h2>
                 
-                <div className="space-y-6">
+                <div className={styles.contactInfo}>
                   <div className="flex items-start">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">

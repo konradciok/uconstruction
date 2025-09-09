@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Container from '@/components/Container'
-import { ProductGrid } from '@/components/grid/product-grid'
 import { CollectionPageClient } from './collection-page-client'
 
 interface CollectionPageProps {

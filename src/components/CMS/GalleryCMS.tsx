@@ -21,7 +21,7 @@ export default function GalleryCMS() {
       Promise.resolve(Portfolio2Manager.listUploadedArtworks()),
     ]).then(([list, uploaded]) => {
       if (!mounted) return;
-      const uploadedIds = new Set(uploaded.map((a) => a.id));
+      const uploadedIds = new Set(uploaded.map((a: Artwork) => a.id));
       const withFlags = (list as EditableArtwork[]).map((a) => ({
         ...a,
         _isUploaded: uploadedIds.has(a.id),
@@ -33,7 +33,7 @@ export default function GalleryCMS() {
         Portfolio2Manager.getAllArtworks(),
         Promise.resolve(Portfolio2Manager.listUploadedArtworks()),
       ]).then(([list, uploaded]) => {
-        const uploadedIds = new Set(uploaded.map((a) => a.id));
+        const uploadedIds = new Set(uploaded.map((a: Artwork) => a.id));
         const withFlags = (list as EditableArtwork[]).map((a) => ({
           ...a,
           _isUploaded: uploadedIds.has(a.id),
