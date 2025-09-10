@@ -7,7 +7,7 @@
 import React from 'react'
 import BasePage from './BasePage'
 import LoadingPage from '../errors/LoadingPage'
-import ErrorPage from '../errors/ErrorPage'
+import StatusPage, { StatusIcons } from '../errors/StatusPage'
 
 interface BaseDynamicPageProps<T> {
   data: T | null
@@ -40,10 +40,12 @@ export default function BaseDynamicPage<T>({
   // Handle error state
   if (error) {
     return (
-      <ErrorPage 
+      <StatusPage 
+        icon={StatusIcons.error}
         title="Error Loading Page"
         message={errorMessage}
         error={error}
+        variant="error"
       />
     )
   }
@@ -51,10 +53,14 @@ export default function BaseDynamicPage<T>({
   // Handle not found state
   if (!data) {
     return (
-      <ErrorPage 
+      <StatusPage 
+        icon={StatusIcons.notFound}
         title="Not Found"
         message={notFoundMessage}
-        showBackButton={true}
+        showAction={true}
+        actionText="Go Back"
+        actionHref="/"
+        variant="neutral"
       />
     )
   }

@@ -2,7 +2,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Artwork } from '@/types/portfolio2';
-import { Portfolio2Manager } from '@/lib/portfolio2-manager';
+import { ProductWithRelations } from '@/types/product';
+import { ProductToArtworkTransformer } from '@/lib/product-to-artwork-transformer';
 import styles from './GalleryCMS.module.css';
 
 interface EditableArtwork extends Artwork {
@@ -16,38 +17,50 @@ export default function GalleryCMS() {
 
   useEffect(() => {
     let mounted = true;
-    Promise.all([
-      Portfolio2Manager.getAllArtworks(),
-      Promise.resolve(Portfolio2Manager.listUploadedArtworks()),
-    ]).then(([list, uploaded]) => {
-      if (!mounted) return;
-      const uploadedIds = new Set(uploaded.map((a: Artwork) => a.id));
-      const withFlags = (list as EditableArtwork[]).map((a) => ({
-        ...a,
-        _isUploaded: uploadedIds.has(a.id),
-      }));
-      setArtworks(withFlags);
-    });
-    const onUpdate = () => {
-      Promise.all([
-        Portfolio2Manager.getAllArtworks(),
-        Promise.resolve(Portfolio2Manager.listUploadedArtworks()),
-      ]).then(([list, uploaded]) => {
-        const uploadedIds = new Set(uploaded.map((a: Artwork) => a.id));
-        const withFlags = (list as EditableArtwork[]).map((a) => ({
+    
+    const fetchArtworks = async () => {
+      try {
+        // Fetch products from the API
+        const response = await fetch('/api/products?publishedOnly=true&take=100');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        
+        const data = await response.json();
+        const products: ProductWithRelations[] = data.data.products;
+        
+        if (!mounted) return;
+        
+        // Transform products to artworks
+        const transformedArtworks = ProductToArtworkTransformer.transformProducts(products);
+        
+        // Mark all as uploaded since they're in the database
+        const withFlags = transformedArtworks.map((a) => ({
           ...a,
-          _isUploaded: uploadedIds.has(a.id),
+          _isUploaded: true,
         }));
+        
         setArtworks(withFlags);
-      });
+      } catch (error) {
+        console.error('Error fetching artworks:', error);
+        if (mounted) {
+          setArtworks([]);
+        }
+      }
     };
-    window.addEventListener('portfolio2-update', onUpdate as EventListener);
+    
+    fetchArtworks();
+    
+    const onUpdate = () => {
+      fetchArtworks();
+    };
+    
+    // Listen for product updates (custom event)
+    window.addEventListener('product-update', onUpdate as EventListener);
+    
     return () => {
       mounted = false;
-      window.removeEventListener(
-        'portfolio2-update',
-        onUpdate as EventListener
-      );
+      window.removeEventListener('product-update', onUpdate as EventListener);
     };
   }, []);
 
@@ -70,9 +83,36 @@ export default function GalleryCMS() {
   const saveArtwork = async (art: Artwork) => {
     setSaving(true);
     try {
-      await Portfolio2Manager.updateArtwork(art.id, art);
+      // Extract product ID from artwork ID (remove 'product-' prefix)
+      const productId = art.id.replace('product-', '');
+      
+      // Update product via API
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: art.title,
+          bodyHtml: `<p>${art.medium || 'Digital Art'} - ${art.dimensions}</p>`,
+          productType: art.medium || 'Digital Art',
+          tags: art.tags || [],
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update product');
+      }
+      
       if (typeof window !== 'undefined') {
         alert('Item updated successfully.');
+        // Dispatch update event
+        window.dispatchEvent(new CustomEvent('product-update'));
+      }
+    } catch (error) {
+      console.error('Error updating artwork:', error);
+      if (typeof window !== 'undefined') {
+        alert('Failed to update item. Please try again.');
       }
     } finally {
       setSaving(false);
@@ -88,8 +128,28 @@ export default function GalleryCMS() {
     }
     setSaving(true);
     try {
-      await Portfolio2Manager.removeArtwork(id);
+      // Extract product ID from artwork ID (remove 'product-' prefix)
+      const productId = id.replace('product-', '');
+      
+      // Delete product via API
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete product');
+      }
+      
+      // Remove from local state
       setArtworks((prev) => prev.filter((a) => a.id !== id));
+      
+      // Dispatch update event
+      window.dispatchEvent(new CustomEvent('product-update'));
+    } catch (error) {
+      console.error('Error deleting artwork:', error);
+      if (typeof window !== 'undefined') {
+        alert('Failed to delete item. Please try again.');
+      }
     } finally {
       setSaving(false);
     }

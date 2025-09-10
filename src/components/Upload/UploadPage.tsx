@@ -4,13 +4,56 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { UploadedFile, ProcessedImage, UploadFormData } from '@/types/upload';
 import { UploadService } from '@/lib/upload-service';
-import { Portfolio2Manager } from '@/lib/portfolio2-manager'
 import { uploadLogger } from '@/lib/logger';
 import { parsePaintingMetaFromFilename } from '@/lib/image-utils';
 import FileUpload from './FileUpload';
 import FileList from './FileList';
 import UploadForm from './UploadForm';
 import styles from './UploadPage.module.css';
+
+/**
+ * Save processed images as products in the database
+ */
+async function saveProcessedImagesAsProducts(processedImages: ProcessedImage[]): Promise<void> {
+  try {
+    // Create products for each processed image
+    const productPromises = processedImages.map(async (image) => {
+      const productData = {
+        title: image.title,
+        handle: image.id, // Use image ID as handle
+        bodyHtml: `<p>${image.medium || 'Digital Art'} - ${image.dimensions}</p>`,
+        vendor: 'Artist',
+        productType: image.medium || 'Digital Art',
+        status: 'ACTIVE' as const,
+        publishedAt: new Date().toISOString(),
+        tags: image.tags || [],
+        alt: image.alt || image.title,
+        // Note: Media will be handled by the upload API
+      };
+
+      // Call the products API to create the product
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create product for ${image.title}`);
+      }
+
+      return response.json();
+    });
+
+    await Promise.all(productPromises);
+    uploadLogger.info(`Successfully created ${processedImages.length} products`);
+  } catch (error) {
+    uploadLogger.error('Error saving processed images as products', error);
+    throw error;
+  }
+}
 
 export default function UploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -89,7 +132,8 @@ export default function UploadPage() {
         // Automatically add to portfolio if enabled
         if (autoAddToPortfolio) {
           try {
-            await Portfolio2Manager.addArtworks(results);
+            // Convert processed images to products and save to database
+            await saveProcessedImagesAsProducts(results);
             uploadLogger.info('Successfully added artworks to portfolio');
           } catch (portfolioError) {
             uploadLogger.error('Error adding to portfolio', portfolioError);
@@ -130,7 +174,7 @@ export default function UploadPage() {
 
   const handleExportToPortfolio = useCallback(() => {
     if (processedImages.length > 0) {
-      Portfolio2Manager.exportPortfolioData();
+      UploadService.downloadPortfolioData(processedImages);
     }
   }, [processedImages]);
 
