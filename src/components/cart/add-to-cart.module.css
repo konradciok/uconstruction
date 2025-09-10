@@ -49,6 +49,27 @@
   color: var(--color-white);
 }
 
+.errorContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.errorIcon {
+  width: var(--spacing-lg);
+  height: var(--spacing-lg);
+  margin-right: var(--spacing-sm);
+  color: var(--color-white);
+}
+
+.error {
+  background-color: var(--color-error) !important;
+}
+
+.error:hover {
+  background-color: var(--color-error-dark) !important;
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);

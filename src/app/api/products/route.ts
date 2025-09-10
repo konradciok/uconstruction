@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     
     // Validate required fields
     if (!body.title || !body.handle) {
-      return ApiErrors.badRequest('Title and handle are required');
+      return ApiErrors.invalidInput('Title and handle are required');
     }
 
     // Create product using ProductService

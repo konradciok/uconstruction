@@ -28,6 +28,13 @@ const eslintConfig = [
       '@typescript-eslint/no-explicit-any': 'error',
     },
   },
+  // Allow any in test files
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**/*'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
   {
     rules: {
       'react-hooks/exhaustive-deps': 'error',

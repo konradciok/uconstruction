@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import '../styles/globals.css';
 import { Navbar } from '../components/layout/navbar';
 import { Footer } from '../components/layout/footer';
-import { CartProvider } from '../components/cart';
+import { BackendCartProvider } from '../components/cart';
 import styles from './layout.module.css';
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased-text" suppressHydrationWarning={true}>
-        <CartProvider>
+        <BackendCartProvider>
           <div className={styles.layout}>
             <Navbar 
               menu={[
@@ -51,7 +51,7 @@ export default function RootLayout({
               companyName="Watercolor Artist"
             />
           </div>
-        </CartProvider>
+        </BackendCartProvider>
       </body>
     </html>
   );

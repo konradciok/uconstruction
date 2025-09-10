@@ -397,7 +397,7 @@ export function useSearchFilters() {
     filters.priceRange.min > 0 ||
     filters.priceRange.max < 1000 ||
     filters.searchQuery.length > 0,
-    [filters.categories.length, filters.tags.length, filters.priceRange.min, filters.priceRange.max, filters.searchQuery.length]
+    [filters.categories, filters.tags, filters.priceRange, filters.searchQuery]
   )
 
   return {

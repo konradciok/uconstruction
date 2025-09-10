@@ -25,22 +25,27 @@ type CartAction =
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
   | { type: 'LOAD_CART'; payload: Cart }
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'SET_ERROR'; payload: string | null }
 
 // Cart Context
 interface CartContextType {
   cart: Cart
+  isLoading: boolean
+  error: string | null
   addItem: (product: TemplateProduct, variantId: string, quantity?: number) => void
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
   getItemCount: () => number
   getTotalAmount: () => number
+  syncCart: () => Promise<void>
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 // Cart Reducer
-function cartReducer(state: Cart, action: CartAction): Cart {
+function cartReducer(state: Cart & { isLoading: boolean; error: string | null }, action: CartAction): Cart & { isLoading: boolean; error: string | null } {
   switch (action.type) {
     case 'ADD_ITEM': {
       const { product, variantId, quantity = 1 } = action.payload
@@ -72,6 +77,7 @@ function cartReducer(state: Cart, action: CartAction): Cart {
       }
 
       return {
+        ...state,
         items: newItems,
         totalQuantity: newItems.reduce((sum, item) => sum + item.quantity, 0),
         totalAmount: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
@@ -81,6 +87,7 @@ function cartReducer(state: Cart, action: CartAction): Cart {
     case 'REMOVE_ITEM': {
       const newItems = state.items.filter(item => item.id !== action.payload.id)
       return {
+        ...state,
         items: newItems,
         totalQuantity: newItems.reduce((sum, item) => sum + item.quantity, 0),
         totalAmount: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
@@ -98,6 +105,7 @@ function cartReducer(state: Cart, action: CartAction): Cart {
       )
 
       return {
+        ...state,
         items: newItems,
         totalQuantity: newItems.reduce((sum, item) => sum + item.quantity, 0),
         totalAmount: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
@@ -106,13 +114,29 @@ function cartReducer(state: Cart, action: CartAction): Cart {
 
     case 'CLEAR_CART':
       return {
+        ...state,
         items: [],
         totalQuantity: 0,
         totalAmount: 0
       }
 
     case 'LOAD_CART':
-      return action.payload
+      return {
+        ...state,
+        ...action.payload
+      }
+
+    case 'SET_LOADING':
+      return {
+        ...state,
+        isLoading: action.payload
+      }
+
+    case 'SET_ERROR':
+      return {
+        ...state,
+        error: action.payload
+      }
 
     default:
       return state
@@ -125,10 +149,12 @@ interface CartProviderProps {
 }
 
 export function CartProvider({ children }: CartProviderProps) {
-  const [cart, dispatch] = useReducer(cartReducer, {
+  const [state, dispatch] = useReducer(cartReducer, {
     items: [],
     totalQuantity: 0,
-    totalAmount: 0
+    totalAmount: 0,
+    isLoading: false,
+    error: null
   })
 
   // Load cart from localStorage on mount
@@ -140,14 +166,20 @@ export function CartProvider({ children }: CartProviderProps) {
         dispatch({ type: 'LOAD_CART', payload: parsedCart })
       } catch (error) {
         console.error('Error loading cart from localStorage:', error)
+        dispatch({ type: 'SET_ERROR', payload: 'Failed to load cart from storage' })
       }
     }
   }, [])
 
   // Save cart to localStorage whenever it changes
   React.useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart))
-  }, [cart])
+    const cartData = {
+      items: state.items,
+      totalQuantity: state.totalQuantity,
+      totalAmount: state.totalAmount
+    }
+    localStorage.setItem('cart', JSON.stringify(cartData))
+  }, [state.items, state.totalQuantity, state.totalAmount])
 
   const addItem = useCallback((product: TemplateProduct, variantId: string, quantity = 1) => {
     dispatch({ type: 'ADD_ITEM', payload: { product, variantId, quantity } })
@@ -165,21 +197,44 @@ export function CartProvider({ children }: CartProviderProps) {
     dispatch({ type: 'CLEAR_CART' })
   }, [])
 
-  const getItemCount = useCallback(() => cart.totalQuantity, [cart.totalQuantity])
+  const getItemCount = useCallback(() => state.totalQuantity, [state.totalQuantity])
 
-  const getTotalAmount = useCallback(() => cart.totalAmount, [cart.totalAmount])
+  const getTotalAmount = useCallback(() => state.totalAmount, [state.totalAmount])
+
+  const syncCart = useCallback(async () => {
+    // For frontend-only cart, sync is a no-op since data is already in localStorage
+    // This method exists for compatibility with the backend cart interface
+    dispatch({ type: 'SET_LOADING', payload: true })
+    dispatch({ type: 'SET_ERROR', payload: null })
+    
+    try {
+      // Simulate a brief loading state
+      await new Promise(resolve => setTimeout(resolve, 100))
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: 'Sync failed' })
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false })
+    }
+  }, [])
 
   const value = useMemo(
     () => ({
-      cart,
+      cart: {
+        items: state.items,
+        totalQuantity: state.totalQuantity,
+        totalAmount: state.totalAmount
+      },
+      isLoading: state.isLoading,
+      error: state.error,
       addItem,
       removeItem,
       updateQuantity,
       clearCart,
       getItemCount,
-      getTotalAmount
+      getTotalAmount,
+      syncCart
     }),
-    [cart, addItem, removeItem, updateQuantity, clearCart, getItemCount, getTotalAmount]
+    [state, addItem, removeItem, updateQuantity, clearCart, getItemCount, getTotalAmount, syncCart]
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

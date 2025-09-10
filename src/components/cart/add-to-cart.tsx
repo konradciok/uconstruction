@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useCart } from './cart-context'
+import { useCart } from './cart-context-backend'
 import { TemplateProduct } from '@/lib/template-adapters'
 import clsx from 'clsx'
 import styles from './add-to-cart.module.css'
@@ -21,9 +21,10 @@ export function AddToCart({
   className = '',
   children 
 }: AddToCartProps) {
-  const { addItem } = useCart()
+  const { addItem, isLoading, error } = useCart()
   const [isAdding, setIsAdding] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
 
   const handleAddToCart = async () => {
     if (!product.variants || product.variants.length === 0) {
@@ -45,16 +46,20 @@ export function AddToCart({
     }
 
     setIsAdding(true)
+    setShowError(false)
 
     try {
-      addItem(product, selectedVariantId, quantity)
+      await addItem(product, selectedVariantId, quantity)
       setShowSuccess(true)
       
       // Hide success message after 2 seconds
       setTimeout(() => setShowSuccess(false), 2000)
     } catch (error) {
       console.error('Error adding to cart:', error)
-      alert('Failed to add item to cart')
+      setShowError(true)
+      
+      // Hide error message after 3 seconds
+      setTimeout(() => setShowError(false), 3000)
     } finally {
       setIsAdding(false)
     }
@@ -63,10 +68,12 @@ export function AddToCart({
   const defaultContent = (
     <button
       onClick={handleAddToCart}
-      disabled={isAdding}
-      className={clsx(styles.button, className)}
+      disabled={isAdding || isLoading}
+      className={clsx(styles.button, className, {
+        [styles.error]: showError
+      })}
     >
-      {isAdding ? (
+      {isAdding || isLoading ? (
         <span className={styles.loadingContent}>
           <svg className={styles.spinner} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className={styles.spinnerCircle} cx="12" cy="12" r="10"></circle>
@@ -80,6 +87,13 @@ export function AddToCart({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           Added to Cart!
+        </span>
+      ) : showError ? (
+        <span className={styles.errorContent}>
+          <svg className={styles.errorIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Try Again
         </span>
       ) : (
         'Add to Cart'

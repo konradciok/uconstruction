@@ -34,12 +34,41 @@
   transition: all var(--transition-normal);
 }
 
+.modalHeader {
+  margin-bottom: var(--spacing-md);
+}
+
 .modalTitle {
   font-size: var(--font-size-lg);
   font-weight: 500;
   line-height: 1.5;
   color: var(--color-text);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+}
+
+.retryButton {
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+}
+
+.retryButton:hover {
+  color: #991b1b;
 }
 
 /* Empty cart styles */
@@ -158,8 +187,13 @@
   transition: background-color var(--transition-fast);
 }
 
-.quantityButton:hover {
+.quantityButton:hover:not(:disabled) {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+.quantityButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .quantityDisplay {
@@ -176,8 +210,13 @@
   transition: color var(--transition-fast);
 }
 
-.removeButton:hover {
+.removeButton:hover:not(:disabled) {
   color: #991b1b; /* red-800 */
+}
+
+.removeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .removeButton svg {
@@ -214,8 +253,13 @@
   transition: color var(--transition-fast);
 }
 
-.clearCartButton:hover {
+.clearCartButton:hover:not(:disabled) {
   color: #991b1b; /* red-800 */
+}
+
+.clearCartButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .actionButtons {
@@ -257,6 +301,34 @@
 
 .continueShoppingButtonSecondary:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Spinner styles */
+.spinner {
+  animation: spin 1s linear infinite;
+  height: 1rem;
+  width: 1rem;
+  color: currentColor;
+}
+
+.spinnerCircle {
+  opacity: 0.25;
+  stroke: currentColor;
+  stroke-width: 4;
+}
+
+.spinnerPath {
+  opacity: 0.75;
+  fill: currentColor;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive adjustments */

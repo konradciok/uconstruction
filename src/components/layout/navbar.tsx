@@ -10,7 +10,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Suspense, useState } from 'react'
-import { CartModal, useCart } from '../cart'
+import { CartModal, useBackendCart } from '../cart'
 import { Search } from './search'
 import { MobileMenu } from './mobile-menu'
 import styles from './navbar.module.css'
@@ -27,7 +27,7 @@ interface NavbarProps {
 
 export function Navbar({ menu = [], siteName = 'Watercolor Artist' }: NavbarProps) {
   const [isCartOpen, setIsCartOpen] = useState(false)
-  const { getItemCount } = useCart()
+  const { getItemCount } = useBackendCart()
 
   const itemCount = getItemCount()
 
