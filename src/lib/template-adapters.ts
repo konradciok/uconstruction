@@ -278,7 +278,7 @@ export async function getShopProducts(
     // Build where clause
     const where: Record<string, unknown> = {
       deletedAt: null,
-      status: 'active',
+      status: 'ACTIVE',
       publishedAt: { not: null }
     }
     

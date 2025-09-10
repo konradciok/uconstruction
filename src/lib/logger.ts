@@ -10,7 +10,7 @@ export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 export interface LogEntry {
   level: LogLevel
   message: string
-  data?: any
+  data?: unknown
   timestamp: string
   context?: string
 }
@@ -50,35 +50,35 @@ class Logger {
   /**
    * Debug level logging - detailed information for debugging
    */
-  debug(message: string, data?: any): void {
+  debug(message: string, data?: unknown): void {
     this.log('debug', message, data)
   }
 
   /**
    * Info level logging - general information
    */
-  info(message: string, data?: any): void {
+  info(message: string, data?: unknown): void {
     this.log('info', message, data)
   }
 
   /**
    * Warning level logging - potentially harmful situations
    */
-  warn(message: string, data?: any): void {
+  warn(message: string, data?: unknown): void {
     this.log('warn', message, data)
   }
 
   /**
    * Error level logging - error events that might still allow the application to continue
    */
-  error(message: string, data?: any): void {
+  error(message: string, data?: unknown): void {
     this.log('error', message, data)
   }
 
   /**
    * Log with specified level
    */
-  private log(level: LogLevel, message: string, data?: any): void {
+  private log(level: LogLevel, message: string, data?: unknown): void {
     if (!this.shouldLog(level)) {
       return
     }
@@ -112,7 +112,7 @@ class Logger {
    */
   private logToConsole(entry: LogEntry): void {
     const prefix = this.formatPrefix(entry)
-    const args = [prefix, entry.message]
+    const args: [string, string, ...unknown[]] = [prefix, entry.message]
     
     if (entry.data !== undefined) {
       args.push(entry.data)
@@ -156,7 +156,7 @@ class Logger {
   /**
    * Sanitize data to prevent circular references and limit depth
    */
-  private sanitizeData(data: any, depth = 0): any {
+  private sanitizeData(data: unknown, depth = 0): unknown {
     if (depth >= this.config.maxDataDepth) {
       return '[Max Depth Reached]'
     }
@@ -182,7 +182,7 @@ class Logger {
     }
 
     if (typeof data === 'object') {
-      const sanitized: any = {}
+      const sanitized: Record<string, unknown> = {}
       for (const [key, value] of Object.entries(data)) {
         try {
           sanitized[key] = this.sanitizeData(value, depth + 1)
@@ -224,10 +224,10 @@ export const createLogger = (context: string) => logger.child(context)
 
 // Convenience functions for common use cases
 export const log = {
-  debug: (message: string, data?: any) => logger.debug(message, data),
-  info: (message: string, data?: any) => logger.info(message, data),
-  warn: (message: string, data?: any) => logger.warn(message, data),
-  error: (message: string, data?: any) => logger.error(message, data)
+  debug: (message: string, data?: unknown) => logger.debug(message, data),
+  info: (message: string, data?: unknown) => logger.info(message, data),
+  warn: (message: string, data?: unknown) => logger.warn(message, data),
+  error: (message: string, data?: unknown) => logger.error(message, data)
 }
 
 // Context-specific loggers for different parts of the application

@@ -63,13 +63,7 @@ export function useShopProducts(
   const isMountedRef = useRef(true)
 
   // Memoize filters to prevent infinite re-renders
-  const memoizedFilters = useMemo(() => filters, [
-    filters?.searchQuery,
-    filters?.categories?.join(','),
-    filters?.tags?.join(','),
-    filters?.priceRange?.min,
-    filters?.priceRange?.max
-  ])
+  const memoizedFilters = useMemo(() => filters, [filters])
 
   const fetchProducts = useCallback(async () => {
     try {
