@@ -62,7 +62,7 @@ If you have existing data in SQLite:
 
 ```bash
 # Migrate data from SQLite to PostgreSQL
-node scripts/migrate-to-postgres.js
+node scripts/simple-migrate.js
 ```
 
 ### 7. Verify Migration
@@ -148,7 +148,7 @@ ls -la backups/
 cp backups/dev-backup-[timestamp].db prisma/dev.db
 
 # Re-run migration
-node scripts/migrate-to-postgres.js
+node scripts/simple-migrate.js
 ```
 
 ## Performance Considerations

@@ -88,7 +88,7 @@ echo ""
 # Step 6: Migrate existing data (if available)
 if [ -f "prisma/dev.db" ]; then
     print_status "Step 6: Migrating existing data from SQLite..."
-    node scripts/migrate-to-postgres.js
+    node scripts/simple-migrate.js
     print_success "Data migration completed"
 else
     print_warning "No existing SQLite data to migrate"

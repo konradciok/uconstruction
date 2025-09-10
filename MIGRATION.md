@@ -79,7 +79,7 @@ npm run prisma:migrate:reset
 ```
 scripts/
 ├── backup-sqlite.js          # Backup SQLite database
-├── migrate-to-postgres.js    # Data migration script
+├── simple-migrate.js         # Data migration script
 ├── setup-postgres.sh         # PostgreSQL setup
 ├── full-migration.sh         # Complete migration process
 ├── switch-db.sh             # Database switching utility

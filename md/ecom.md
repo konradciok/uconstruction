@@ -21,8 +21,8 @@
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘            │
 │           │                     │                     │                     │                   │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐            │
-│  │ useProducts     │  │ useTemplateProd │  │ useSearchFilter │  │ useCart         │            │
-│  │ useDebounce     │  │ usePortfolio2   │  │ useTemplateColl │  │ CartProvider    │            │
+│  │ useTemplateProd │  │ useSearchFilter │  │ useCart         │  │ CartProvider    │            │
+│  │ useDebounce     │  │ useTemplateColl │  │ useTemplateTags │  │ useFeaturedProd │            │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘            │
 └─────────────────────────────────────────────────────────────────────────────────────────────────┘
                                         │
@@ -130,7 +130,7 @@
 │  │ • Filter    │    │ • CartModal  │    │ • Validation│    │ • UploadService│    │ • Collection│  │
 │  │ • Add to Cart│    │ • AddToCart  │    │ • Error Handle│    │ • StripeService│    │ • Tag       │  │
 │  │ • Checkout  │    │ • useCart    │    │ • Response  │    │ • Data Transform│    │ • Media     │  │
-│  │ • Payment   │    │ • useProducts│    │ • Caching   │    │ • Business Logic│    │ • Relations │  │
+│  │ • Payment   │    │ • useTemplateProd│    │ • Caching   │    │ • Business Logic│    │ • Relations │  │
 │  └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘  │
 │                                                                                                 │
 └─────────────────────────────────────────────────────────────────────────────────────────────────┘

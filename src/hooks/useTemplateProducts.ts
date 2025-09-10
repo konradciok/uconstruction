@@ -10,6 +10,7 @@ import {
   TemplateProduct,
   TemplateSearchFilters
 } from '@/lib/template-adapters'
+import { productLogger } from '@/lib/logger'
 
 /**
  * Hook for fetching featured products (homepage)
@@ -33,7 +34,7 @@ export function useFeaturedProducts(limit: number = 3) {
         const data = await response.json()
         setProducts(data.products || [])
       } catch (err) {
-        console.error('Error fetching featured products:', err)
+        productLogger.error('Error fetching featured products', err)
         setError(err instanceof Error ? err.message : 'Failed to fetch featured products')
       } finally {
         setLoading(false)
@@ -125,7 +126,7 @@ export function useShopProducts(
         throw fetchError
       }
     } catch (err) {
-      console.error('Error fetching shop products:', err)
+      productLogger.error('Error fetching shop products', err)
       if (isMountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to fetch shop products')
       }
@@ -184,7 +185,7 @@ export function useShopProducts(
         setHasMore(data.hasMore || false)
       }
     } catch (err) {
-      console.error('Error loading more products:', err)
+      productLogger.error('Error loading more products', err)
       if (isMountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to load more products')
       }
@@ -235,7 +236,7 @@ export function useTemplateCollections() {
         const data = await response.json()
         setCollections(data.collections || [])
       } catch (err) {
-        console.error('Error fetching collections:', err)
+        productLogger.error('Error fetching collections', err)
         setError(err instanceof Error ? err.message : 'Failed to fetch collections')
       } finally {
         setLoading(false)
@@ -274,7 +275,7 @@ export function useTemplateTags() {
         const data = await response.json()
         setTags(data.tags || [])
       } catch (err) {
-        console.error('Error fetching tags:', err)
+        productLogger.error('Error fetching tags', err)
         setError(err instanceof Error ? err.message : 'Failed to fetch tags')
       } finally {
         setLoading(false)
@@ -331,7 +332,7 @@ export function useProductSearch() {
       const data = await response.json()
       setSearchResults(data.products || [])
     } catch (err) {
-      console.error('Error searching products:', err)
+      productLogger.error('Error searching products', err)
       setError(err instanceof Error ? err.message : 'Search failed')
     } finally {
       setLoading(false)
@@ -451,7 +452,7 @@ export function useProductsByCollection(collectionHandle: string, limit: number 
       setTotal(data.total || 0)
       setHasMore(data.hasMore || false)
     } catch (err) {
-      console.error('Error loading products by collection:', err)
+      productLogger.error('Error loading products by collection', err)
       setError(err instanceof Error ? err.message : 'Failed to load products')
     } finally {
       setLoading(false)

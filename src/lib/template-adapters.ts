@@ -7,6 +7,7 @@
 
 import type { ProductWithRelations } from '@/types/product'
 import type { PrismaClient } from '@/generated/prisma'
+import { productLogger } from './logger'
 
 // Type for products with serialized variants (numbers instead of Decimals)
 export type ProductWithSerializedVariants = Omit<ProductWithRelations, 'variants'> & {
@@ -252,7 +253,7 @@ export async function getFeaturedProducts(prisma: PrismaClient, limit: number = 
     
     return adaptProductsForTemplate(products as ProductWithRelations[])
   } catch (error) {
-    console.error('Error fetching featured products:', error)
+    productLogger.error('Error fetching featured products', error)
     return []
   }
 }
@@ -361,7 +362,7 @@ export async function getShopProducts(
       totalCount
     }
   } catch (error) {
-    console.error('Error fetching shop products:', error)
+    productLogger.error('Error fetching shop products', error)
     return {
       products: [],
       hasMore: false,
@@ -398,7 +399,7 @@ export async function getTemplateCollections(prisma: PrismaClient) {
       description: collection.bodyHtml || undefined
     }))
   } catch (error) {
-    console.error('Error fetching collections:', error)
+    productLogger.error('Error fetching collections', error)
     return []
   }
 }
@@ -479,7 +480,7 @@ export async function getProductsByCollection(prisma: PrismaClient, collectionHa
       total
     }
   } catch (error) {
-    console.error('Error fetching products by collection:', error)
+    productLogger.error('Error fetching products by collection', error)
     return { products: [], total: 0 }
   }
 }
@@ -506,7 +507,7 @@ export async function getTemplateTags(prisma: PrismaClient) {
       productCount: tag._count.productTags
     }))
   } catch (error) {
-    console.error('Error fetching tags:', error)
+    productLogger.error('Error fetching tags', error)
     return []
   }
 }

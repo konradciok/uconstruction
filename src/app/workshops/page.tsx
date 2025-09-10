@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Container from '../../components/Container';
 import WorkshopDatePicker from '../../components/WorkshopDatePicker';
+import { workshopLogger } from '@/lib/logger';
 import styles from './page.module.css';
 
 export default function WorkshopsPage() {
@@ -112,7 +113,7 @@ export default function WorkshopsPage() {
               </p>
               <WorkshopDatePicker
                 onDateSelect={(date) => {
-                  console.log('Selected date:', date);
+                  workshopLogger.info('Selected date', { date });
                   // The component handles the redirect to Stripe internally
                 }}
                 className={styles.datePicker}

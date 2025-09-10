@@ -4,7 +4,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { UploadedFile, ProcessedImage, UploadFormData } from '@/types/upload';
 import { UploadService } from '@/lib/upload-service';
-import { Portfolio2Manager } from '@/lib/portfolio2-manager';
+import { Portfolio2Manager } from '@/lib/portfolio2-manager'
+import { uploadLogger } from '@/lib/logger';
 import { parsePaintingMetaFromFilename } from '@/lib/image-utils';
 import FileUpload from './FileUpload';
 import FileList from './FileList';
@@ -89,9 +90,9 @@ export default function UploadPage() {
         if (autoAddToPortfolio) {
           try {
             await Portfolio2Manager.addArtworks(results);
-            console.log('Successfully added artworks to portfolio');
+            uploadLogger.info('Successfully added artworks to portfolio');
           } catch (portfolioError) {
-            console.error('Error adding to portfolio:', portfolioError);
+            uploadLogger.error('Error adding to portfolio', portfolioError);
             // Don't fail the upload if portfolio update fails
           }
         }

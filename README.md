@@ -67,11 +67,51 @@ Required environment variables:
 
 ```bash
 npm run dev          # Start development server
-npm run dev:full     # Start with database sync
+npm run dev:full     # Start with database initialization and sync
+npm run dev:db       # Simple database setup + dev server
 npm run shopify:verify # Verify Shopify connection
 npm run sync:backfill # Import all products from Shopify
 npm run sync:delta   # Incremental product sync
 ```
+
+### Database Management
+
+```bash
+npm run db:migrate   # Migrate from SQLite to PostgreSQL
+npm run db:backup    # Backup SQLite database
+npm run db:reset     # Reset database with fresh schema
+npm run prisma:studio # Open database admin interface
+```
+
+### Testing
+
+```bash
+npm test            # Run all tests with Jest
+npm run test:watch  # Run tests in watch mode
+npm run test:coverage # Run tests with coverage report
+```
+
+**Testing Strategy:**
+- **Jest** for unit and integration tests
+- **TypeScript** support with proper type checking
+- **Mocked Prisma Client** for database testing
+- **Component testing** for React components
+- **API route testing** for backend functionality
+
+### Script Architecture
+
+**Simplified Node.js Implementation:**
+- `scripts/start-dev.js` - Comprehensive development startup with database initialization
+- `scripts/simple-migrate.js` - Direct SQLite to PostgreSQL migration
+- `scripts/backup-sqlite.js` - Database backup utility
+- `scripts/switch-db.sh` - Database switching utility (Bash for Docker integration)
+
+**Removed Redundancy:**
+- Consolidated duplicate development startup scripts
+- Unified migration approach using direct database connections
+- Streamlined package.json scripts for better maintainability
+- Removed obsolete test files (`run_portfolio2_tests.py`, `test-performance-optimizations.js`)
+- Integrated testing into standard Jest workflow
 
 ### Architecture
 
