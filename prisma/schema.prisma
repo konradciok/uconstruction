@@ -8,10 +8,10 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
-// Datasource — PostgreSQL for production, SQLite for development
+// Datasource — PostgreSQL for production and development
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // e.g. DATABASE_URL="postgresql://user:password@localhost:5432/uconstruction"
+  url      = env("DATABASE_URL") // e.g. DATABASE_URL="postgresql://uconstruction:uconstruction_dev_password@localhost:5432/uconstruction"
 }
 
 // -----------------------------
@@ -21,6 +21,7 @@ datasource db {
 model Product {
   id               Int       @id @default(autoincrement())
   shopifyId        String    @unique // Store GID or numeric string from REST
+  stripeProductId  String?   @unique // Stripe product ID (e.g., prod_T2kS0ddu50quBd)
   handle           String    @unique // Unique per shop
   title            String
   bodyHtml         String?
@@ -62,9 +63,9 @@ model Variant {
   title                     String?
   sku                       String?
   // PostgreSQL decimal with precision for currency
-  priceAmount               Decimal? @db.Decimal(18, 6) 
+  priceAmount               Decimal?  
   priceCurrency             String?
-  compareAtPriceAmount      Decimal? @db.Decimal(18, 6) 
+  compareAtPriceAmount      Decimal?  
   compareAtPriceCurrency    String?
   position                  Int?
   barcode                   String?
@@ -205,7 +206,7 @@ model CartItem {
   productId   Int      // Reference to Product table
   variantId   Int      // Reference to Variant table
   quantity    Int      @default(1)
-  price       Decimal  @db.Decimal(18, 6) // Price at time of adding
+  price       Decimal   // Price at time of adding
   addedAt     DateTime @default(now())
   updatedAt   DateTime @updatedAt
   

@@ -166,15 +166,15 @@ export class CartMigrationHelper {
 
       // Convert backend cart to localStorage format
       const localStorageCart: FrontendCart = {
-        items: backendCart.items.map((item: any) => ({
+        items: backendCart.items.map((item: { id: string; product: Record<string, unknown>; variantId: string | number; quantity: number; price: number }) => ({
           id: item.id,
           product: item.product!,
           variantId: item.variantId.toString(),
           quantity: item.quantity,
           price: item.price
         })),
-        totalQuantity: backendCart.items.reduce((sum, item) => sum + item.quantity, 0),
-        totalAmount: backendCart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        totalQuantity: backendCart.items.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0),
+        totalAmount: backendCart.items.reduce((sum: number, item: { price: number; quantity: number }) => sum + (item.price * item.quantity), 0)
       }
 
       // Save to localStorage

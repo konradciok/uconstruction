@@ -370,7 +370,7 @@ export class CartService {
   /**
    * Update item quantity
    */
-  async updateItemQuantity(cartItemId: string, quantity: number): Promise<CartServiceResponse<BackendCartItem>> {
+  async updateItemQuantity(cartItemId: string, quantity: number): Promise<CartServiceResponse<BackendCartItem | void>> {
     try {
       if (quantity <= 0) {
         return this.removeItem(cartItemId)
@@ -518,7 +518,7 @@ export class CartService {
       const updatedCart = await this.getCart(backendCart.sessionId)
       return {
         success: true,
-        data: updatedCart.data,
+        data: updatedCart.data || undefined,
         message: 'Carts merged successfully'
       }
     } catch (error) {
@@ -618,20 +618,21 @@ export class CartService {
     }
 
     // Add product data if available
-    if (item.product) {
+    if ('product' in item && item.product) {
       serializedItem.product = adaptProductForTemplate(item.product as ProductWithRelations)
     }
 
     // Add variant data if available
-    if (item.variant) {
+    if ('variant' in item && item.variant && typeof item.variant === 'object' && 'id' in item.variant) {
+      const variant = item.variant as { id: string | number; title?: string; priceAmount?: number | string; priceCurrency?: string }
       serializedItem.variant = {
-        id: item.variant.id.toString(),
-        title: item.variant.title || 'Default',
+        id: variant.id.toString(),
+        title: variant.title || 'Default',
         price: {
-          amount: (typeof item.variant.priceAmount === 'number' 
-            ? item.variant.priceAmount 
-            : parseFloat(item.variant.priceAmount?.toString() || '0')).toString(),
-          currencyCode: item.variant.priceCurrency || 'USD'
+          amount: (typeof variant.priceAmount === 'number' 
+            ? variant.priceAmount 
+            : parseFloat(variant.priceAmount?.toString() || '0')).toString(),
+          currencyCode: variant.priceCurrency || 'USD'
         }
       }
     }

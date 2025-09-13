@@ -10,19 +10,13 @@
 import { useState, useEffect } from 'react'
 import { ThreeItemGrid } from '@/components/grid/three-item'
 import { ProductGrid } from '@/components/grid/product-grid'
-import { SearchFilters } from '@/components/search/search-filters'
 // Removed problematic hooks - using direct fetch instead
-import { TemplateSearchFilters } from '@/lib/template-adapters'
 import Container from '@/components/Container'
 import styles from './page.module.css'
 
 export default function ShopPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [products, setProducts] = useState<any[]>([])
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [collections, setCollections] = useState<any[]>([])
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [tags, setTags] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -53,44 +47,6 @@ export default function ShopPage() {
     fetchProducts()
   }, [currentPage])
 
-  // Fetch collections
-  useEffect(() => {
-    async function fetchCollections() {
-      try {
-        const response = await fetch('/api/template/collections')
-        if (response.ok) {
-          const data = await response.json()
-          setCollections(data.collections || [])
-        }
-      } catch (err) {
-        console.error('Error fetching collections:', err)
-      }
-    }
-
-    fetchCollections()
-  }, [])
-
-  // Fetch tags
-  useEffect(() => {
-    async function fetchTags() {
-      try {
-        const response = await fetch('/api/template/tags')
-        if (response.ok) {
-          const data = await response.json()
-          setTags(data.tags || [])
-        }
-      } catch (err) {
-        console.error('Error fetching tags:', err)
-      }
-    }
-
-    fetchTags()
-  }, [])
-
-  const handleFiltersChange = (newFilters: TemplateSearchFilters) => {
-    // For now, just reset to page 1
-    setCurrentPage(1)
-  }
 
   const handleLoadMore = () => {
     if (hasMore && !loading) {
@@ -98,11 +54,6 @@ export default function ShopPage() {
     }
   }
 
-  const clearFilters = () => {
-    setCurrentPage(1)
-  }
-
-  const hasActiveFilters = false // Simplified for now
 
   // Show loading state for initial load
   if (loading && products.length === 0) {
@@ -160,57 +111,21 @@ export default function ShopPage() {
               </section>
             )}
 
-            {/* Filters and Products Grid */}
-            <div className={styles.shopContent}>
-              {/* Filters Sidebar */}
-              <aside className={`${styles.filtersSection} animate-fadeInUp`}>
-                <SearchFilters
-                  categories={collections.map(c => ({
-                    id: parseInt(c.id),
-                    name: c.name,
-                    handle: c.handle,
-                    productCount: c.productCount
-                  }))}
-                  tags={tags.map(t => ({
-                    id: parseInt(t.id),
-                    name: t.name,
-                    productCount: t.productCount
-                  }))}
-                  onFiltersChange={handleFiltersChange}
-                />
-              </aside>
+            {/* Products Grid */}
+            <main className={`${styles.productsSection} animate-fadeInUp`}>
+              <div className={styles.productsHeader}>
+                <h2 className={styles.productsTitle}>All Products</h2>
+              </div>
 
-              {/* Products Grid */}
-              <main className={`${styles.productsSection} animate-fadeInUp`}>
-                <div className={styles.productsHeader}>
-                  <h2 className={styles.productsTitle}>
-                    All Products
-                    {hasActiveFilters && (
-                      <span className={styles.resultsCount}>
-                        ({products.length} results)
-                      </span>
-                    )}
-                  </h2>
-                  {hasActiveFilters && (
-                    <button
-                      onClick={clearFilters}
-                      className={styles.clearFiltersButton}
-                    >
-                      Clear Filters
-                    </button>
-                  )}
-                </div>
-
-                <ProductGrid
-                  products={products}
-                  loading={loading}
-                  error={error || undefined}
-                  hasMore={hasMore}
-                  onLoadMore={handleLoadMore}
-                  columns={{ xs: 1, sm: 2, md: 2, lg: 3, xl: 3 }}
-                />
-              </main>
-            </div>
+              <ProductGrid
+                products={products}
+                loading={loading}
+                error={error || undefined}
+                hasMore={hasMore}
+                onLoadMore={handleLoadMore}
+                columns={{ xs: 1, sm: 2, md: 2, lg: 3, xl: 3 }}
+              />
+            </main>
           </div>
         </div>
       </Container>
