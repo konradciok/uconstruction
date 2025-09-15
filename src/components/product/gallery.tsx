@@ -46,7 +46,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
             alt={images[selectedImageIndex].altText || product.title}
             fill
             className={styles.mainImage}
-            sizes="(min-width: 1024px) 50vw, 100vw"
+            sizes="(min-width:1536px) 60vw, (min-width:1280px) 60vw, (min-width:768px) 50vw, 100vw"
             priority
           />
         )}
