@@ -47,8 +47,6 @@ export async function GET(request: NextRequest) {
  * POST /api/products - Create a new product
  */
 export async function POST(request: NextRequest) {
-  const productService = new ProductService();
-
   try {
     const body = await request.json();
     

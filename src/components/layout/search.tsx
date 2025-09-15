@@ -8,6 +8,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useProductSearch } from '@/hooks/useTemplateProducts'
@@ -144,9 +145,11 @@ export function Search() {
                     }`}
                   >
                     <div className={styles.resultImage}>
-                      <img
+                      <Image
                         src={product.featuredImage.url}
                         alt={product.title}
+                        width={50}
+                        height={50}
                         className={styles.resultImageImg}
                       />
                     </div>

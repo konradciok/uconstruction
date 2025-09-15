@@ -16,11 +16,7 @@ import type {
   FrontendCart,
   FrontendCartItem,
   AddToCartRequest,
-  UpdateCartItemRequest,
-  CartMergeRequest,
-  SessionInfo,
   CartServiceResponse,
-  CartValidationError,
   CartStatus
 } from '@/types/cart'
 

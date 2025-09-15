@@ -7,7 +7,7 @@ const execAsync = promisify(exec)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { force = false } = body
+    const { force: _force = false } = body
 
     console.log('Starting database to Stripe synchronization...')
 

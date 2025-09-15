@@ -8,7 +8,7 @@
 import { PrismaClient } from '@/generated/prisma'
 import { productLogger } from './logger'
 import { cartCache } from './cart-cache'
-import type { CartAnalytics } from '@/types/cart'
+// import type { CartAnalytics } from '@/types/cart'
 
 export interface CartMetrics {
   // Cart counts

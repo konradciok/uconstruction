@@ -10,7 +10,7 @@ import { prisma } from '@/lib/db'
 import { CartService } from '@/lib/cart-service'
 import { SessionManager } from '@/lib/session-manager'
 import { productLogger } from '@/lib/logger'
-import type { CartMergeRequest, FrontendCartItem } from '@/types/cart'
+import type { CartMergeRequest } from '@/types/cart'
 
 const cartService = new CartService(prisma)
 

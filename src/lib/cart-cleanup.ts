@@ -8,7 +8,7 @@
 import { PrismaClient } from '@/generated/prisma'
 import { productLogger } from './logger'
 import { CartService } from './cart-service'
-import type { CartStatus } from '@/types/cart'
+// import type { CartStatus } from '@/types/cart'
 
 export class CartCleanupService {
   private prisma: PrismaClient

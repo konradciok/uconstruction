@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { UploadedFile } from '@/types/upload';
 import { UploadService } from '@/lib/upload-service';
 import styles from './FileList.module.css';
@@ -143,9 +144,11 @@ export default function FileList({
           >
             <div className={styles.preview}>
               {file.preview && (
-                <img
+                <Image
                   src={file.preview}
                   alt={file.name}
+                  width={100}
+                  height={100}
                   className={styles.previewImage}
                 />
               )}

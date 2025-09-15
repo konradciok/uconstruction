@@ -6,7 +6,7 @@
  */
 
 import { CartService } from './cart-service'
-import { SessionManager } from './session-manager'
+// import { SessionManager } from './session-manager'
 import { productLogger } from './logger'
 import type { 
   FrontendCart, 

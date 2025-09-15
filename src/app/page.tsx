@@ -5,50 +5,19 @@
  * with carousel and grid layout using template components.
  */
 
-'use client'
-
 import Link from 'next/link'
 import { ThreeItemGrid } from '@/components/grid/three-item'
 import { Carousel } from '@/components/carousel'
-import { useFeaturedProducts } from '@/hooks/useTemplateProducts'
+import { getFeaturedProducts } from '@/lib/template-adapters'
+import { prisma } from '@/lib/db'
 import Container from '@/components/Container'
 import styles from './page.module.css'
 
-export default function HomePage() {
-  const { products, loading, error } = useFeaturedProducts(6)
+export default async function HomePage() {
+  // Fetch featured products server-side
+  const products = await getFeaturedProducts(prisma, 6)
 
-  if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingContent}>
-          <div className={styles.loadingSpinner}></div>
-          <p className={styles.loadingText}>Loading featured products...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className={styles.errorContainer}>
-        <div className={styles.errorContent}>
-          <div className={styles.errorIcon}>
-            <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-          </div>
-          <h1 className={styles.errorTitle}>Error Loading Products</h1>
-          <p className={styles.errorMessage}>{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className={styles.retryButton}
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    )
-  }
+  // No loading or error states needed for server-side rendering
 
   return (
     <div className={styles.homePage}>

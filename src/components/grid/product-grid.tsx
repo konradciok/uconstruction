@@ -1,3 +1,5 @@
+'use client'
+
 import { TemplateProduct } from '@/lib/template-adapters'
 import { GridTileImage } from './tile'
 import Link from 'next/link'

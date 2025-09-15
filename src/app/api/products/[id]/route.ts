@@ -9,7 +9,7 @@ import { createSuccessResponse, ApiErrors } from '@/lib/api-response';
  * DELETE /api/products/[id] - Delete product by ID
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const productService = new ProductService();
@@ -46,11 +46,9 @@ export async function GET(
  * PUT /api/products/[id] - Update product by ID
  */
 export async function PUT(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const productService = new ProductService();
-
   try {
     // Validate ID parameter
     const resolvedParams = await params;
@@ -59,7 +57,7 @@ export async function PUT(
     if (idError) return idError;
     
     const productId = parseInt(idValidation.value!);
-    const body = await request.json();
+    const body = await _request.json();
 
     // Update product using ProductService
     // Note: This would need to be implemented in ProductService
@@ -86,11 +84,9 @@ export async function PUT(
  * DELETE /api/products/[id] - Delete product by ID
  */
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const productService = new ProductService();
-
   try {
     // Validate ID parameter
     const resolvedParams = await params;

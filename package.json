@@ -29,7 +29,14 @@
     "migrate:full": "./scripts/full-migration.sh",
     "db:seed": "node scripts/seed-sample-data.js",
     "mcp:setup": "node scripts/setup-mcp.js",
-    "mcp:test": "echo 'Testing MCP configuration...' && npx @stripe/mcp --tools=all && echo 'Stripe MCP working' && npx @modelcontextprotocol/server-postgres postgresql://test:test@localhost:5432/test && echo 'PostgreSQL MCP working'"
+    "mcp:test": "echo 'Testing MCP configuration...' && npx @stripe/mcp --tools=all && echo 'Stripe MCP working' && npx @modelcontextprotocol/server-postgres postgresql://test:test@localhost:5432/test && echo 'PostgreSQL MCP working'",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "docker:startup": "./scripts/docker-startup.sh",
+    "docker:clean": "docker-compose down -v && docker system prune -f"
   },
   "dependencies": {
     "@formspree/react": "^3.0.0",

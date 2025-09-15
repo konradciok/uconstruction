@@ -41,7 +41,7 @@ export class CartMigrationHelper {
         throw new Error('Failed to create backend cart')
       }
 
-      const { cart: backendCart } = await createResponse.json()
+      const { cart: _backendCart } = await createResponse.json()
 
       // Merge localStorage cart with backend
       const mergeResponse = await fetch('/api/cart/merge', {
@@ -58,7 +58,7 @@ export class CartMigrationHelper {
         throw new Error('Failed to merge carts')
       }
 
-      const { cart: mergedCart } = await mergeResponse.json()
+      const { cart: _mergedCart } = await mergeResponse.json()
 
       // Clear localStorage after successful migration
       CartMigrationService.clearLocalStorageCart()

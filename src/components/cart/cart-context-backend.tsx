@@ -4,11 +4,7 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 import { TemplateProduct } from '@/lib/template-adapters'
 import { CartMigrationService } from '@/lib/cart-migration'
 import type { 
-  FrontendCart, 
-  FrontendCartItem, 
-  BackendCart, 
-  AddToCartRequest,
-  UpdateCartItemRequest 
+  BackendCart
 } from '@/types/cart'
 
 // Cart Types (keeping same interface for compatibility)
@@ -193,11 +189,11 @@ export function CartProvider({ children }: CartProviderProps) {
         dispatch({ type: 'SET_ERROR', payload: null })
 
         // Try to get cart from backend
-        const backendCart = await apiRequest<{ cart: BackendCart | null }>('/api/cart')
+        const response = await apiRequest<{ cart: BackendCart | null }>('/api/cart')
         
-        if (backendCart.cart) {
+        if (response.cart) {
           // Convert backend cart to frontend format
-          const frontendCart = convertBackendToFrontendCart(backendCart.cart)
+          const frontendCart = convertBackendToFrontendCart(response.cart)
           dispatch({ type: 'LOAD_CART', payload: frontendCart })
         } else {
           // Check if we have localStorage cart to migrate
@@ -212,14 +208,14 @@ export function CartProvider({ children }: CartProviderProps) {
             })
             
             // Merge localStorage cart
-            const mergeResponse = await apiRequest<{ cart: BackendCart }>('/api/cart/merge', {
+            const mergedCart = await apiRequest<{ cart: BackendCart }>('/api/cart/merge', {
               method: 'POST',
               body: JSON.stringify({
                 localStorageCart: localStorageCart?.items || []
               })
             })
             
-            const frontendCart = convertBackendToFrontendCart(mergeResponse.cart)
+            const frontendCart = convertBackendToFrontendCart(mergedCart.cart)
             dispatch({ type: 'LOAD_CART', payload: frontendCart })
             
             // Clear localStorage after successful migration

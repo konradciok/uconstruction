@@ -13,7 +13,6 @@ import { prisma } from '@/lib/db'
 import { CartService } from '@/lib/cart-service'
 import { SessionManager } from '@/lib/session-manager'
 import { productLogger } from '@/lib/logger'
-import type { CartServiceResponse } from '@/types/cart'
 
 const cartService = new CartService(prisma)
 
