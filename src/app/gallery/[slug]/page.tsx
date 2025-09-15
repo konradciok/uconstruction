@@ -6,15 +6,9 @@ import Container from '@/components/Container'
 import { fetchArtworkBySlug, generateArtworkStaticParams } from '@/lib/artwork-fetcher'
 import styles from './page.module.css'
 
-interface ArtworkPageProps {
-  params: Promise<{
-    slug: string
-  }>
-}
-
-export async function generateMetadata({ params }: ArtworkPageProps): Promise<Metadata> {
-  const resolvedParams = await params
-  const result = await fetchArtworkBySlug(resolvedParams.slug)
+export async function generateMetadata(props: unknown): Promise<Metadata> {
+  const { params } = props as { params: { slug: string } }
+  const result = await fetchArtworkBySlug(params.slug)
   
   if (!result.success || !result.artwork) {
     return {
@@ -40,9 +34,9 @@ export async function generateStaticParams() {
   return await generateArtworkStaticParams()
 }
 
-export default async function ArtworkPage({ params }: ArtworkPageProps) {
-  const resolvedParams = await params
-  const result = await fetchArtworkBySlug(resolvedParams.slug)
+export default async function ArtworkPage(props: unknown) {
+  const { params } = props as { params: { slug: string } }
+  const result = await fetchArtworkBySlug(params.slug)
 
   if (!result.success || !result.artwork) {
     notFound()

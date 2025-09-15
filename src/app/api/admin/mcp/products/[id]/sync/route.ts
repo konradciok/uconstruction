@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { PrismaClient } from '@/generated/prisma'
 import Stripe from 'stripe'
 
@@ -6,11 +6,11 @@ const prisma = new PrismaClient()
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  request: Request,
+  context: unknown
 ) {
   try {
-    const { id } = await params
+    const { id } = (context as { params?: Record<string, string> })?.params || {}
     const productId = parseInt(id)
     
     // Get product from database

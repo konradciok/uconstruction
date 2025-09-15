@@ -1,0 +1,273 @@
+/* BuyBox Component Styles - Optimized Visual Hierarchy */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  width: 100%;
+}
+
+/* Product Header Section */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.vendor {
+  font-size: var(--font-size-lg);
+  color: var(--color-gray-600);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Price Section - Prominent Visual Hierarchy */
+.priceSection {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.price {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.comparePrice {
+  font-size: var(--font-size-xl);
+  color: var(--color-gray-500);
+  text-decoration: line-through;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* Purchase Controls Section */
+.purchaseControls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.sizeSection {
+  /* Size selector container */
+}
+
+/* Action Row - Quantity + CTA */
+.actionRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: stretch;
+}
+
+.quantityContainer {
+  align-self: flex-start;
+}
+
+.ctaContainer {
+  flex: 1;
+}
+
+.addToCartButton {
+  width: 100%;
+  min-height: 56px;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(128, 166, 242, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.addToCartButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.addToCartButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(128, 166, 242, 0.4);
+}
+
+.addToCartButton:hover::before {
+  left: 100%;
+}
+
+.addToCartButton:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 20px rgba(128, 166, 242, 0.3);
+}
+
+.addToCartButton:disabled {
+  background: var(--color-gray-400);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.addToCartButton:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.addToCartButton:disabled::before {
+  display: none;
+}
+
+/* Trust Signals Positioning */
+.reassurance {
+  margin-top: 0; /* Override default margin to keep close to CTA */
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .container {
+    gap: var(--spacing-lg);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .vendor {
+    font-size: var(--font-size-base);
+  }
+  
+  .price {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .comparePrice {
+    font-size: var(--font-size-lg);
+  }
+  
+  .addToCartButton {
+    min-height: 48px;
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (min-width: 768px) {
+  .actionRow {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: var(--spacing-lg);
+  }
+  
+  .quantityContainer {
+    flex-shrink: 0;
+    align-self: flex-end;
+  }
+  
+  .title {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .price {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .addToCartButton {
+    min-height: 60px;
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    gap: var(--spacing-2xl);
+  }
+  
+  .purchaseControls {
+    gap: var(--spacing-xl);
+  }
+  
+  .priceSection {
+    padding: var(--spacing-xl) 0;
+  }
+  
+  .title {
+    font-size: var(--font-size-5xl);
+  }
+  
+  .price {
+    font-size: var(--font-size-5xl);
+  }
+  
+  .comparePrice {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .addToCartButton {
+    min-height: 64px;
+    font-size: var(--font-size-xl);
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .priceSection {
+    border-bottom-width: 2px;
+  }
+  
+  .price {
+    font-weight: 800;
+  }
+  
+  .addToCartButton {
+    border: 2px solid var(--color-primary);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .addToCartButton,
+  .addToCartButton::before,
+  .price,
+  .comparePrice {
+    transition: none;
+  }
+  
+  .addToCartButton:hover {
+    transform: none;
+  }
+  
+  .addToCartButton:active {
+    transform: none;
+  }
+}

@@ -12,6 +12,10 @@ interface AddToCartProps {
   quantity?: number
   className?: string
   children?: React.ReactNode
+  /**
+   * Optional callback fired after a successful add-to-cart operation
+   */
+  onSuccess?: () => void
 }
 
 export function AddToCart({ 
@@ -19,7 +23,8 @@ export function AddToCart({
   variantId, 
   quantity = 1, 
   className = '',
-  children 
+  children,
+  onSuccess
 }: AddToCartProps) {
   const { addItem, isLoading, error } = useCart()
   const [isAdding, setIsAdding] = useState(false)
@@ -51,6 +56,7 @@ export function AddToCart({
     try {
       await addItem(product, selectedVariantId, quantity)
       setShowSuccess(true)
+      onSuccess?.()
       
       // Hide success message after 2 seconds
       setTimeout(() => setShowSuccess(false), 2000)

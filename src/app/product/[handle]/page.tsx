@@ -10,17 +10,14 @@ import { notFound } from 'next/navigation'
 import { fetchProductByHandle } from '@/lib/product-fetcher'
 import ProductPageClient from '@/components/product/ProductPageClient'
 
-interface ProductPageProps {
-  params: Promise<{
-    handle: string
-  }>
-}
+// Use inline param typing to align with Next.js PageProps
 
 /**
  * Generate metadata for the product page
  */
-export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const { handle } = await params
+export async function generateMetadata(props: unknown): Promise<Metadata> {
+  const { params } = props as { params: { handle: string } }
+  const { handle } = params
   
   try {
     const result = await fetchProductByHandle(handle)
@@ -62,8 +59,9 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 /**
  * Main product page component
  */
-export default async function ProductPage({ params }: ProductPageProps) {
-  const { handle } = await params
+export default async function ProductPage(props: unknown) {
+  const { params } = props as { params: { handle: string } }
+  const { handle } = params
   
   // Fetch product data server-side
   const result = await fetchProductByHandle(handle)

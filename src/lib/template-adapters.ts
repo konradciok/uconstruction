@@ -107,7 +107,7 @@ export function adaptProductForTemplate(product: ProductWithRelations | ProductW
     url: media[0].url,
     altText: media[0].altText || product.title
   } : {
-    url: '/img/placeholder.jpg',
+    url: '/assets/pics/main.png',
     altText: product.title
   }
   
@@ -172,8 +172,12 @@ export function adaptProductForTemplate(product: ProductWithRelations | ProductW
     tags,
     collections,
     availableForSale: variants.length > 0, // Simplified availability check
-    createdAt: product.createdAt.toISOString(),
-    updatedAt: product.updatedAt.toISOString()
+    createdAt: typeof (product as unknown as { createdAt: unknown }).createdAt === 'string'
+      ? (product as unknown as { createdAt: string }).createdAt
+      : (product as unknown as { createdAt: Date }).createdAt.toISOString(),
+    updatedAt: typeof (product as unknown as { updatedAt: unknown }).updatedAt === 'string'
+      ? (product as unknown as { updatedAt: string }).updatedAt
+      : (product as unknown as { updatedAt: Date }).updatedAt.toISOString()
   }
 }
 

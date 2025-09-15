@@ -1,0 +1,198 @@
+/* QuantityStepper Component Styles */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: fit-content;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--border-radius);
+  background: white;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.stepper:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(128, 166, 242, 0.1);
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--color-gray-50);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-text);
+}
+
+.button:hover:not(:disabled) {
+  background: var(--color-gray-100);
+  color: var(--color-primary);
+}
+
+.button:active:not(:disabled) {
+  background: var(--color-gray-200);
+  transform: scale(0.95);
+}
+
+.button:focus {
+  outline: none;
+  background: var(--color-primary);
+  color: white;
+}
+
+.buttonDisabled {
+  background: var(--color-gray-50);
+  color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+.buttonDisabled:hover {
+  background: var(--color-gray-50);
+  color: var(--color-gray-400);
+  transform: none;
+}
+
+.decrementButton {
+  border-right: 1px solid var(--color-gray-300);
+}
+
+.incrementButton {
+  border-left: 1px solid var(--color-gray-300);
+}
+
+.buttonIcon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5;
+}
+
+.input {
+  width: 60px;
+  height: 44px;
+  border: none;
+  background: white;
+  text-align: center;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text);
+  outline: none;
+  padding: 0;
+}
+
+.input:focus {
+  background: rgba(128, 166, 242, 0.05);
+}
+
+.inputDisabled {
+  background: var(--color-gray-50);
+  color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+.constraints {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .input {
+    width: 50px;
+    height: 40px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .buttonIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .button {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .input {
+    width: 70px;
+    height: 48px;
+    font-size: var(--font-size-lg);
+  }
+  
+  .buttonIcon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stepper {
+    border-width: 2px;
+  }
+  
+  .button {
+    width: 52px;
+    height: 52px;
+  }
+  
+  .input {
+    width: 80px;
+    height: 52px;
+  }
+  
+  .buttonIcon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .stepper {
+    border-width: 3px;
+  }
+  
+  .button {
+    border-width: 2px;
+  }
+  
+  .buttonIcon {
+    stroke-width: 3;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .stepper {
+    transition: none;
+  }
+  
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}

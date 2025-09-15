@@ -3,11 +3,7 @@ import { notFound } from 'next/navigation'
 import Container from '@/components/Container'
 import { CollectionPageClient } from './collection-page-client'
 
-interface CollectionPageProps {
-  params: Promise<{
-    collection: string
-  }>
-}
+// Inline props typing at call sites to avoid PageProps generic mismatch
 
 // Mock collection data - this will be replaced with real data from the database
 const collections = {
@@ -28,9 +24,9 @@ const collections = {
   }
 }
 
-export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
-  const resolvedParams = await params
-  const collection = collections[resolvedParams.collection as keyof typeof collections]
+export async function generateMetadata(props: unknown): Promise<Metadata> {
+  const { params } = props as { params: { collection: string } }
+  const collection = collections[params.collection as keyof typeof collections]
   
   if (!collection) {
     return {
@@ -45,9 +41,9 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
   }
 }
 
-export default async function CollectionPage({ params }: CollectionPageProps) {
-  const resolvedParams = await params
-  const collection = collections[resolvedParams.collection as keyof typeof collections]
+export default async function CollectionPage(props: unknown) {
+  const { params } = props as { params: { collection: string } }
+  const collection = collections[params.collection as keyof typeof collections]
 
   if (!collection) {
     notFound()
@@ -68,7 +64,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
           </div>
 
           {/* Collection Products - Now with real data */}
-          <CollectionPageClient collectionHandle={resolvedParams.collection} />
+          <CollectionPageClient collectionHandle={params.collection} />
 
           {/* Collection Info */}
           <section className="mt-16 bg-gray-50 rounded-lg p-8">

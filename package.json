@@ -1,6 +1,7 @@
 {
   "name": "watercolor-artist-site",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "Premium portfolio and workshop booking platform with advanced product pages featuring gallery enhancements, sticky controls, and conversion optimization",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -44,8 +45,10 @@
     "@heroicons/react": "^2.2.0",
     "@prisma/client": "^6.15.0",
     "@stripe/stripe-js": "^2.0.0",
+    "clsx": "^2.1.1",
     "date-fns-tz": "^2.0.0",
     "framer-motion": "^12.23.12",
+    "isomorphic-dompurify": "^2.11.0",
     "next": "^15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",

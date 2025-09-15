@@ -1,0 +1,267 @@
+/* AccordionGroup Component Styles */
+
+.accordionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.accordionItem {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  background-color: var(--color-background);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.accordionItem:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.accordionItem:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(128, 166, 242, 0.2);
+}
+
+.accordionHeading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.accordionTrigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 48px; /* Touch target accessibility */
+}
+
+.accordionTrigger:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.accordionTrigger:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+  background-color: rgba(128, 166, 242, 0.05);
+}
+
+.accordionTrigger:active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.accordionTriggerOpen {
+  background-color: rgba(128, 166, 242, 0.05);
+}
+
+.accordionTriggerText {
+  flex: 1;
+  margin-right: var(--spacing-md);
+}
+
+.accordionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: rgba(0, 0, 0, 0.6);
+  transition: color var(--transition-fast);
+}
+
+.accordionTrigger:hover .accordionIcon {
+  color: var(--color-text);
+}
+
+.accordionIconSvg {
+  transition: transform var(--transition-normal);
+  transform-origin: center;
+}
+
+.accordionIconOpen {
+  transform: rotate(180deg);
+}
+
+.accordionContent {
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  max-height: 0;
+  opacity: 0;
+}
+
+.accordionContentOpen {
+  max-height: 2000px; /* Large enough for most content */
+  opacity: 1;
+}
+
+.accordionContentInner {
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.6;
+}
+
+/* Progressive enhancement for no-JS fallback */
+@media (prefers-reduced-motion: reduce) {
+  .accordionContent,
+  .accordionIconSvg {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .accordionItem {
+    border-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .accordionTrigger:focus {
+    outline: 3px solid;
+  }
+  
+  .accordionIcon {
+    color: var(--color-text);
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 639px) {
+  .accordionTrigger {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+  
+  .accordionContentInner {
+    padding: 0 var(--spacing-md) var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+  
+  .accordionIcon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) {
+  .accordionTrigger {
+    font-size: var(--font-size-lg);
+  }
+  
+  .accordionContentInner {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Content styling within accordion */
+.accordionContentInner h1,
+.accordionContentInner h2,
+.accordionContentInner h3,
+.accordionContentInner h4,
+.accordionContentInner h5,
+.accordionContentInner h6 {
+  color: var(--color-text);
+  font-weight: 600;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+.accordionContentInner h1:first-child,
+.accordionContentInner h2:first-child,
+.accordionContentInner h3:first-child,
+.accordionContentInner h4:first-child,
+.accordionContentInner h5:first-child,
+.accordionContentInner h6:first-child {
+  margin-top: 0;
+}
+
+.accordionContentInner p {
+  margin-bottom: var(--spacing-md);
+}
+
+.accordionContentInner p:last-child {
+  margin-bottom: 0;
+}
+
+.accordionContentInner ul,
+.accordionContentInner ol {
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-lg);
+}
+
+.accordionContentInner li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.accordionContentInner a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.accordionContentInner a:hover {
+  color: var(--color-primary-blue);
+}
+
+/* Feature list styling within accordion */
+.accordionContentInner .featuresList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.accordionContentInner .featureItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.accordionContentInner .featureIcon {
+  color: #16a34a; /* green-600 */
+  margin-right: var(--spacing-sm);
+  font-weight: bold;
+}
+
+/* Tags and collections styling within accordion */
+.accordionContentInner .tagsList,
+.accordionContentInner .collectionsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.accordionContentInner .tag {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: rgba(128, 166, 242, 0.1);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  border-radius: 9999px;
+}
+
+.accordionContentInner .collectionLink {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.7);
+  font-size: var(--font-size-sm);
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.accordionContentInner .collectionLink:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}

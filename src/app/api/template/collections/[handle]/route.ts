@@ -10,10 +10,10 @@ import { getProductsByCollection } from '@/lib/template-adapters'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ handle: string }> }
+  context: unknown
 ) {
   try {
-    const { handle } = await params
+    const { handle } = (context as { params?: Record<string, string> })?.params || {}
     const { searchParams } = new URL(request.url)
     
     if (!handle) {

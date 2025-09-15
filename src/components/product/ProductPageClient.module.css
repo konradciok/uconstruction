@@ -94,11 +94,7 @@
 }
 
 .buyBox {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-  width: 100%;
-  margin-bottom: var(--spacing-xl);
+  /* BuyBox component now handles its own styling */
 }
 
 .details {
@@ -108,81 +104,7 @@
   width: 100%;
 }
 
-.buyBoxTitle {
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
-  line-height: 1.2;
-  margin: 0;
-  color: var(--color-text);
-}
-
-.buyBoxVendor {
-  font-size: var(--font-size-lg);
-  color: var(--color-gray-600);
-  margin: 0;
-}
-
-.buyBoxPrice {
-  font-size: var(--font-size-2xl);
-  font-weight: 600;
-  color: var(--color-primary);
-  margin: 0;
-}
-
-.quantitySection {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  width: 100%;
-}
-
-.quantityLabel {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--color-text);
-}
-
-.quantitySelect {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius);
-  font-size: var(--font-size-base);
-  background: white;
-  width: 100px;
-}
-
-.variantSection {
-  padding: var(--spacing-lg) 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-
-.additionalInfo {
-  padding: var(--spacing-lg) 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.infoList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.infoItem {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  font-size: var(--font-size-sm);
-  color: var(--color-text);
-  opacity: 0.8;
-}
-
-.infoIcon {
-  width: 20px;
-  height: 20px;
-  color: #10b981;
-  flex-shrink: 0;
-}
+/* Cleaned up: legacy component styles have moved to their respective modules */
 
 .relatedSection {
   background: rgba(255, 255, 255, 0.8);
@@ -389,9 +311,7 @@
     gap: var(--spacing-xl);
   }
 
-  .buyBoxTitle {
-    font-size: var(--font-size-3xl);
-  }
+  /* Legacy responsive styles - now handled by BuyBox component */
 
   .relatedTitle {
     font-size: var(--font-size-3xl);
@@ -414,11 +334,32 @@
 
   .productGrid {
     gap: var(--spacing-4xl);
+    align-items: flex-start;
   }
 
-  .buyBoxTitle {
-    font-size: var(--font-size-4xl);
+  .infoSection {
+    position: sticky;
+    top: var(--spacing-xl);
+    max-height: calc(100vh - var(--spacing-2xl));
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
   }
+
+  .infoSection::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .infoSection::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .infoSection::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+
+  /* Legacy responsive styles - now handled by BuyBox component */
 }
 
 /* Large desktop breakpoint */
@@ -433,9 +374,7 @@
     gap: var(--spacing-4xl);
   }
 
-  .buyBoxTitle {
-    font-size: var(--font-size-5xl);
-  }
+  /* Legacy responsive styles - now handled by BuyBox component */
 }
 
 /* Extra large desktop breakpoint */

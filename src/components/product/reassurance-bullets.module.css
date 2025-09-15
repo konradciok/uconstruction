@@ -1,0 +1,203 @@
+/* ReassuranceBullets Component Styles */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: var(--spacing-lg);
+}
+
+.bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  line-height: 1.4;
+}
+
+.iconContainer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px; /* Align with text baseline */
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  color: #10b981; /* Green checkmark color matching existing design */
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+}
+
+.text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.subtext {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: 400;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+/* Compact variant for tight spaces */
+.container.compact {
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) 0;
+}
+
+.container.compact .bullet {
+  gap: var(--spacing-sm);
+}
+
+.container.compact .iconContainer {
+  width: 20px;
+  height: 20px;
+}
+
+.container.compact .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.container.compact .text,
+.container.compact .subtext {
+  font-size: var(--font-size-xs);
+}
+
+/* Horizontal layout for wide spaces */
+@media (min-width: 768px) {
+  .container.horizontal {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+  }
+  
+  .container.horizontal .bullet {
+    flex: 1;
+    min-width: 200px;
+    justify-content: flex-start;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .container {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) 0;
+  }
+  
+  .bullet {
+    gap: var(--spacing-sm);
+  }
+  
+  .iconContainer {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .text,
+  .subtext {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (min-width: 768px) {
+  .text,
+  .subtext {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl) 0;
+  }
+  
+  .bullet {
+    gap: var(--spacing-lg);
+  }
+  
+  .iconContainer {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .text {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+  }
+  
+  .subtext {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Animation for enhanced perceived performance */
+.bullet {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.bullet:nth-child(1) { animation-delay: 0.1s; }
+.bullet:nth-child(2) { animation-delay: 0.2s; }
+.bullet:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .bullet {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .container {
+    border-top-width: 2px;
+  }
+  
+  .icon {
+    color: #059669; /* Darker green for better contrast */
+  }
+  
+  .text {
+    font-weight: 600;
+  }
+}

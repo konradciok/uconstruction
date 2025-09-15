@@ -8,21 +8,21 @@ import { createSuccessResponse, ApiErrors } from '@/lib/api-response';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ handle: string }> }
+  context: unknown
 ) {
   const productService = new ProductService();
 
   try {
     // Await params and validate handle parameter
-    const resolvedParams = await params;
-    const handleValidation = validateProductHandle(resolvedParams.handle);
+    const { handle: handleParam } = (context as { params?: Record<string, string> })?.params || {}
+    const handleValidation = validateProductHandle(handleParam as string);
     const handleError = handleValidationError(handleValidation);
     if (handleError) return handleError;
     
-    const handle = handleValidation.value!;
+    const normalizedHandle = handleValidation.value!;
 
     // Fetch product
-    const product = await productService.getProductByHandle(handle);
+    const product = await productService.getProductByHandle(normalizedHandle);
 
     if (!product) {
       return ApiErrors.notFound('Product not found');

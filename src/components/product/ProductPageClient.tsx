@@ -6,12 +6,12 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { ProductGallery } from './gallery'
-import { ProductDescription } from './description'
-import { VariantSelector } from './variant-selector'
-import { AddToCart } from '../cart/add-to-cart'
+import { ProductContent } from './product-content'
+import { BuyBox } from './buy-box'
+import { StickyPurchaseBar } from './sticky-purchase-bar'
 import { CartModal } from '../cart/cart-modal'
 import Container from '../Container'
 import { adaptProductForTemplate } from '@/lib/template-adapters'
@@ -28,19 +28,61 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
   const [selectedVariantId, setSelectedVariantId] = useState<string>(
     product.variants[0]?.id?.toString() || ''
   )
+  const [quantity, setQuantity] = useState<number>(1)
+  const [isStickyBarVisible, setIsStickyBarVisible] = useState(false)
+
+  // Refs for scroll detection
+  const buyBoxRef = useRef<HTMLDivElement>(null)
 
   // Adapt the product for template components
   const templateProduct = adaptProductForTemplate(product)
-  
-  // Get the selected variant for price display
-  const selectedVariant = templateProduct.variants.find(v => v.id === selectedVariantId) || templateProduct.variants[0]
+
+  // Scroll detection for sticky bar visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!buyBoxRef.current) return
+
+      const buyBoxRect = buyBoxRef.current.getBoundingClientRect()
+      const isInViewport = buyBoxRect.bottom > 0 && buyBoxRect.top < window.innerHeight
+
+      // Show sticky bar when main CTA is not in viewport (mobile only)
+      const shouldShowStickyBar = !isInViewport && window.innerWidth < 1024
+
+      // Set unconditionally; React ignores if value is unchanged. Avoids stale closure.
+      setIsStickyBarVisible(shouldShowStickyBar)
+    }
+
+    // Throttled scroll handler for performance
+    let ticking = false
+    const throttledScrollHandler = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    // Initial check
+    handleScroll()
+
+    // Add scroll listener
+    window.addEventListener('scroll', throttledScrollHandler, { passive: true })
+    window.addEventListener('resize', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', throttledScrollHandler)
+      window.removeEventListener('resize', handleScroll)
+    }
+  }, [])
 
   return (
     <div className={styles.productPage}>
       <Container>
         <div className={styles.content}>
           {/* Breadcrumb */}
-          <nav className={`${styles.breadcrumb} animate-fadeInUp`}>
+          <nav className={`${styles.breadcrumb} animate-fadeInUp`} suppressHydrationWarning>
             <ol className={styles.breadcrumbList}>
               <li className={styles.breadcrumbItem}>
                 <Link href="/" className={styles.breadcrumbLink}>Home</Link>
@@ -57,7 +99,7 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
           </nav>
 
           {/* Product Details */}
-          <div className={`${styles.productSection} animate-fadeInUp`}>
+          <div className={`${styles.productSection} animate-fadeInUp`} suppressHydrationWarning>
             <div className={styles.productGrid}>
               {/* Product Gallery */}
               <div className={styles.gallerySection}>
@@ -66,100 +108,30 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
 
               {/* Product Info */}
               <div className={styles.infoSection}>
-                {/* Buy Box - Title, Price, Variants, CTA */}
-                <div className={styles.buyBox}>
-                  <h1 className={styles.buyBoxTitle}>{product.title}</h1>
-                  {product.vendor && (
-                    <p className={styles.buyBoxVendor}>by {product.vendor}</p>
-                  )}
-                  {selectedVariant && (
-                    <div className={styles.buyBoxPrice}>
-                      ${selectedVariant.price.amount}
-                      {selectedVariant.compareAtPrice && 
-                       parseFloat(selectedVariant.compareAtPrice.amount) > 
-                       parseFloat(selectedVariant.price.amount) && (
-                        <span style={{ 
-                          textDecoration: 'line-through', 
-                          color: 'var(--color-gray-500)', 
-                          marginLeft: 'var(--spacing-sm)',
-                          fontSize: 'var(--font-size-lg)'
-                        }}>
-                          ${selectedVariant.compareAtPrice.amount}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  
-                  {/* Variant Selector */}
-                  {product.variants.length > 1 && (
-                    <div className={styles.variantSection}>
-                      <VariantSelector
-                        product={templateProduct}
-                        onVariantChange={setSelectedVariantId}
-                      />
-                    </div>
-                  )}
-                  
-                  {/* Quantity Selector */}
-                  <div className={styles.quantitySection}>
-                    <label htmlFor="quantity" className={styles.quantityLabel}>
-                      Quantity
-                    </label>
-                    <select
-                      id="quantity"
-                      className={styles.quantitySelect}
-                    >
-                      {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
-                        <option key={num} value={num}>
-                          {num}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  {/* Add to Cart Button */}
-                  <AddToCart
+                {/* Optimized Buy Box with new components */}
+                <div ref={buyBoxRef}>
+                  <BuyBox
                     product={templateProduct}
-                    variantId={selectedVariantId}
-                    quantity={1}
+                    selectedVariantId={selectedVariantId}
+                    quantity={quantity}
+                    onVariantChange={setSelectedVariantId}
+                    onQuantityChange={setQuantity}
+                    className={styles.buyBox}
+                    onAddToCartSuccess={() => setIsCartOpen(true)}
                   />
                 </div>
                 
-                {/* Details - Description, Features, Tags */}
+                {/* Details - Accordion Content Structure */}
                 <article className={styles.details}>
-                  <ProductDescription product={templateProduct} />
+                  <ProductContent product={templateProduct} />
                 </article>
-                
-                {/* Additional Info */}
-                <div className={styles.additionalInfo}>
-                  <div className={styles.infoList}>
-                    <div className={styles.infoItem}>
-                      <svg className={styles.infoIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Free shipping on orders over $50
-                    </div>
-                    <div className={styles.infoItem}>
-                      <svg className={styles.infoIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      30-day return policy
-                    </div>
-                    <div className={styles.infoItem}>
-                      <svg className={styles.infoIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Certificate of authenticity included
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
           {/* Related Products Section */}
           {product.productCollections && product.productCollections.length > 0 && (
-            <section className={`${styles.relatedSection} animate-fadeInUp`}>
+            <section className={`${styles.relatedSection} animate-fadeInUp`} suppressHydrationWarning>
               <h2 className={styles.relatedTitle}>Related Products</h2>
               <div className={styles.relatedPlaceholder}>
                 <p className={styles.relatedPlaceholderText}>
@@ -178,6 +150,16 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
       <CartModal
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
+      />
+
+      {/* Mobile Sticky Purchase Bar */}
+      <StickyPurchaseBar
+        product={templateProduct}
+        selectedVariantId={selectedVariantId}
+        quantity={quantity}
+        onQuantityChange={setQuantity}
+        isVisible={isStickyBarVisible}
+        onAddToCartSuccess={() => setIsCartOpen(true)}
       />
     </div>
   )

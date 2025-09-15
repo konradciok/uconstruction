@@ -1,0 +1,164 @@
+/* StickyPurchaseBar Component Styles */
+
+.stickyBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transform: translateY(100%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  padding: var(--spacing-sm) 0;
+}
+
+.stickyBarVisible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.stickyBarHidden {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.stickyBarContent {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  justify-content: space-between;
+}
+
+/* Product Info Section */
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+  min-width: 0; /* Allow text truncation */
+}
+
+.productImage {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.productImageImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.productDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.productTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 2px 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.productPrice {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.comparePrice {
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  color: var(--color-text);
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* Purchase Controls Section */
+.purchaseControls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.quantityContainer {
+  display: flex;
+  align-items: center;
+}
+
+.ctaContainer {
+  display: flex;
+  align-items: center;
+}
+
+.addToCartButton {
+  min-width: 100px;
+  height: 44px;
+  font-size: var(--font-size-sm);
+  padding: 0 var(--spacing-md);
+  white-space: nowrap;
+}
+
+/* Tablet adjustments */
+@media (min-width: 640px) {
+  .stickyBarContent {
+    padding: 0 var(--spacing-lg);
+    gap: var(--spacing-lg);
+  }
+  
+  .productTitle {
+    font-size: var(--font-size-md);
+  }
+  
+  .addToCartButton {
+    min-width: 120px;
+    height: 48px;
+    font-size: var(--font-size-md);
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+/* Hide on desktop - sticky column handles this */
+@media (min-width: 1024px) {
+  .stickyBar {
+    display: none;
+  }
+}
+
+/* Accessibility and interaction states */
+.stickyBar:focus-within {
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation performance optimization */
+.stickyBar {
+  will-change: transform, opacity;
+}
+
+/* Safe area padding for devices with notches/home indicators */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .stickyBar {
+    padding-bottom: calc(var(--spacing-sm) + env(safe-area-inset-bottom));
+  }
+}

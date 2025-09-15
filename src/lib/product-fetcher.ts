@@ -5,6 +5,7 @@
  */
 
 import { ProductService } from './product-service'
+import { cache } from 'react'
 import { validateProductHandle, validateProductId } from './param-validators'
 import type { ProductWithRelations } from '@/types/product'
 import type { Variant } from '@/generated/prisma'
@@ -43,7 +44,8 @@ function serializeProductForClient(product: ProductWithRelations): SerializedPro
 /**
  * Fetch product by handle (server-side)
  */
-export async function fetchProductByHandle(handle: string): Promise<ProductFetchResult> {
+// Wrap the core fetch in React cache to dedupe concurrent/server calls
+const fetchProductByHandleUncached = async (handle: string): Promise<ProductFetchResult> => {
   // Validate handle parameter
   const validation = validateProductHandle(handle)
   if (!validation.isValid) {
@@ -79,6 +81,8 @@ export async function fetchProductByHandle(handle: string): Promise<ProductFetch
     // No disconnect needed - using singleton PrismaClient
   }
 }
+
+export const fetchProductByHandle = cache(fetchProductByHandleUncached)
 
 /**
  * Fetch product by ID (server-side)

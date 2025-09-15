@@ -10,14 +10,14 @@ import { createSuccessResponse, ApiErrors } from '@/lib/api-response';
  */
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: unknown
 ) {
   const productService = new ProductService();
 
   try {
     // Validate ID parameter
-    const resolvedParams = await params;
-    const idValidation = validateProductId(resolvedParams.id);
+    const { id } = (context as { params?: Record<string, string> })?.params || {}
+    const idValidation = validateProductId(id as string);
     const idError = handleValidationError(idValidation);
     if (idError) return idError;
     
@@ -47,12 +47,12 @@ export async function GET(
  */
 export async function PUT(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: unknown
 ) {
   try {
     // Validate ID parameter
-    const resolvedParams = await params;
-    const idValidation = validateProductId(resolvedParams.id);
+    const { id } = (context as { params?: Record<string, string> })?.params || {}
+    const idValidation = validateProductId(id as string);
     const idError = handleValidationError(idValidation);
     if (idError) return idError;
     
@@ -85,12 +85,12 @@ export async function PUT(
  */
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: unknown
 ) {
   try {
     // Validate ID parameter
-    const resolvedParams = await params;
-    const idValidation = validateProductId(resolvedParams.id);
+    const { id } = (context as { params?: Record<string, string> })?.params || {}
+    const idValidation = validateProductId(id as string);
     const idError = handleValidationError(idValidation);
     if (idError) return idError;
     

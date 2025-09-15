@@ -1,0 +1,232 @@
+/* ProductContent Component Styles */
+
+.productContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.contentAccordions {
+  /* Inherits styles from AccordionGroup */
+}
+
+/* Description content styles */
+.descriptionContent {
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.7;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.descriptionContent h1,
+.descriptionContent h2,
+.descriptionContent h3,
+.descriptionContent h4,
+.descriptionContent h5,
+.descriptionContent h6 {
+  color: var(--color-text);
+  font-weight: 600;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+.descriptionContent h1:first-child,
+.descriptionContent h2:first-child,
+.descriptionContent h3:first-child,
+.descriptionContent h4:first-child,
+.descriptionContent h5:first-child,
+.descriptionContent h6:first-child {
+  margin-top: 0;
+}
+
+.descriptionContent p {
+  margin-bottom: var(--spacing-md);
+}
+
+.descriptionContent p:last-child {
+  margin-bottom: 0;
+}
+
+.descriptionContent ul,
+.descriptionContent ol {
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-lg);
+}
+
+.descriptionContent li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.descriptionContent a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.descriptionContent a:hover {
+  color: var(--color-primary-blue);
+}
+
+/* Technical Details styles */
+.technicalDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.technicalSpecs h4 {
+  color: var(--color-text);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-base);
+}
+
+.technicalSpecs ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.technicalSpecs li {
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: var(--font-size-sm);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.technicalSpecs li:last-child {
+  border-bottom: none;
+}
+
+.technicalSpecs strong {
+  color: var(--color-text);
+  font-weight: 600;
+  margin-right: var(--spacing-sm);
+}
+
+/* Shipping & Returns styles */
+.shippingReturns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.shippingSection,
+.returnsSection {
+  /* Individual sections within shipping & returns */
+}
+
+.shippingSection h4,
+.returnsSection h4 {
+  color: var(--color-text);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-base);
+}
+
+.shippingSection ul,
+.returnsSection ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.shippingSection li,
+.returnsSection li {
+  padding: var(--spacing-xs) 0;
+  font-size: var(--font-size-sm);
+  color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: flex-start;
+}
+
+.shippingSection strong,
+.returnsSection strong {
+  color: var(--color-text);
+  font-weight: 600;
+  margin-right: var(--spacing-sm);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.shippingSection p,
+.returnsSection p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: rgba(0, 0, 0, 0.6);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Additional Information styles */
+.additionalInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.tagsSection,
+.collectionsSection {
+  /* Individual sections within additional info */
+}
+
+.tagsSection h4,
+.collectionsSection h4 {
+  color: var(--color-text);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-base);
+}
+
+/* Mobile optimizations */
+@media (max-width: 639px) {
+  .technicalSpecs li,
+  .shippingSection li,
+  .returnsSection li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+  
+  .shippingSection strong,
+  .returnsSection strong {
+    min-width: auto;
+  }
+  
+  .shippingReturns {
+    gap: var(--spacing-md);
+  }
+  
+  .technicalDetails {
+    gap: var(--spacing-md);
+  }
+  
+  .additionalInfo {
+    gap: var(--spacing-md);
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) {
+  .shippingReturns {
+    flex-direction: row;
+    gap: var(--spacing-xl);
+  }
+  
+  .shippingSection,
+  .returnsSection {
+    flex: 1;
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 1024px) {
+  .additionalInfo {
+    flex-direction: row;
+    gap: var(--spacing-xl);
+  }
+  
+  .tagsSection,
+  .collectionsSection {
+    flex: 1;
+  }
+}

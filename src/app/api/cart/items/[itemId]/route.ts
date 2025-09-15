@@ -20,7 +20,7 @@ const cartService = new CartService(prisma)
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ itemId: string }> }
+  context: unknown
 ): Promise<NextResponse> {
   try {
     const sessionId = SessionManager.getSessionIdFromRequest(request)
@@ -32,7 +32,7 @@ export async function PUT(
       )
     }
 
-    const { itemId } = await params
+    const { itemId } = (context as { params?: Record<string, string> })?.params || {}
 
     // Parse request body
     const body = await request.json()
@@ -84,7 +84,7 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ itemId: string }> }
+  context: unknown
 ): Promise<NextResponse> {
   try {
     const sessionId = SessionManager.getSessionIdFromRequest(request)
@@ -96,7 +96,7 @@ export async function DELETE(
       )
     }
 
-    const { itemId } = await params
+    const { itemId } = (context as { params?: Record<string, string> })?.params || {}
 
     // Remove item from cart
     const result = await cartService.removeItem(itemId)
