@@ -8,19 +8,6 @@ interface ProductDescriptionProps {
 export function ProductDescription({ product }: ProductDescriptionProps) {
   return (
     <div className={styles.container}>
-      {/* Product Title */}
-      <div className={styles.header}>
-        <h1 className={styles.title}>
-          {product.title}
-        </h1>
-        
-        {product.vendor && (
-          <p className={styles.vendor}>
-            by {product.vendor}
-          </p>
-        )}
-      </div>
-
       {/* Product Description */}
       {product.description && (
         <div className={styles.description}>

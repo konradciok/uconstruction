@@ -31,6 +31,9 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
 
   // Adapt the product for template components
   const templateProduct = adaptProductForTemplate(product)
+  
+  // Get the selected variant for price display
+  const selectedVariant = templateProduct.variants.find(v => v.id === selectedVariantId) || templateProduct.variants[0]
 
   return (
     <div className={styles.productPage}>
@@ -63,18 +66,69 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
 
               {/* Product Info */}
               <div className={styles.infoSection}>
-                <ProductDescription product={templateProduct} />
-                
-                {/* Variant Selector */}
-                {product.variants.length > 1 && (
-                  <div className={styles.variantSection}>
-                    <VariantSelector
-                      product={templateProduct}
-                      onVariantChange={setSelectedVariantId}
-                    />
+                {/* Buy Box - Title, Price, Variants, CTA */}
+                <div className={styles.buyBox}>
+                  <h1 className={styles.buyBoxTitle}>{product.title}</h1>
+                  {product.vendor && (
+                    <p className={styles.buyBoxVendor}>by {product.vendor}</p>
+                  )}
+                  {selectedVariant && (
+                    <div className={styles.buyBoxPrice}>
+                      ${selectedVariant.price.amount}
+                      {selectedVariant.compareAtPrice && 
+                       parseFloat(selectedVariant.compareAtPrice.amount) > 
+                       parseFloat(selectedVariant.price.amount) && (
+                        <span style={{ 
+                          textDecoration: 'line-through', 
+                          color: 'var(--color-gray-500)', 
+                          marginLeft: 'var(--spacing-sm)',
+                          fontSize: 'var(--font-size-lg)'
+                        }}>
+                          ${selectedVariant.compareAtPrice.amount}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Variant Selector */}
+                  {product.variants.length > 1 && (
+                    <div className={styles.variantSection}>
+                      <VariantSelector
+                        product={templateProduct}
+                        onVariantChange={setSelectedVariantId}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Quantity Selector */}
+                  <div className={styles.quantitySection}>
+                    <label htmlFor="quantity" className={styles.quantityLabel}>
+                      Quantity
+                    </label>
+                    <select
+                      id="quantity"
+                      className={styles.quantitySelect}
+                    >
+                      {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+                        <option key={num} value={num}>
+                          {num}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                )}
+                  
+                  {/* Add to Cart Button */}
+                  <AddToCart
+                    product={templateProduct}
+                    variantId={selectedVariantId}
+                    quantity={1}
+                  />
+                </div>
                 
+                {/* Details - Description, Features, Tags */}
+                <article className={styles.details}>
+                  <ProductDescription product={templateProduct} />
+                </article>
                 
                 {/* Additional Info */}
                 <div className={styles.additionalInfo}>

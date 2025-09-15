@@ -28,7 +28,7 @@ export function ProductGrid({
   hasMore = false,
   onLoadMore,
   onProductSelect,
-  columns = { xs: 1, sm: 2, md: 3, lg: 4, xl: 4 },
+  columns = { xs: 1, sm: 2, md: 2, lg: 2, xl: 2 },
   className = ''
 }: ProductGridProps) {
   const gridCols = {

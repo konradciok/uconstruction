@@ -123,7 +123,7 @@ export default function ShopPage() {
                 error={error || undefined}
                 hasMore={hasMore}
                 onLoadMore={handleLoadMore}
-                columns={{ xs: 1, sm: 2, md: 2, lg: 3, xl: 3 }}
+                columns={{ xs: 1, sm: 2, md: 2, lg: 2, xl: 2 }}
               />
             </main>
           </div>

@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { TemplateProduct } from '@/lib/template-adapters'
-import { AddToCart } from '@/components/cart/add-to-cart'
 import clsx from 'clsx'
 import styles from './variant-selector.module.css'
 
@@ -91,30 +90,6 @@ export function VariantSelector({ product, onVariantChange }: VariantSelectorPro
         </div>
       )}
 
-      {/* Quantity Selector */}
-      <div className={styles.quantitySection}>
-        <label htmlFor="quantity" className={styles.quantityLabel}>
-          Quantity
-        </label>
-        <select
-          id="quantity"
-          className={styles.quantitySelect}
-        >
-          {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
-            <option key={num} value={num}>
-              {num}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Add to Cart Button */}
-      <AddToCart
-        product={product}
-        variantId={selectedVariantId}
-        quantity={1}
-        className={styles.addToCartButton}
-      />
     </div>
   )
 }
